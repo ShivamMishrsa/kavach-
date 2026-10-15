@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <title>Project Kavach - Pure Software Architecture Specification</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+
+    @page {
+      size: A4;
+      margin: 18mm 16mm 18mm 16mm;
+      @bottom-right {
+        content: counter(page);
+        font-family: 'Inter', sans-serif;
+        font-size: 9pt;
+        color: #64748b;
+      }
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      color: #0f172a;
+      background: #ffffff;
+      line-height: 1.55;
+      font-size: 10pt;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1, h2, h3, h4 {
+      color: #0f172a;
+      font-weight: 700;
+      page-break-after: avoid;
+    }
+
+    h1 {
+      font-size: 20pt;
+      line-height: 1.2;
+      margin-bottom: 4px;
+      color: #1e3a8a;
+      border-bottom: 2px solid #1e3a8a;
+      padding-bottom: 8px;
+    }
+
+    .subtitle {
+      font-size: 11pt;
+      color: #475569;
+      font-weight: 600;
+      margin-top: 0;
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      font-size: 13pt;
+      margin-top: 24px;
+      margin-bottom: 10px;
+      border-left: 4px solid #2563eb;
+      padding-left: 8px;
+      background: #f8fafc;
+      padding-top: 4px;
+      padding-bottom: 4px;
+    }
+
+    h3 {
+      font-size: 11pt;
+      margin-top: 16px;
+      margin-bottom: 6px;
+      color: #1e293b;
+    }
+
+    p {
+      margin: 6px 0 10px 0;
+      text-align: justify;
+    }
+
+    ul, ol {
+      margin: 4px 0 10px 20px;
+      padding: 0;
+    }
+
+    li {
+      margin-bottom: 4px;
+    }
+
+    .diagram {
+      background: #0f172a;
+      color: #e2e8f0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 7.8pt;
+      line-height: 1.35;
+      padding: 12px;
+      border-radius: 6px;
+      margin: 12px 0 16px 0;
+      white-space: pre;
+      overflow-x: hidden;
+      page-break-inside: avoid;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0 16px 0;
+      font-size: 8.8pt;
+      page-break-inside: avoid;
+    }
+
+    th, td {
+      border: 1px solid #cbd5e1;
+      padding: 6px 9px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background-color: #f1f5f9;
+      color: #0f172a;
+      font-weight: 700;
+    }
+
+    tr:nth-child(even) td {
+      background-color: #f8fafc;
+    }
+
+    .callout {
+      border-left: 4px solid #e11d48;
+      background: #fff1f2;
+      padding: 10px 12px;
+      margin: 12px 0;
+      border-radius: 0 4px 4px 0;
+      page-break-inside: avoid;
+    }
+
+    .callout-title {
+      font-weight: 700;
+      color: #9f1239;
+      font-size: 9.5pt;
+      margin-bottom: 3px;
+    }
+
+    .tag {
+      display: inline-block;
+      font-size: 7.5pt;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 3px;
+      background: #e2e8f0;
+      color: #334155;
+      margin-right: 4px;
+    }
+
+    .page-break {
+      page-break-before: always;
+    }
+
+    .header-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 8.5pt;
+      color: #64748b;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 6px;
+      margin-bottom: 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header-meta">
+    <span>PROJECT KAVACH: TECHNICAL BLUEPRINT</span>
+    <span>CONFIDENTIAL &amp; PROPRIETARY</span>
+    <span>REVISION: PURE-SOFTWARE V2</span>
+  </div>
+
+  <h1>Project Kavach: Pure-Software Indic Cyber-Fraud Defense Platform</h1>
+  <div class="subtitle">Complete Technical Architecture, System Requirements &amp; Commercialization Roadmap (Hinglish Edition)</div>
+
+  <h2>1. Executive Summary &amp; Problem Breakdown (Asli Problem Kya Hai?)</h2>
+  
+  <p>India me cyber fraud ab basic lottery SMS ya fake OTP calls tak seemit nahi raha. Scammers high-scale, psychologically weaponized aur automated techniques use kar rahe hain jo seedha aam nagrikon aur business operations ko destabilize karti hain.</p>
+
+  <h3>1.1 Major Threat Vectors (Scammers Ka Tareeka)</h3>
+  <ul>
+    <li><strong>"Digital Arrest" Extortion Syndicates:</strong> Organised cartels victims ko video call (Skype/WhatsApp) par connect karke fake CBI, ED, State Police ya Supreme Court ke rooms create karte hain. Wo victim ko fake arrest warrants, official letterheads aur fabricated court stamps dikhate hain aur ghanton tak call par bandhe rakhte hain jab tak victim apni sari life savings "verification account" me transfer na kar de.</li>
+    <li><strong>Neural Voice Cloning &amp; Impersonation:</strong> Scammers social media reels ya shorts se 5–10 seconds ka audio sample utha kar Generative AI (Zero-Shot TTS) se voice clone kar lete hain. Fir parents ya doston ko call karke bolte hain: <em>"Bhaiya ka accident ho gaya hai, turant 50,000 bhejo."</em> Normal call filters ise normal call samajhkar pass kar dete hain.</li>
+    <li><strong>Indic Language &amp; Dialect Masking:</strong> Scammers pure English me baat nahi karte. Wo pure North India me Bhojpuri, Maithili, Haryanvi aur pure Hinglish slang use karte hain. Global cyber protection engines (jaise Norton, McAfee, Cloudflare) Indic multi-lingual semantics samajh nahi pate.</li>
+    <li><strong>"Golden Hour" Panic &amp; Evidence Collapse:</strong> Jab fraud execute hota hai, pehle 60–120 minute sabse crucial hote hain (<strong>Golden Hour</strong>). Agar is time me UTR number, beneficiary UPI ID aur transaction timestamp I4C helpline (1930) par submit kar diya jaye, toh bank funds freeze ho jate hain. Par aam insan panic me aa kar screen capture aur bank SMS collect nahi kar pata, aur paise multi-layer mule accounts me siphon off ho jate hain.</li>
+  </ul>
+
+  <div class="diagram">
++----------------------------------------------------------------------------------------------------+
+|                                    CURRENT ATTACK &amp; LOSS LIFECYCLE                                 |
++----------------------------------------------------------------------------------------------------+
+[Attacker: Cloned Voice / Fake Legal PDF] 
+                  │
+                  ▼
+[Citizen Receives Threat via WhatsApp/Call] ──► [Psychological Shock &amp; Panic]
+                                                              │
+                                                              ▼
+                                                [Paise Transfer via UPI/NEFT]
+                                                              │
+                                            +─────────────────┴──────────────────+
+                                            ▼                                    ▼
+                             [Golden Hour Lost: 2+ Hours]           [Mule Accounts Launder Funds]
+                                            ▼                                    ▼
+                             [No FIR, No Frozen Accounts]           [Total Financial Loss: 100%]
++----------------------------------------------------------------------------------------------------+</div>
+
+  <h3>1.2 Solution Mechanism (Hum Kya Bana Rahe Hain?)</h3>
+  <p>Project Kavach ek <strong>100% Cloud-Native Indic Multi-Modal Software Engine</strong> hai jisme do direct entry points hain:</p>
+  <ol>
+    <li><strong>Kavach Citizen Security Web / PWA:</strong> Ek fast, zero-install Progressive Web App jahan citizen koi bhi recording, fake notice ki photo, phishing link ya screenshot forward/upload karega. System turant plain Hindi/Hinglish me scam expose karega aur ek standardized <strong>Pre-FIR Evidence Dossier PDF</strong> bana dega jo direct 1930 ya cybercrime.gov.in me upload ho sake.</li>
+    <li><strong>Kavach Enterprise B2B API Engine:</strong> Sub-200ms latency wale microservices jo commercial banks, UPI apps (PhonePe, GPay), NBFCs aur telcos ko license kiye jayenge, taaki onboarding (eKYC) aur high-risk fund transfers ke time deepfake voice aur tampered documents real-time block ho sakein.</li>
+  </ol>
+
+  <h3>1.3 Why Hardware Was Scrapped? (Software-Only Decision)</h3>
+  <ul>
+    <li><strong>TLS 1.3 Encryption Barrier:</strong> Network cables par sara traffic end-to-end encrypted hota hai. Ek hardware firewall (jaise Raspberry Pi) bina har phone me private root certificate install kiye WhatsApp audio ya bank receipts inspect hi nahi kar sakta. Software directly application layer par unencrypted file ko analyze karta hai.</li>
+    <li><strong>Zero Manufacturing Deficit:</strong> Hardware me physical shipment, chip inventory, return logistics aur hardware warranty ka jhanjhat hota hai. Pure software model 85%+ gross margin deliver karta hai.</li>
+    <li><strong>Enterprise Budget Alignment:</strong> Chote kirana dukandar hardware box kharidne ke liye paise nahi dete. Lekin commercial banks fraud rokhne ke liye high-value B2B API contracts sign karte hain.</li>
+  </ul>
+
+  <div class="page-break"></div>
+
+  <h2>2. System Architecture &amp; Engineering Blueprint</h2>
+
+  <p>System ko high-concurrency microservices structure par design kiya gaya hai jo MeitY-empanelled sovereign Indian cloud nodes (AWS Mumbai / Azure Central India) par host hoga.</p>
+
+  <div class="diagram">
++----------------------------------------------------------------------------------------------------+
+|                                      PROJECT KAVACH: ARCHITECTURE                                  |
++------------------------------------------------------------------+---------------------------------+
+| CITIZEN INTERFACE (PWA / Responsive Web)                         | ENTERPRISE B2B INTERFACE        |
+| - DPDP 2023 Explicit Dynamic Consent                             | - Secure TLS 1.3 / gRPC Endpoints|
+| - Audio, Screenshot, Legal Notice, URL Upload                    | - Low-Latency Identity Payloads |
++------------------------------------------------------------------+---------------------------------+
+                                                │
+                                                ▼
++----------------------------------------------------------------------------------------------------+
+|                               API GATEWAY, SCRUBBER &amp; JOB DISPATCH                                 |
+| - Kong Gateway: JWT Verification, IP Rate Limiter                                                  |
+| - Inline PII Vault: Real-Time Aadhaar / PAN Tokenization                                           |
+| - Redis Queue Broker + Celery Async Processing Workers                                             |
++----------------------------------------------------------------------------------------------------+
+                                                │
+                                                ▼
++----------------------------------------------------------------------------------------------------+
+|                              PARALLEL MULTI-MODAL INFERENCE ENGINE                                 |
++----------------------------------+-------------------------------+---------------------------------+
+| INDIC SPEECH &amp; AUDIO CLUSTER     | DOCUMENT FORENSICS CLUSTER    | URL &amp; PHISHING CLUSTER          |
+| - AI4Bharat IndicWhisper (ASR)   | - PaddleOCR Layout Engine     | - Fast Domain Decomposition     |
+| - AASIST Voice Anti-Spoofing     | - ViT State Seal Classifier   | - Punycode / Homoglyph Detector |
+| - IndicTrans2 Regional Engine    | - Statutory Consistency Regex | - Threat Intelligence Lookups   |
++----------------------------------+-------------------------------+---------------------------------+
+                                                │
+                                                ▼
++----------------------------------------------------------------------------------------------------+
+|                                DETERMINISTIC REASONING CONTROLLER                                  |
+| - Scam Taxonomy Tree: [Digital Arrest | Fake Courier | Loan App Extortion | UPI Reversal Trap]      |
+| - LangGraph Guardrail: If Forged State Seal Detected ──► Threat Score = 99.8%                      |
++----------------------------------------------------------------------------------------------------+
+                        │                                                   │
+                        ▼                                                   ▼
++-----------------------------------------------+   +------------------------------------------------+
+| CITIZEN DELIVERY ENGINE                       |   | ENTERPRISE DELIVERY ENGINE                     |
+| - Plain Hindi Audio/Text Scam Breakdown       |   | - Sub-200ms Structured JSON / gRPC Response    |
+| - Pre-FIR Evidence Dossier PDF (1930-Ready)   |   | - Deepfake / Voice Cloning Confidence Metrics  |
++-----------------------------------------------+   +------------------------------------------------+</div>
+
+  <h3>2.1 Multi-Modal AI Detection Subsystems</h3>
+  <ul>
+    <li><strong>Indic Speech Pipeline:</strong> AI4Bharat IndicWhisper use karta hai jo raw audio ko text me convert karta hai. Ye model English-Hindi code-mixing (Hinglish) aur regional colloquial terms ko accurately recognize karta hai. Saath hi <em>AASIST</em> (Audio Anti-Spoofing using Integrated Spectro-Temporal Graph Attention Networks) model waveform ke linear prediction cepstral coefficients aur high-frequency phase shifts ko map karke synthetic voice detect karta hai.</li>
+    <li><strong>Document Forensics Engine:</strong> PaddleOCR document ke Devanagari aur English text ko extract karta hai. Ek fine-tuned Vision Transformer (ViT) notice par bane State Emblems, police badges aur stamps ko check karta hai ki wo authentic government designs se match karte hain ya internet se cut-paste kiye gaye hain.</li>
+    <li><strong>Statutory Consistency Regex Engine:</strong> Notice me mention kiye gaye laws ko match karta hai. Scammers aksar purane Indian Penal Code (IPC) ke invalid sections ya fabricated sections likh dete hain. Hamara parser legal discrepancies pakad kar turant alert karta hai.</li>
+    <li><strong>Phishing &amp; Link Deconstructor:</strong> Suspicious links ko parse karke unka age lookup, SSL certificate issuer aur Punycode homoglyphs (jaise SBI ke badle <code>sbı.com</code>) analyze karta hai.</li>
+  </ul>
+
+  <h2>3. Functional &amp; Non-Functional Specifications</h2>
+
+  <h3>3.1 Functional Requirements (System Kya Karega?)</h3>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 14%;">ID</th>
+        <th style="width: 26%;">Module Name</th>
+        <th>Description &amp; Operational Deliverable</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>FRS-01</strong></td>
+        <td>Multi-Modal Upload</td>
+        <td>User voice notes (.wav, .mp3, .ogg), images (.jpeg, .png), legal PDF notices aur URL strings bina app install kiye submit kar sakega.</td>
+      </tr>
+      <tr>
+        <td><strong>FRS-02</strong></td>
+        <td>Synthetic Voice Flagging</td>
+        <td>Audio stream ko analyze karke synthetic probability score ($P_{\text{synth}} \in [0, 1]$) generate karega aur vocoder artifacts flag karega.</td>
+      </tr>
+      <tr>
+        <td><strong>FRS-03</strong></td>
+        <td>Indic Speech Parser</td>
+        <td>Hindi, Hinglish aur regional dialects ko readable plain text me transcribe karega with confidence scores.</td>
+      </tr>
+      <tr>
+        <td><strong>FRS-04</strong></td>
+        <td>Fake Seal / Stamp Verifier</td>
+        <td>Legal notice par Supreme Court, CBI, Police ke stamps ko compare karke forgery verdict dega.</td>
+      </tr>
+      <tr>
+        <td><strong>FRS-05</strong></td>
+        <td>Plain-Hindi Explanation</td>
+        <td>Jargon-free native Hindi me output generate karega: <em>"Ye notice nakli hai. Police video call par kisi ko arrest nahi karti."</em></td>
+      </tr>
+      <tr>
+        <td><strong>FRS-06</strong></td>
+        <td>Pre-FIR Dossier Builder</td>
+        <td>Extracted UTR number, fraud UPI ID, beneficiary details aur call timestamps ko standardized PDF format me organize karega.</td>
+      </tr>
+      <tr>
+        <td><strong>FRS-07</strong></td>
+        <td>Enterprise Verification API</td>
+        <td>Commercial financial apps ke liye sub-200ms document verification aur deepfake detection programmatic endpoints provide karega.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>3.2 Non-Functional Requirements (Performance, Security &amp; Legal)</h3>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 18%;">Category</th>
+        <th style="width: 14%;">ID</th>
+        <th style="width: 25%;">Standard</th>
+        <th>Validation Criteria</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>B2B Performance</strong></td>
+        <td>NFRS-01</td>
+        <td>Latency &le; 200 ms</td>
+        <td>Single-modal synchronous API requests sub-200ms (p95) latency SLA maintain karengi.</td>
+      </tr>
+      <tr>
+        <td><strong>Web Performance</strong></td>
+        <td>NFRS-02</td>
+        <td>Latency &le; 4,500 ms</td>
+        <td>Full multi-modal upload (Audio + OCR + Translation + Synthesis) 4.5 seconds ke andar complete hoga.</td>
+      </tr>
+      <tr>
+        <td><strong>System Scale</strong></td>
+        <td>NFRS-03</td>
+        <td>5,000 Concurrent Queries</td>
+        <td>High-load peak bursts ke dauran auto-scale clusters bina packet drop ke load handle karenge.</td>
+      </tr>
+      <tr>
+        <td><strong>Data Shredding</strong></td>
+        <td>NFRS-04</td>
+        <td>15-Minute Data TTL</td>
+        <td>Analysis complete hote hi consumer audio aur images cloud RAM aur storage se permanently erase ho jayengi.</td>
+      </tr>
+      <tr>
+        <td><strong>Regulatory</strong></td>
+        <td>NFRS-05</td>
+        <td>DPDP Act 2023 Strict</td>
+        <td>Consent records cryptographically audit-logged rahenge aur processing sovereign Indian boundary ke andar hogi.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="page-break"></div>
+
+  <h2>4. Processing Pipeline &amp; Latency Budget</h2>
+
+  <p>Cloud GPU clusters (NVIDIA L4 Tensor Core instances) par pipeline execution asynchronous micro-queues ke zariye runs hoti hai:</p>
+
+  <div class="diagram">
+0ms          500ms        1000ms       1500ms       2000ms       2500ms       3000ms       3500ms
+├────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┤
+[ Web Ingest &amp; PII Scrub: 150ms ]
+             [ IndicWhisper ASR: 650ms ]
+             [ AASIST Voice Anti-Spoof: 300ms ]
+                          [ PaddleOCR &amp; Layout Parse: 850ms ]
+                                       [ IndicTrans2 Translation: 450ms ]
+                                                    [ Deterministic Rules: 600ms ]
+                                                                 [ PDF Dossier Build: 300ms ]
+────────────────────────────────────────────────────────────────────────────────────────►
+TOTAL END-TO-END PIPELINE LATENCY: ~3,300ms (Strictly under the 4,500ms p95 requirement)</div>
+
+  <h3>4.1 Pipeline Latency Breakdown Table</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Processing Stage</th>
+        <th>Model / Technology Used</th>
+        <th>Execution Context</th>
+        <th>Avg Time (ms)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Payload Ingress &amp; PII Tokenization</td>
+        <td>Kong Gateway + Crypto Vault</td>
+        <td>CPU / In-Memory AES-256</td>
+        <td>150 ms</td>
+      </tr>
+      <tr>
+        <td>Speech-to-Text Transcription</td>
+        <td>AI4Bharat IndicWhisper</td>
+        <td>NVIDIA L4 GPU (Triton)</td>
+        <td>650 ms</td>
+      </tr>
+      <tr>
+        <td>Synthetic Audio Classification</td>
+        <td>AASIST Spectro-Temporal GAT</td>
+        <td>NVIDIA L4 GPU</td>
+        <td>300 ms</td>
+      </tr>
+      <tr>
+        <td>Document OCR &amp; Stamp Classification</td>
+        <td>PaddleOCR + Vision Transformer</td>
+        <td>NVIDIA L4 GPU</td>
+        <td>850 ms</td>
+      </tr>
+      <tr>
+        <td>Regional Language Translation</td>
+        <td>IndicTrans2 (Distilled 200M)</td>
+        <td>NVIDIA L4 GPU</td>
+        <td>450 ms</td>
+      </tr>
+      <tr>
+        <td>Fraud Taxonomy Matching</td>
+        <td>LangGraph + Statutory Regex Engine</td>
+        <td>CPU Microservice</td>
+        <td>600 ms</td>
+      </tr>
+      <tr>
+        <td>Pre-FIR Dossier Synthesis</td>
+        <td>ReportLab PDF Micro-Engine</td>
+        <td>CPU Microservice</td>
+        <td>300 ms</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>5. Competitive Differentiation vs. Market (Market Me Kya Alag Hai?)</h2>
+
+  <div class="diagram">
++----------------------------------------------------------------------------------------------------+
+|                                    DEFENSIVE MARKET POSITIONING                                    |
++-----------------------------------+-----------------------------------+----------------------------+
+| Government Portals (1930 / Chakshu)| Commercial Apps (Truecaller)      | Project Kavach             |
+| - Reactive intake repositories    | - Cellular call focused           | - Proactive multi-modal AI |
+| - No real-time threat analysis    | - No legal document scanning      | - Fake legal notices OCR   |
+| - Form-based manual user input    | - No automated FIR dossier format | - Pre-FIR Dossier generator|
++-----------------------------------+-----------------------------------+----------------------------+</div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Capability</th>
+        <th>DoT Sanchar Saathi (Chakshu)</th>
+        <th>MHA I4C Helpline (1930 / NCRP)</th>
+        <th>Truecaller AI Call Scanner</th>
+        <th>Project Kavach</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Operational Focus</strong></td>
+        <td>Citizen fraud reporting to telcos</td>
+        <td>Bank account lien &amp; capital freezing</td>
+        <td>Live call spam tagging</td>
+        <td>Multi-modal forensics &amp; B2B defense</td>
+      </tr>
+      <tr>
+        <td><strong>Payload Modality</strong></td>
+        <td>Text numbers, screenshots</td>
+        <td>Transaction IDs, account numbers</td>
+        <td>Cellular voice signals</td>
+        <td>Audio, legal PDFs, stamps, links</td>
+      </tr>
+      <tr>
+        <td><strong>Indic Dialect Depth</strong></td>
+        <td>Static portal forms</td>
+        <td>Static call-center triage</td>
+        <td>Primarily English metadata</td>
+        <td>Fine-tuned IndicWhisper &amp; IndicTrans2</td>
+      </tr>
+      <tr>
+        <td><strong>Document Analysis</strong></td>
+        <td>None (Manual police review)</td>
+        <td>None (Manual review post-FIR)</td>
+        <td>None</td>
+        <td>Vision Transformer + Judicial seals</td>
+      </tr>
+      <tr>
+        <td><strong>Citizen Real-Time Feedback</strong></td>
+        <td>None (Gives ticket ID)</td>
+        <td>None (Operator intake)</td>
+        <td>Binary spam/clone banner</td>
+        <td>Plain-Hindi root-cause analysis</td>
+      </tr>
+      <tr>
+        <td><strong>Complaint Formatting</strong></td>
+        <td>Manual form filling</td>
+        <td>Phone call Q&amp;A</td>
+        <td>None</td>
+        <td>Instant structured Pre-FIR Dossier</td>
+      </tr>
+      <tr>
+        <td><strong>Commercial Model</strong></td>
+        <td>Public service</td>
+        <td>Public service</td>
+        <td>Ads / Consumer subscription</td>
+        <td>Enterprise B2B API Licensing</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="page-break"></div>
+
+  <h2>6. Financial Architecture &amp; Unit Economics (Paisa Kaise Banega?)</h2>
+
+  <h3>6.1 Why PWA Trumps WhatsApp Business API</h3>
+  <p>WhatsApp Business API har interaction par platform charges lagata hai. India me 1,000 monthly utility messages ke baad har user interaction par Meta charges lagte hain. Agar 10 lakh users Kavach bot par 3–4 messages chat karenge, toh har query par messaging cost plus GPU compute cost mila kar ₹1.50–₹2.50 kharch honge. Mahine ka operational deficit ₹15 lakh se ₹25 lakh ho jayega bina kisi direct revenue ke.</p>
+  <p><strong>PWA Strategy:</strong> Kavach Progressive Web App use karega. Cloudflare CDN ke through web traffic delivery cost sirf ₹0.02 per user aati hai. WhatsApp ko sirf marketing links share karne ke liye use kiya jayega, jisse distribution expense 95% kam ho jata hai.</p>
+
+  <h3>6.2 Revenue Generation: B2B Enterprise API</h3>
+  <ul>
+    <li><strong>Commercial Banks &amp; NBFCs:</strong> eKYC verification aur video call onboarding ke waqt deepfake face aur cloned voice verify karne ke liye per-call API rate (₹1.50 se ₹3.00) charge kiya jata hai.</li>
+    <li><strong>UPI &amp; Payment Apps (PhonePe, GPay, Paytm):</strong> Payment transfer screen par recipient handle aur user-uploaded payment screenshot verification API integrate hoti hai.</li>
+    <li><strong>Telecom Security Feeds:</strong> Telecom companies ko real-time Indic scam scripts aur newly emerged malicious domain feeds license kiye jate hain.</li>
+  </ul>
+
+  <h3>6.3 Unit Economics Breakdown</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Cost / Revenue Component</th>
+        <th>Consumer Web Tier (PWA)</th>
+        <th>Enterprise B2B API Tier</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Bandwidth &amp; Network Delivery</td>
+        <td>₹0.02 (Cloudflare CDN Edge)</td>
+        <td>₹0.01 (Direct TLS 1.3 / gRPC)</td>
+      </tr>
+      <tr>
+        <td>Inference GPU Compute Cost</td>
+        <td>₹0.85 (Multi-Modal Full Pipeline)</td>
+        <td>₹0.15 (Single-Check Sub-200ms)</td>
+      </tr>
+      <tr>
+        <td>Total Ingress Operational Cost</td>
+        <td><strong>₹0.87 per scan</strong></td>
+        <td><strong>₹0.16 per check</strong></td>
+      </tr>
+      <tr>
+        <td>Realized Revenue per Query</td>
+        <td>₹0.00 (Free Community Tier)</td>
+        <td><strong>₹2.00 per API call</strong></td>
+      </tr>
+      <tr>
+        <td>Gross Margin</td>
+        <td>-₹0.87 (Operational Top-of-Funnel)</td>
+        <td><strong>+₹1.84 (92% Gross Margin)</strong></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <div class="callout-title">SUSTAINABILITY RATIO</div>
+    Sirf <strong>50,000 paid enterprise API calls</strong> pure platform ke <strong>1,00,000 free citizen scans</strong> ke GPU compute aur infrastructure kharche ko 100% cover kar lete hain.
+  </div>
+
+  <h2>7. Regulatory, DPDP Act 2023 &amp; Legal Shielding</h2>
+
+  <h3>7.1 DPDP Act 2023 Mandatory Compliance</h3>
+  <ul>
+    <li><strong>Data Fiduciary Classification:</strong> Jab user apni call recording ya document upload karta hai, Kavach legal terms me Data Fiduciary banta hai. Platform Section 6 ke mutabiq multi-lingual explicit consent screen enforce karta hai.</li>
+    <li><strong>Biometric Data &amp; Purpose Limitation:</strong> Audio me vocal prints biometric data hote hain, aur notice me PAN ya account details hoti hain. Kavach strict <em>Purpose Limitation</em> implement karta hai: analysis score generate hote hi user payload memory se cryptographically shred kar diya jata hai.</li>
+    <li><strong>Penalty Shielding:</strong> DPDP Act ke Schedule 1 ke tahat data breach par ₹250 crore tak ki statutory penalty ho sakti hai. Kavach zero persistent customer storage model par chalta hai aur local Indian data centers me operate karta hai.</li>
+  </ul>
+
+  <h3>7.2 Asymmetric Liability Shield (Court/Police Disclaimers)</h3>
+  <ul>
+    <li><strong>False Negative Risk:</strong> Agar system kisi naye advanced scam ko clean bol de aur user paise transfer kar de, toh platform par financial loss ka claim na ho sake.</li>
+    <li><strong>False Positive Risk:</strong> Agar system kisi asli court summon ya tax notice ko fake bol de aur citizen court me pesh na ho, toh platform par legal obstruction ka case na bane.</li>
+    <li><strong>Mitigation Strategy:</strong> Output hamesha probabilistic risk assessment ke roop me diya jata hai: <em>"Risk Rating: 94%. Is document me unauthorized stamps paye gaye hain. Kripya kisi bhi payment se pehle official 1930 helpline par verify karein."</em> Platform absolute verdict claim nahi karta.</li>
+  </ul>
+
+  <div class="page-break"></div>
+
+  <h2>8. Implementation Roadmap (Phases to Build)</h2>
+
+  <div class="diagram">
++----------------------------------------------------------------------------------------------------+
+|                                      IMPLEMENTATION TIMELINE                                       |
++----------------------------------------------------------------------------------------------------+
+| Phase 1: Core ML Pipeline &amp; PWA MVP (Months 1–6)                                                   |
+| [========================&gt;                                                                         |
+| - IndicWhisper + AASIST fine-tuning; PaddleOCR fake stamp classifiers; PWA launch.                 |
++----------------------------------------------------------------------------------------------------+
+| Phase 2: Evidence Dossier &amp; Language Expansion (Months 7–12)                                       |
+|                          [========================&gt;                                                |
+| - Automated 1930 Pre-FIR engine; IndicTrans2 regional scale; CERT-In audits.                      |
++----------------------------------------------------------------------------------------------------+
+| Phase 3: Enterprise B2B Hardening &amp; Scale (Months 13–24)                                           |
+|                                                   [==============================================&gt; |
+| - Sub-200ms Triton gRPC APIs; SOC2 / ISO 27001 certifications; live bank sandboxes.               |
++----------------------------------------------------------------------------------------------------+</div>
+
+  <h3>8.1 Phase 1: Core ML Pipeline &amp; Web MVP (Months 1–6)</h3>
+  <ul>
+    <li><strong>Indic Speech Pipeline:</strong> Fine-tune AI4Bharat IndicWhisper on Hindi/Hinglish call datasets; integrate AASIST anti-spoofing audio classifier.</li>
+    <li><strong>Document Forensics:</strong> PaddleOCR pipeline deploy karna with Vision Transformer trained on State police and court emblem datasets.</li>
+    <li><strong>Web PWA Interface:</strong> Deploy lightweight React/Next.js interface with real-time plain-Hindi risk explanations.</li>
+    <li><em>Deliverable:</em> Fully functional web app processing audio and documents within 4 seconds.</li>
+  </ul>
+
+  <h3>8.2 Phase 2: Evidence Dossier &amp; Language Expansion (Months 7–12)</h3>
+  <ul>
+    <li><strong>Pre-FIR Builder:</strong> Automated report generator jo UTRs, UPI IDs aur call records ko structured PDF format me compile karega.</li>
+    <li><strong>Language Scaling:</strong> IndicTrans2 distilled models integrate karke Tamil, Telugu, Bengali aur Marathi support rollout karna.</li>
+    <li><strong>Security Certification:</strong> Comprehensive penetration testing aur CERT-In security empaneled audits complete karna.</li>
+    <li><em>Deliverable:</em> Multi-lingual evidence preparation engine active nationwide.</li>
+  </ul>
+
+  <h3>8.3 Phase 3: Enterprise B2B Hardening &amp; Commercialization (Months 13–24)</h3>
+  <ul>
+    <li><strong>Sub-200ms Optimization:</strong> Serving stack ko NVIDIA Triton Inference Server par re-architect karke gRPC high-throughput enterprise pipelines ready karna.</li>
+    <li><strong>Enterprise Certifications:</strong> SOC2 Type II aur ISO/IEC 27001 audit clearances complete karna.</li>
+    <li><strong>Bank &amp; Fintech Deployments:</strong> Leading commercial banks aur payment gateways ke fraud mitigation sandboxes me API integrate karna.</li>
+    <li><em>Deliverable:</em> Enterprise-grade B2B fraud defense infrastructure with long-term recurring SaaS contracts.</li>
+  </ul>
+
+  <h2>9. Final Viability Verdict</h2>
+  <ul>
+    <li><strong>Original Hardware Model (Kavach Box + Consumer Bot):</strong> <strong>Unviable.</strong> TLS 1.3 encryption hardware inspection ko block kar deti hai aur WhatsApp messaging bills platform ko loss me daal dete hain.</li>
+    <li><strong>Restructured Pure-Software Model (PWA + B2B API):</strong> <strong>Highly Viable (9.0/10).</strong> Hardware dependency khatam karke system instant-scale ban jata hai. Zero inventory cost, DPDP Act compliance, aur direct B2B banking monetization is model ko profitable aur defensible banate hain.</li>
+  </ul>
+
+</body>
+</html>
