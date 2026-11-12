@@ -14,7 +14,7 @@ Website pehle (mobile-first), phir PWA. Ye 9 steps `Project Kavach - Phase-wise 
 | # | Step | Roadmap phases | Status |
 |---|---|---|---|
 | 1 | [Setup](01-setup.md) | 0 | Done |
-| 2 | [Design system](02-design-system.md) | 2 | Not started |
+| 2 | [Design system](02-design-system.md) | 2 | Done (see notes) |
 | 3 | [Mobile-first screens (mock data)](03-mobile-first-screens.md) | 1 (light), 3 | Not started |
 | 4 | [Minimal backend (OCR + rules + Hindi result)](04-minimal-backend.md) | 6, 7, 8 (minimal) | Not started |
 | 5 | [Dossier PDF + consent + auto-delete](05-dossier-consent-delete.md) | 9, 5 (basic) | Not started |

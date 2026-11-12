@@ -1,0 +1,96 @@
+{
+  "app": { "name": "Kavach", "tagline": "Check before you get scammed" },
+  "settings": {
+    "language": "Language",
+    "theme": "Theme",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+    "themeAuto": "Auto",
+    "textSize": "Text size",
+    "sizeNormal": "Normal",
+    "sizeLarge": "Large",
+    "sizeXlarge": "Largest",
+    "highContrast": "High contrast"
+  },
+  "risk": {
+    "label": {
+      "very_high": "Very high risk",
+      "high": "High risk",
+      "medium": "Medium risk",
+      "cannot_verify": "Could not verify",
+      "low": "Low risk"
+    },
+    "bar": { "low": "Low", "medium": "Medium", "high": "High", "very_high": "Very high" },
+    "title": {
+      "very_high": "This is very likely a scam.",
+      "high": "There are several suspicious signs.",
+      "medium": "Some things look suspicious.",
+      "cannot_verify": "We could not check this.",
+      "low": "No major risk signs found."
+    },
+    "message": {
+      "very_high": "Police or courts do not arrest people over a video call. Do not send money and contact 1930.",
+      "high": "Verify with an official source before making any payment.",
+      "medium": "Be careful and verify before paying.",
+      "cannot_verify": "The photo may be unclear or the format is new. Ask an official helpline.",
+      "low": "This is not a guarantee. Still verify before paying."
+    },
+    "why": "Why did we flag this?",
+    "disclaimer": "This is a risk assessment, not a final verdict or legal advice. Verify with an official source before paying.",
+    "wrongResult": "Result looks wrong? Tell us"
+  },
+  "upload": {
+    "chooseFile": "Choose file",
+    "camera": "Take a photo",
+    "dropHint": "Drop a photo, screenshot or PDF here",
+    "limits": "Up to {{max}} MB",
+    "tooBig": "File is too large (max {{max}} MB).",
+    "badType": "This file type is not accepted.",
+    "selected": "Selected file: {{name}}",
+    "remove": "Remove"
+  },
+  "stepper": { "done": "Done", "current": "In progress", "waiting": "Pending" },
+  "entity": { "edit": "Edit", "save": "Save", "editing": "Editing {{label}}" },
+  "emergency": { "text": "Already scammed? Call 1930 now", "call": "Call 1930" },
+  "dialog": { "close": "Close" },
+  "consent": {
+    "title": "Your consent",
+    "body": "Your file is used only for checking and is deleted automatically within 15 minutes.",
+    "agree": "I agree",
+    "decline": "I do not agree"
+  },
+  "actions": {
+    "primary": "Create evidence report",
+    "outline": "View rules",
+    "ghost": "Cancel",
+    "danger": "Call 1930"
+  },
+  "demo": {
+    "title": "Design system",
+    "subtitle": "Kavach components. Check them in light and dark.",
+    "buttons": "Buttons",
+    "riskCards": "Risk cards",
+    "upload": "Upload",
+    "stepper": "Scan progress",
+    "entities": "Extracted details",
+    "dialog": "Dialog",
+    "toast": "Toast",
+    "openConsent": "Open consent",
+    "showToast": "Show toast",
+    "toastText": "File received safely.",
+    "settingsTitle": "Settings",
+    "reasons": {
+      "digital_arrest": "Mentions \"digital arrest\" and a video call",
+      "payment_demand": "Demands a money transfer",
+      "safe_account": "Asks you to pay into a \"safe/verification account\"",
+      "secrecy": "Pressure to tell no one"
+    },
+    "steps": {
+      "received": "File received securely",
+      "read": "Text was read",
+      "signals": "Checking for scam signs",
+      "report": "Preparing the report"
+    },
+    "fields": { "utr": "UTR number", "upi": "Scammer UPI ID", "amount": "Amount" }
+  }
+}

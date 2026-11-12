@@ -1,0 +1,80 @@
+/*
+ * Kavach design tokens. Light is the default (Option A "Calm Trust").
+ * Dark follows Option B colours. Change a colour here and every screen updates.
+ */
+:root {
+  color-scheme: light;
+  --bg: #f6f9ff;
+  --surface: #ffffff;
+  --text: #0f172a;
+  --muted: #566580;
+  --primary: #1d4ed8;
+  --on-primary: #ffffff;
+  --border: #dbe4f5;
+  --chip: #e0e9ff;
+
+  --danger: #b91c1c;
+  --danger-bg: #fef2f2;
+  --ok: #15803d;
+  --ok-bg: #ecfdf3;
+  --warn: #a16207;
+  --warn-bg: #fef9c3;
+
+  --risk-very-high: #b91c1c;
+  --risk-high: #c2410c;
+  --risk-medium: #a16207;
+  --risk-unknown: #475569;
+  --risk-low: #15803d;
+  --on-risk: #ffffff;
+
+  --radius: 1rem;
+  --font-base: 16px;
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #0b1220;
+  --surface: #121c33;
+  --text: #e6edf8;
+  --muted: #8fa3c4;
+  --primary: #38bdf8;
+  --on-primary: #04121f;
+  --border: #22304f;
+  --chip: #16264a;
+
+  --danger: #fb7185;
+  --danger-bg: #2a1420;
+  --ok: #34d399;
+  --ok-bg: #0f2a24;
+  --warn: #fbbf24;
+  --warn-bg: #2d2410;
+
+  --risk-very-high: #fb7185;
+  --risk-high: #fb923c;
+  --risk-medium: #fbbf24;
+  --risk-unknown: #94a3b8;
+  --risk-low: #34d399;
+  --on-risk: #04121f;
+}
+
+/* Text size modes (bigger text for senior users and helpers) */
+[data-text='large'] {
+  --font-base: 19px;
+}
+[data-text='xlarge'] {
+  --font-base: 22px;
+}
+
+/* High contrast mode */
+[data-contrast='high'] {
+  --text: #000000;
+  --muted: #1f2937;
+  --border: #475569;
+  --primary: #1e40af;
+}
+[data-contrast='high'][data-theme='dark'] {
+  --text: #ffffff;
+  --muted: #e2e8f0;
+  --border: #94a3b8;
+  --primary: #7dd3fc;
+}

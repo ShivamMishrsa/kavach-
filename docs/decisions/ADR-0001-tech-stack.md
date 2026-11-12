@@ -15,3 +15,10 @@ Status: accepted. Date: 2026-11-13.
 | Scope order | Notice scan, entities, link check, dossier first; voice later | Voice accuracy is the riskiest part |
 
 Consequences: modules are kept separate so services can be split later (see the microservice architecture PDF).
+
+## Addendum (Step 2)
+
+- Styling: Tailwind CSS v4 with CSS-variable design tokens (`src/styles/tokens.css`).
+- Components: built in the shadcn/ui style (Radix primitives + class-variance-authority + `cn`), **without running the shadcn CLI**, to keep the component set small and fully token-driven.
+- Fonts: Fontsource packages (self-hosted), so no request goes to a font CDN.
+- Tests: Vitest for unit tests; a Node script checks colour contrast.
