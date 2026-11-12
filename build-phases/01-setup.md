@@ -1,23 +1,27 @@
 # Step 1: Setup (Roadmap Phase 0)
 
-**Status:** Not started
+**Status:** Done
 
 ## Goal
 Build shuru karne se pehle project ka base aur decisions ready.
 
 ## Tasks
-- [ ] Repo structure: `frontend/`, `backend/`, `docs/`, `build-phases/`, `tests/`
-- [ ] Frontend scaffold: React + Vite (TypeScript suggested)
-- [ ] Backend scaffold: Python venv + FastAPI "hello" endpoint
-- [ ] Tooling: ESLint, Prettier, editorconfig, pre-commit hooks (secret scan)
-- [ ] `.gitignore` (node_modules, venv, .env, uploads)
-- [ ] `.env.example`, secrets kabhi repo me nahi
-- [ ] README: project ko run karne ke steps
-- [ ] Decision log (ADR): React + Vite, FastAPI, Tesseract/Paddle, WeasyPrint
-- [ ] Task board (milestones = ye 9 steps)
+- [x] Repo structure: `microservices/{frontend,backend,database,ml,infra,tests}`, `docs/`, `build-phases/`
+- [x] Frontend scaffold: React + Vite + TypeScript (`npm run lint` aur `npm run build` pass)
+- [x] Backend scaffold: Python venv + FastAPI `/health` endpoint + pytest (1 test pass)
+- [x] Tooling: oxlint + Prettier (frontend), `.editorconfig`, pre-commit hook (basic checks: private key, bade files, merge conflict)
+- [x] `.gitignore` (node_modules, venv, .env, uploads, keys)
+- [x] `.env.example` (frontend aur backend); secrets kabhi repo me nahi
+- [x] README: project run karne ke steps
+- [x] Decision log: `docs/decisions/ADR-0001-tech-stack.md` (OCR ka final choice Step 4 me)
+- [x] Milestones: `build-phases/README.md` ki status table (alag task board abhi nahi)
+
+## Notes
+- Pre-commit hook sirf basic checks karta hai; poora secret scanner (jaise gitleaks) baad me add kar sakte hain.
+- Pytest ek deprecation warning deta hai (`httpx` -> `httpx2`); abhi ignore, baad me update.
 
 ## Deliverables
-Chalne wala empty frontend + backend, README, decision log.
+Chalne wala frontend aur backend, README, decision log.
 
 ## Exit criteria
-Naya developer 15 minute me `npm run dev` aur backend run kar sake.
+- [x] Frontend dev server (port 5173) aur backend `/health` (port 8000) dono verify kiye gaye.
