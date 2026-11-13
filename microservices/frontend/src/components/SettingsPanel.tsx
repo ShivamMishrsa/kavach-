@@ -36,7 +36,7 @@ export function SettingsPanel() {
           type="checkbox"
           checked={highContrast}
           onChange={(event) => setHighContrast(event.target.checked)}
-          className="size-5 accent-[var(--primary)]"
+          className="size-5 accent-primary"
         />
         {t('settings.highContrast')}
       </label>
