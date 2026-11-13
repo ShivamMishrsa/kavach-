@@ -11,10 +11,10 @@ Multilingual (English default, Indian regional languages) scam-triage web app (m
 | `microservices/database` | Schemas, migrations, purge scripts |
 | `microservices/ml` | OCR, rules, evaluation experiments |
 | `microservices/infra` | Docker, CI/CD, deploy configs |
-| `microservices/tests` | End-to-end and cross-module tests |
+| `microservices/tests` | Browser end-to-end checks (`e2e/run.ps1`) and cross-module tests |
 | `build-phases` | The 9 website build steps (checklists) |
 | `design-mockups` | UI mockups (Option A is the chosen design) |
-| `docs` | Architecture decisions |
+| `docs` | Architecture decisions, user stories, API contract |
 
 Planning PDFs (master document, roadmap, microservice architecture) are in the repo root.
 

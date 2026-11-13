@@ -1,7 +1,7 @@
 import { cva } from 'class-variance-authority';
 
 export const buttonVariants = cva(
-  'inline-flex min-h-11 items-center justify-center gap-2 rounded-[calc(var(--radius)-2px)] px-5 text-base font-bold transition-colors disabled:cursor-not-allowed disabled:opacity-50',
+  'inline-flex min-h-11 items-center justify-center gap-2 rounded-[calc(var(--radius)-2px)] px-5 py-2 text-center text-base leading-snug font-bold transition-colors disabled:cursor-not-allowed disabled:opacity-50',
   {
     variants: {
       variant: {
@@ -12,7 +12,7 @@ export const buttonVariants = cva(
       },
       size: {
         md: 'min-h-11',
-        lg: 'min-h-14 text-lg',
+        lg: 'min-h-14 py-3 text-lg',
       },
       block: { true: 'w-full', false: '' },
     },
