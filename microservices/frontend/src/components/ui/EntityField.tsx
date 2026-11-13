@@ -5,13 +5,15 @@ interface EntityFieldProps {
   label: string;
   value: string;
   onChange: (value: string) => void;
+  /** Open in edit mode, used for a detail the person is adding by hand. */
+  startEditing?: boolean;
 }
 
 /** A detail extracted from evidence (UTR, UPI ID...). The user always confirms or edits it. */
-export function EntityField({ label, value, onChange }: EntityFieldProps) {
+export function EntityField({ label, value, onChange, startEditing = false }: EntityFieldProps) {
   const { t } = useTranslation();
   const inputId = useId();
-  const [editing, setEditing] = useState(false);
+  const [editing, setEditing] = useState(startEditing);
   const [draft, setDraft] = useState(value);
 
   function save() {

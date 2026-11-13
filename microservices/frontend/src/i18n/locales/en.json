@@ -1,5 +1,8 @@
 {
-  "app": { "name": "Kavach", "tagline": "Check before you get scammed" },
+  "app": {
+    "name": "Kavach",
+    "tagline": "Check before you get scammed"
+  },
   "settings": {
     "language": "Language",
     "theme": "Theme",
@@ -10,7 +13,22 @@
     "sizeNormal": "Normal",
     "sizeLarge": "Large",
     "sizeXlarge": "Largest",
-    "highContrast": "High contrast"
+    "highContrast": "High contrast",
+    "title": "Settings",
+    "appearance": "Language and display",
+    "privacy": "Privacy",
+    "consentGiven": "You agreed on {{date}}.",
+    "consentNone": "You have not agreed yet. You can agree before your next check.",
+    "withdraw": "Withdraw consent",
+    "account": "Account",
+    "signedInAs": "Signed in as {{email}}.",
+    "signOut": "Sign out",
+    "deleteAccount": "Delete account",
+    "deleteAccountTitle": "Delete your account?",
+    "deleteAccountBody": "This removes your account details and your check history from this device. This cannot be undone.",
+    "guestInfo": "You are using Kavach without an account. An account keeps your language and history on every device.",
+    "loginOrSignup": "Log in or sign up",
+    "about": "Kavach demo version {{version}}"
   },
   "risk": {
     "label": {
@@ -20,7 +38,12 @@
       "cannot_verify": "Could not verify",
       "low": "Low risk"
     },
-    "bar": { "low": "Low", "medium": "Medium", "high": "High", "very_high": "Very high" },
+    "bar": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High",
+      "very_high": "Very high"
+    },
     "title": {
       "very_high": "This is very likely a scam.",
       "high": "There are several suspicious signs.",
@@ -43,7 +66,11 @@
     "digital_arrest": "Mentions \"digital arrest\" and a video call",
     "payment_demand": "Demands a money transfer",
     "safe_account": "Asks you to pay into a \"safe/verification account\"",
-    "secrecy": "Pressure to tell no one"
+    "secrecy": "Pressure to tell no one",
+    "urgency": "Creates urgency or threatens arrest",
+    "outdated_section": "Mentions an outdated or wrong law section",
+    "lookalike_domain": "The web address imitates a known bank or agency",
+    "insecure_link": "The link does not use a secure connection (https)"
   },
   "steps": {
     "received": "File received securely",
@@ -51,7 +78,14 @@
     "signals": "Checking for scam signs",
     "report": "Preparing the report"
   },
-  "fields": { "utr": "UTR number", "upi": "Scammer UPI ID", "amount": "Amount" },
+  "fields": {
+    "utr": "UTR number",
+    "upi": "Scammer UPI ID",
+    "amount": "Amount",
+    "phone": "Scammer's phone number",
+    "datetime": "Date and time",
+    "link": "Link"
+  },
   "upload": {
     "chooseFile": "Choose file",
     "camera": "Take a photo",
@@ -62,15 +96,32 @@
     "selected": "Selected file: {{name}}",
     "remove": "Remove"
   },
-  "stepper": { "done": "Done", "current": "In progress", "waiting": "Pending" },
-  "entity": { "edit": "Edit", "save": "Save", "editing": "Editing {{label}}" },
-  "emergency": { "text": "Already scammed? Call 1930 now", "call": "Call 1930" },
-  "dialog": { "close": "Close" },
+  "stepper": {
+    "done": "Done",
+    "current": "In progress",
+    "waiting": "Pending"
+  },
+  "entity": {
+    "edit": "Edit",
+    "save": "Save",
+    "editing": "Editing {{label}}"
+  },
+  "emergency": {
+    "text": "Already scammed? Call 1930 now",
+    "call": "Call 1930"
+  },
+  "dialog": {
+    "close": "Close"
+  },
   "consent": {
     "title": "Your consent",
     "body": "Your file is used only for checking and is deleted automatically within 15 minutes.",
     "agree": "I agree",
-    "decline": "I do not agree"
+    "decline": "I do not agree",
+    "point1": "We use your file only to check it.",
+    "point2": "It is deleted automatically within 15 minutes.",
+    "point3": "We do not use it to train any model.",
+    "withdrawHint": "You can withdraw your consent any time in Settings."
   },
   "actions": {
     "primary": "Create evidence report",
@@ -85,6 +136,296 @@
     "scanFull": "Notice scan: supported",
     "scanLimited": "Notice scan: limited",
     "selectLabel": "Language"
+  },
+  "common": {
+    "continue": "Continue",
+    "back": "Back",
+    "cancel": "Cancel",
+    "loading": "Loading…",
+    "checking": "Checking…",
+    "retry": "Try again",
+    "goHome": "Go to home",
+    "copied": "Copied",
+    "skipToContent": "Skip to content",
+    "brandHome": "Kavach home",
+    "demoBanner": "Demo mode: results are simulated until the backend is connected."
+  },
+  "nav": {
+    "main": "Main menu",
+    "home": "Home",
+    "history": "History",
+    "help": "Help",
+    "settings": "Settings"
+  },
+  "welcome": {
+    "subtitle": "Check a suspicious notice, link or message in a minute. We explain the risk in plain words.",
+    "point1": "Check notices, links and messages",
+    "point2": "Answers in your language",
+    "point3": "Your files are deleted within 15 minutes",
+    "guest": "Continue without account",
+    "guestHint": "No sign-up needed. It takes less than a minute.",
+    "or": "or",
+    "login": "Log in",
+    "signup": "Sign up"
+  },
+  "auth": {
+    "loginTitle": "Log in",
+    "signupTitle": "Create an account",
+    "signupBenefit": "An account keeps your language and history on every device.",
+    "emailLabel": "Email address",
+    "emailHint": "We will send you a sign-in link. No password needed.",
+    "emailError": "Enter a valid email address.",
+    "sendLink": "Send sign-in link",
+    "checkTitle": "Check your email",
+    "checkBody": "We sent a sign-in link to {{email}}.",
+    "demoNote": "Demo mode: no email is really sent. Use the button below to continue.",
+    "continueDemo": "Continue (demo)",
+    "useOtherEmail": "Use a different email",
+    "noAccount": "New to Kavach?",
+    "haveAccount": "Already have an account?"
+  },
+  "notFound": {
+    "title": "We could not find that page",
+    "body": "The link may be wrong or the page may have moved.",
+    "home": "Go to start"
+  },
+  "error": {
+    "title": "Something went wrong",
+    "body": "Please try again. If it keeps happening, go back to the start.",
+    "reload": "Go to start"
+  },
+  "errors": {
+    "invalid": "We could not read that. Try another file or paste the text.",
+    "network": "No connection. Please check your internet and try again.",
+    "generic": "Something went wrong. Please try again."
+  },
+  "home": {
+    "title": "What would you like to check?",
+    "signedIn": "Signed in as {{email}}.",
+    "guestHint": "No account needed. Your file is deleted within 15 minutes.",
+    "notice": "Notice, message or screenshot",
+    "noticeDesc": "Photo of a notice, an SMS or a payment screenshot",
+    "link": "Link",
+    "linkDesc": "Paste a suspicious web address",
+    "voice": "Voice note",
+    "voiceDesc": "Check what a caller said",
+    "soon": "Coming soon",
+    "sentMoney": "Already sent money?",
+    "sentMoneyDesc": "Steps for the first hour",
+    "recent": "Recent checks",
+    "seeAll": "See all"
+  },
+  "kinds": {
+    "notice": "Notice or message",
+    "link": "Link",
+    "voice": "Voice note"
+  },
+  "kindsInline": {
+    "notice": "notice or message",
+    "link": "link",
+    "voice": "voice note"
+  },
+  "notice": {
+    "title": "Check a notice or message",
+    "subtitle": "Add a photo or screenshot, or paste the text.",
+    "limitedNote": "Notice scanning works best for English and Hindi right now. Other languages may give limited results.",
+    "modeLabel": "How do you want to add it?",
+    "modeFile": "Photo or file",
+    "modeText": "Paste text",
+    "previewAlt": "Preview of your photo",
+    "textLabel": "Message text",
+    "textHint": "Paste the text of the SMS, WhatsApp message or notice.",
+    "submit": "Check now",
+    "samplesTitle": "Try a demo sample",
+    "samplesHint": "Samples use no personal data. They show how a result looks."
+  },
+  "samples": {
+    "fake_notice": "Fake arrest notice",
+    "courier_link": "Courier link message",
+    "unclear_photo": "Unclear photo",
+    "bank_alert": "Normal bank alert"
+  },
+  "link": {
+    "title": "Check a link",
+    "subtitle": "Do not open the link. Paste it here and we will look at it for you.",
+    "label": "Web address",
+    "hint": "Paste it exactly as you received it.",
+    "submit": "Check link",
+    "invalid": "That does not look like a web address.",
+    "demoTitle": "Try a demo link",
+    "demo": {
+      "lookalike": "Look-alike bank link",
+      "official": "Official bank link"
+    }
+  },
+  "voice": {
+    "title": "Voice note",
+    "soonTitle": "Voice checking is coming soon",
+    "soonBody": "We are still testing it and do not want to give you a wrong answer. For now, type or paste what the caller said and we will check the words.",
+    "useText": "Check text instead"
+  },
+  "scan": {
+    "checking": "Checking…",
+    "checkingHint": "This usually takes a few seconds. Please keep this page open.",
+    "privacyNote": "Your file is not saved. It is deleted within 15 minutes.",
+    "resultTitle": "Result",
+    "simulatedNote": "Demo result: simulated for testing. It is not real detection yet.",
+    "reviewDetails": "Review details and create report",
+    "warnFamily": "Warn family",
+    "warnCopied": "Warning copied. Paste it in your family group.",
+    "deleteAt": "Your file and details will be deleted at {{time}}.",
+    "deleteNow": "Delete now",
+    "deleted": "Deleted.",
+    "expiredTitle": "This check was deleted",
+    "expiredBody": "For your privacy, files and details are deleted 15 minutes after a check. You can check again any time.",
+    "notFoundTitle": "We could not find this check"
+  },
+  "next": {
+    "title": "What to do now",
+    "very_high": [
+      "Do not send money, OTPs or bank details.",
+      "End the call or chat. Do not stay on the video call.",
+      "Call 1930 or report at cybercrime.gov.in.",
+      "Tell a family member right away."
+    ],
+    "high": [
+      "Do not pay anything until you have verified this.",
+      "Check using the official website or phone number, not the one in the message.",
+      "Call 1930 if you are unsure or have already paid."
+    ],
+    "medium": [
+      "Do not click links or pay until you have checked.",
+      "Verify with the official source: their website, or the number on your bank card."
+    ],
+    "cannot_verify": [
+      "Take a clearer, full photo and try again, or paste the text.",
+      "Verify with the official helpline before paying."
+    ],
+    "low": [
+      "No major warning signs were found, but this is not a guarantee.",
+      "Still verify before paying anyone."
+    ]
+  },
+  "share": {
+    "message": "Warning: a message I received looks like a scam (Kavach check: {{level}}). Do not send money or share any OTP. If you already paid, call 1930 right away."
+  },
+  "feedback": {
+    "title": "Result looks wrong?",
+    "description": "Tell us what was wrong. We never see your file.",
+    "types": {
+      "false_alarm": "It is genuine but was flagged",
+      "missed_scam": "It is a scam but was not flagged",
+      "wrong_wording": "The wording is wrong or unclear",
+      "other": "Something else"
+    },
+    "noteLabel": "Note (optional)",
+    "noteHint": "Do not include personal details.",
+    "send": "Send",
+    "thanks": "Thank you. We will look into it."
+  },
+  "details": {
+    "title": "Check the details",
+    "subtitle": "These were read from what you added. Please correct anything that is wrong.",
+    "none": "No payment details were found. You can add them below.",
+    "addLabel": "Add a missing detail",
+    "choose": "Choose…",
+    "add": "Add",
+    "confirm": "I checked these details against my bank SMS or payment app.",
+    "continue": "Create evidence summary"
+  },
+  "dossier": {
+    "title": "Evidence summary",
+    "disclaimer": "Prepared by you for your records and to help when you report. This is not an FIR or an official complaint.",
+    "summaryTitle": "What happened",
+    "summaryLabel": "Your summary (you can edit it)",
+    "summaryTemplate": "On {{date}} I received a {{kind}} that I believe is a scam. Kavach showed this risk level: {{level}}. I prepared this summary myself.",
+    "detailsTitle": "Details",
+    "noDetails": "No details were added.",
+    "evidenceTitle": "Evidence fingerprints",
+    "evidenceHint": "A fingerprint (SHA-256) is worked out on your phone from each file. It helps show later that your original was not changed.",
+    "capturedAt": "Recorded {{time}}",
+    "copyHash": "Copy fingerprint",
+    "keepOriginals": "Keep your original photos, screenshots and chats on your phone. We delete our copy.",
+    "scriptTitle": "What to say to the helpline",
+    "scriptHint": "Read this when you call 1930.",
+    "script": "Hello, I want to report a cyber fraud. On {{date}} I sent {{amount}} to UPI ID {{upi}}. The transaction reference (UTR) is {{utr}}. The scammer's phone number is {{phone}}. Please help me stop this payment.",
+    "copyScript": "Copy script",
+    "copyAll": "Copy everything",
+    "pdfSoon": "PDF download (coming next)",
+    "notAvailable": "not available"
+  },
+  "sentMoney": {
+    "title": "Already sent money?",
+    "subtitle": "Act fast. Reporting quickly gives the best chance of stopping the transfer, but nothing is guaranteed.",
+    "portal": "Report on cybercrime.gov.in",
+    "checklist": "First-hour checklist",
+    "progress": "{{done}} of {{total}} done",
+    "clear": "Clear ticks",
+    "prepare": "Prepare my evidence summary",
+    "steps": {
+      "call": {
+        "title": "Call 1930 right now",
+        "detail": "This is the national cyber fraud helpline. Tell them the amount, the time and the UPI ID."
+      },
+      "report": {
+        "title": "Report on cybercrime.gov.in",
+        "detail": "File a complaint online and keep the acknowledgement number."
+      },
+      "bank": {
+        "title": "Call your bank",
+        "detail": "Use the number on your card or the bank's official website. Ask them to hold or flag the transaction."
+      },
+      "evidence": {
+        "title": "Save the evidence",
+        "detail": "Take screenshots of the payment, the bank SMS, the UTR number, the UPI ID, the phone number and the chats."
+      },
+      "keep": {
+        "title": "Do not delete anything",
+        "detail": "Keep chats, call logs and the original files. Do not reset your phone."
+      },
+      "nomore": {
+        "title": "Do not send more money",
+        "detail": "Scammers often promise to return your money for a fee. Do not pay again."
+      }
+    }
+  },
+  "history": {
+    "title": "History",
+    "subtitle": "We keep only the type, risk level and time. Files and details are deleted after 15 minutes.",
+    "emptyTitle": "No checks yet",
+    "emptyBody": "When you check something, it will appear here.",
+    "checkSomething": "Check something",
+    "deleteOne": "Delete this check",
+    "deleteAll": "Delete all history",
+    "confirmTitle": "Delete all history?",
+    "confirmBody": "This removes your list of past checks from this device. This cannot be undone.",
+    "deleted": "History deleted."
+  },
+  "help": {
+    "title": "Help",
+    "subtitle": "Quick answers and official contacts.",
+    "contacts": "Official contacts",
+    "faq": "Common questions",
+    "q1": {
+      "q": "Do police arrest people over a video call?",
+      "a": "No. Police and courts do not carry out a \"digital arrest\" over a video call, and they do not ask you to transfer money to avoid arrest. Anyone who does is trying to scam you."
+    },
+    "q2": {
+      "q": "Do I need an account?",
+      "a": "No. You can check without an account. An account only keeps your language and history on every device."
+    },
+    "q3": {
+      "q": "What happens to my file?",
+      "a": "It is used only to check it and is deleted automatically within 15 minutes. Your history keeps only the type, risk level and time, and you can delete that too."
+    },
+    "q4": {
+      "q": "I already paid. What now?",
+      "a": "Open \"Already sent money?\" on the home screen and follow the steps. Call 1930 right away."
+    },
+    "q5": {
+      "q": "How reliable is the result?",
+      "a": "Kavach gives a risk assessment with reasons, not a verdict. It can be wrong. Always verify with an official source before paying."
+    }
   },
   "demo": {
     "title": "Design system",

@@ -85,13 +85,15 @@ export interface FeedbackInput {
   note?: string;
 }
 
+export type ApiErrorCode = 'not_found' | 'expired' | 'invalid_input' | 'network';
+
 export class ApiError extends Error {
-  constructor(
-    public readonly code: 'not_found' | 'expired' | 'invalid_input' | 'network',
-    message: string,
-  ) {
+  readonly code: ApiErrorCode;
+
+  constructor(code: ApiErrorCode, message: string) {
     super(message);
     this.name = 'ApiError';
+    this.code = code;
   }
 }
 
