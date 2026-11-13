@@ -2,11 +2,13 @@ import { useState } from 'react';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
+import { LanguagePicker } from '@/components/LanguagePicker';
 import { SettingsPanel } from '@/components/SettingsPanel';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogTrigger } from '@/components/ui/Dialog';
 import { EmergencyStrip } from '@/components/ui/EmergencyStrip';
 import { EntityField } from '@/components/ui/EntityField';
+import { Input } from '@/components/ui/Input';
 import { RiskCard } from '@/components/ui/RiskCard';
 import type { RiskLevel } from '@/components/ui/risk';
 import { Stepper, type StepItem } from '@/components/ui/Stepper';
@@ -29,17 +31,20 @@ export default function DesignSystem() {
   const [utr, setUtr] = useState('4XXXXXXXXXXX');
   const [upi, setUpi] = useState('name@upi');
   const [amount, setAmount] = useState('₹50,000');
+  const [phone, setPhone] = useState('');
 
   const steps: StepItem[] = [
-    { id: 'received', label: t('demo.steps.received'), status: 'done' },
-    { id: 'read', label: t('demo.steps.read'), status: 'done' },
-    { id: 'signals', label: t('demo.steps.signals'), status: 'current' },
-    { id: 'report', label: t('demo.steps.report'), status: 'waiting' },
+    { id: 'received', label: t('steps.received'), status: 'done' },
+    { id: 'read', label: t('steps.read'), status: 'done' },
+    { id: 'signals', label: t('steps.signals'), status: 'current' },
+    { id: 'report', label: t('steps.report'), status: 'waiting' },
   ];
 
   const reasons = ['digital_arrest', 'payment_demand', 'safe_account', 'secrecy'].map((key) =>
-    t(`demo.reasons.${key}`),
+    t(`reasons.${key}`),
   );
+
+  const phoneError = phone !== '' && !/^\d{10}$/.test(phone) ? t('demo.sampleError') : undefined;
 
   return (
     <main className="mx-auto flex max-w-2xl flex-col gap-8 px-4 py-6">
@@ -51,6 +56,10 @@ export default function DesignSystem() {
       </header>
 
       <EmergencyStrip />
+
+      <Section title={t('language.title')}>
+        <LanguagePicker />
+      </Section>
 
       <Section title={t('demo.settingsTitle')}>
         <SettingsPanel />
@@ -66,6 +75,18 @@ export default function DesignSystem() {
             {t('actions.primary')}
           </Button>
         </div>
+      </Section>
+
+      <Section title={t('demo.inputs')}>
+        <Input
+          label={t('demo.sampleLabel')}
+          hint={t('demo.sampleHint')}
+          error={phoneError}
+          value={phone}
+          onChange={(event) => setPhone(event.target.value)}
+          inputMode="numeric"
+          autoComplete="tel"
+        />
       </Section>
 
       <Section title={t('demo.riskCards')}>
@@ -91,9 +112,9 @@ export default function DesignSystem() {
 
       <Section title={t('demo.entities')}>
         <div className="rounded-card border border-border bg-surface px-4">
-          <EntityField label={t('demo.fields.utr')} value={utr} onChange={setUtr} />
-          <EntityField label={t('demo.fields.upi')} value={upi} onChange={setUpi} />
-          <EntityField label={t('demo.fields.amount')} value={amount} onChange={setAmount} />
+          <EntityField label={t('fields.utr')} value={utr} onChange={setUtr} />
+          <EntityField label={t('fields.upi')} value={upi} onChange={setUpi} />
+          <EntityField label={t('fields.amount')} value={amount} onChange={setAmount} />
         </div>
       </Section>
 

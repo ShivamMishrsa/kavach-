@@ -4,7 +4,7 @@ Website pehle (mobile-first), phir PWA. Ye 9 steps `Project Kavach - Phase-wise 
 
 ## Fixed decisions
 - Design: **Option A "Calm Trust"** (light, blue). Default theme **light**; dark theme settings se (Option B colours).
-- Frontend: **React + Vite**, Hindi-first with English toggle, mobile-first.
+- Frontend: **React + Vite**, mobile-first. App **English me khulta hai**; signup/login ya "Continue without account" (guest mode rahega) ke baad user apni language chunta hai (Round 1: English, Hindi, Bengali, Marathi, Tamil, Telugu, Gujarati).
 - Pehle banega: notice scan, entities (UTR/UPI/phone), link check, dossier. Voice scan baad me ("experimental" label).
 - Result me **risk level + reasons**, koi accuracy % ya "100% fake" claim nahi.
 - Repo private: `ShivamMishrsa/kavach-`.
@@ -14,7 +14,7 @@ Website pehle (mobile-first), phir PWA. Ye 9 steps `Project Kavach - Phase-wise 
 | # | Step | Roadmap phases | Status |
 |---|---|---|---|
 | 1 | [Setup](01-setup.md) | 0 | Done |
-| 2 | [Design system](02-design-system.md) | 2 | Done (see notes) |
+| 2 | [Design system](02-design-system.md) | 2 | Done (translations are drafts) |
 | 3 | [Mobile-first screens (mock data)](03-mobile-first-screens.md) | 1 (light), 3 | Not started |
 | 4 | [Minimal backend (OCR + rules + Hindi result)](04-minimal-backend.md) | 6, 7, 8 (minimal) | Not started |
 | 5 | [Dossier PDF + consent + auto-delete](05-dossier-consent-delete.md) | 9, 5 (basic) | Not started |

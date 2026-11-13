@@ -1,28 +1,16 @@
 import { useTranslation } from 'react-i18next';
+import { LanguageSelect } from '@/components/LanguageSelect';
 import { Segmented } from '@/components/ui/Segmented';
-import { LANGUAGES, type Language } from '@/i18n';
 import { useTheme } from '@/theme/ThemeProvider';
 
 /** Language, theme (light default), text size and contrast. Used on the settings page later. */
 export function SettingsPanel() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { theme, setTheme, text, setText, highContrast, setHighContrast } = useTheme();
 
   return (
     <div className="flex flex-col gap-4">
-      <Segmented<Language>
-        label={t('settings.language')}
-        value={
-          (LANGUAGES as readonly string[]).includes(i18n.language)
-            ? (i18n.language as Language)
-            : 'hi'
-        }
-        options={[
-          { value: 'hi', label: 'हिंदी' },
-          { value: 'en', label: 'English' },
-        ]}
-        onChange={(lang) => void i18n.changeLanguage(lang)}
-      />
+      <LanguageSelect />
       <Segmented
         label={t('settings.theme')}
         value={theme}

@@ -39,6 +39,19 @@
     "disclaimer": "This is a risk assessment, not a final verdict or legal advice. Verify with an official source before paying.",
     "wrongResult": "Result looks wrong? Tell us"
   },
+  "reasons": {
+    "digital_arrest": "Mentions \"digital arrest\" and a video call",
+    "payment_demand": "Demands a money transfer",
+    "safe_account": "Asks you to pay into a \"safe/verification account\"",
+    "secrecy": "Pressure to tell no one"
+  },
+  "steps": {
+    "received": "File received securely",
+    "read": "Text was read",
+    "signals": "Checking for scam signs",
+    "report": "Preparing the report"
+  },
+  "fields": { "utr": "UTR number", "upi": "Scammer UPI ID", "amount": "Amount" },
   "upload": {
     "chooseFile": "Choose file",
     "camera": "Take a photo",
@@ -65,6 +78,14 @@
     "ghost": "Cancel",
     "danger": "Call 1930"
   },
+  "language": {
+    "title": "Choose your language",
+    "hint": "You can change this later in Settings.",
+    "draft": "Translation under review",
+    "scanFull": "Notice scan: supported",
+    "scanLimited": "Notice scan: limited",
+    "selectLabel": "Language"
+  },
   "demo": {
     "title": "Design system",
     "subtitle": "Kavach components. Check them in light and dark.",
@@ -79,18 +100,10 @@
     "showToast": "Show toast",
     "toastText": "File received safely.",
     "settingsTitle": "Settings",
-    "reasons": {
-      "digital_arrest": "Mentions \"digital arrest\" and a video call",
-      "payment_demand": "Demands a money transfer",
-      "safe_account": "Asks you to pay into a \"safe/verification account\"",
-      "secrecy": "Pressure to tell no one"
-    },
-    "steps": {
-      "received": "File received securely",
-      "read": "Text was read",
-      "signals": "Checking for scam signs",
-      "report": "Preparing the report"
-    },
-    "fields": { "utr": "UTR number", "upi": "Scammer UPI ID", "amount": "Amount" }
+    "languagePicker": "Language picker",
+    "inputs": "Input",
+    "sampleLabel": "Phone number",
+    "sampleHint": "We never share this.",
+    "sampleError": "Enter a valid 10-digit number."
   }
 }

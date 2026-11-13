@@ -1,6 +1,6 @@
 # Kavach
 
-Hindi-first scam-triage web app (mobile-first, then PWA): notice scan, link check, entity extraction and an evidence dossier. Output is a **risk assessment with reasons, not a verdict or legal advice.**
+Multilingual (English default, Indian regional languages) scam-triage web app (mobile-first, then PWA): notice scan, link check, entity extraction and an evidence dossier. Output is a **risk assessment with reasons, not a verdict or legal advice.**
 
 ## Repo layout
 

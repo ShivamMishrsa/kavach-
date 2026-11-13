@@ -13,7 +13,10 @@ Poora citizen flow mock data par chalta hua, backend ke bina.
 - [ ] Result card: risk level, reasons, disclaimer, "result galat laga" button
 - [ ] Mock API layer (MSW/static JSON) jo final API format jaisa ho
 - [ ] Responsive: phone, tablet, desktop (Website-3 mockup)
-- [ ] Loading, empty, error states; Hindi error messages
+- [ ] Loading, empty, error states; error messages in every supported language
+- [ ] First-run flow: Sign up / Log in / **Continue without account (guest)**, then "Choose your language" screen; whole UI switches to the chosen language (English is the default before choosing)
+- [ ] Language saved: profile for accounts, browser for guests
+- [ ] Per-language capability label: "Notice scan: supported / limited" (UI language is not the same as scan language)
 - [ ] Voice upload screen: "jald aa raha hai" placeholder
 
 ## References

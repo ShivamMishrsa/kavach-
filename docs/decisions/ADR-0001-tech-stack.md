@@ -22,3 +22,11 @@ Consequences: modules are kept separate so services can be split later (see the 
 - Components: built in the shadcn/ui style (Radix primitives + class-variance-authority + `cn`), **without running the shadcn CLI**, to keep the component set small and fully token-driven.
 - Fonts: Fontsource packages (self-hosted), so no request goes to a font CDN.
 - Tests: Vitest for unit tests; a Node script checks colour contrast.
+
+## Addendum: language decision (2026-11-13)
+
+- Default language is **English** (replaces "Hindi-first"). First screen: Sign up / Log in / Continue without account (guest mode kept), then a "Choose your language" screen.
+- Language is stored in the profile for accounts and in the browser for guests.
+- Round 1 languages: English, Hindi, Bengali, Marathi, Tamil, Telugu, Gujarati (to be confirmed). Later: Kannada, Malayalam, Punjabi, Odia, Assamese, then Urdu (needs RTL layout).
+- Every language needs native-speaker review of risk messages and legal wording before it counts as ready.
+- UI language and scan/detection language are separate; the app must show which languages the notice scan supports.
