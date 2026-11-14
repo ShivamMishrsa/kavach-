@@ -1,5 +1,12 @@
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router';
+import i18n from '@/i18n';
+import legalEn from '@/i18n/legal/en.json';
+import legalHi from '@/i18n/legal/hi.json';
+
+// The legal text is only needed on these pages, so it is added to the translations here.
+i18n.addResourceBundle('en', 'legal', legalEn);
+i18n.addResourceBundle('hi', 'legal', legalHi);
 
 const DOCS = ['privacy', 'terms', 'limitations'];
 

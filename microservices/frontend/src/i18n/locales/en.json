@@ -226,7 +226,8 @@
     "invalid": "We could not read that. Try another file or paste the text.",
     "network": "No connection. Please check your internet and try again.",
     "generic": "Something went wrong. Please try again.",
-    "rateLimited": "Too many tries. Please wait a few minutes and try again."
+    "rateLimited": "Too many tries. Please wait a few minutes and try again.",
+    "busy": "Kavach is very busy right now. Please try again in a few minutes. If you already lost money, call 1930."
   },
   "home": {
     "title": "What would you like to check?",

@@ -53,3 +53,9 @@ body {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* The page that was written out in advance is hidden when this visitor would see something else
+   (see scripts/skip-prerender.js), so it never shows in the wrong language, colours or address. */
+html[data-skip-prerender] #root {
+  display: none;
+}

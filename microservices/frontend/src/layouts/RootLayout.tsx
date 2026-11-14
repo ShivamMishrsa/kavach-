@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Outlet, useMatches } from 'react-router';
+import { pageMeta } from '@/lib/pageMeta';
 
 /** A route marks itself as a public page by giving its title (a translation key) in `handle`. */
 export interface RouteHandle {
@@ -28,8 +29,9 @@ export function RootLayout() {
   const title = (matches.at(-1)?.handle as RouteHandle | undefined)?.title;
 
   useEffect(() => {
-    document.title = title ? `${t(title)} · ${t('app.name')}` : t('app.name');
-    setMeta('description', t('welcome.subtitle'));
+    const meta = pageMeta(t, title);
+    document.title = meta.title;
+    setMeta('description', meta.description);
     setMeta('robots', title ? null : 'noindex');
   }, [title, t]);
 

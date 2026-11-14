@@ -67,13 +67,12 @@ export function SiteLayout() {
         </div>
       </header>
 
-      <div className={`${WIDTH} flex flex-col gap-2 pt-3`}>
+      <main id="main" className={`${WIDTH} flex flex-1 flex-col gap-2 py-3`}>
         <DemoBanner />
         <EmergencyStrip />
-      </div>
-
-      <main id="main" className={`${WIDTH} flex flex-1 flex-col py-6`}>
-        <Outlet />
+        <div className="flex flex-1 flex-col py-3">
+          <Outlet />
+        </div>
       </main>
 
       <footer className="border-t border-border bg-surface">

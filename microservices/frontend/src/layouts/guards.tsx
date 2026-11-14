@@ -8,10 +8,14 @@ import { Spinner } from '@/components/StateMessage';
  */
 const waiting = <Spinner />;
 
-/** First-run pages: people who are already set up go straight into the app. */
+/**
+ * First-run pages: people who are already set up go straight into the app. These pages are shown
+ * while the answer is still coming, because they are also the ones written out in advance for
+ * search engines and slow phones; a signed-in person is moved on a moment later.
+ */
 export function RedirectIfReady() {
   const { session, onboarded, ready } = useAuth();
-  if (!ready) return waiting;
+  if (!ready) return <Outlet />;
   if (session && onboarded) return <Navigate to="/app" replace />;
   if (session && !onboarded) return <Navigate to="/language" replace />;
   return <Outlet />;

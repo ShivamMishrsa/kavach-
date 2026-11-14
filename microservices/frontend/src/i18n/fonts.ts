@@ -3,12 +3,13 @@ import type { Language } from './languages';
 /**
  * Script fonts are loaded only when that language is used, so English users do not
  * download Indic fonts. Fonts are self-hosted (Fontsource); nothing comes from a CDN.
+ * Regular and bold only: the extra-bold headings use the bold file, which saves about a third of
+ * the font download.
  */
 const devanagari = () =>
   Promise.all([
     import('@fontsource/noto-sans-devanagari/400.css'),
     import('@fontsource/noto-sans-devanagari/700.css'),
-    import('@fontsource/noto-sans-devanagari/800.css'),
   ]);
 
 const FONT_LOADERS: Partial<Record<Language, () => Promise<unknown>>> = {
@@ -18,25 +19,21 @@ const FONT_LOADERS: Partial<Record<Language, () => Promise<unknown>>> = {
     Promise.all([
       import('@fontsource/noto-sans-bengali/400.css'),
       import('@fontsource/noto-sans-bengali/700.css'),
-      import('@fontsource/noto-sans-bengali/800.css'),
     ]),
   ta: () =>
     Promise.all([
       import('@fontsource/noto-sans-tamil/400.css'),
       import('@fontsource/noto-sans-tamil/700.css'),
-      import('@fontsource/noto-sans-tamil/800.css'),
     ]),
   te: () =>
     Promise.all([
       import('@fontsource/noto-sans-telugu/400.css'),
       import('@fontsource/noto-sans-telugu/700.css'),
-      import('@fontsource/noto-sans-telugu/800.css'),
     ]),
   gu: () =>
     Promise.all([
       import('@fontsource/noto-sans-gujarati/400.css'),
       import('@fontsource/noto-sans-gujarati/700.css'),
-      import('@fontsource/noto-sans-gujarati/800.css'),
     ]),
 };
 

@@ -1,6 +1,6 @@
 import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
-import { LANGUAGE_LIST, DEFAULT_LANGUAGE, isLanguage } from '@/i18n';
+import { LANGUAGE_LIST, DEFAULT_LANGUAGE, isLanguage, setLanguage } from '@/i18n';
 
 /**
  * Language dropdown (a native select works well with many languages).
@@ -19,7 +19,7 @@ export function LanguageSelect({ compact = false }: { compact?: boolean }) {
       <select
         id={id}
         value={current}
-        onChange={(event) => void i18n.changeLanguage(event.target.value)}
+        onChange={(event) => void setLanguage(event.target.value)}
         className="min-h-11 rounded-[calc(var(--radius)-4px)] border-2 border-border bg-surface px-3 text-base"
       >
         {LANGUAGE_LIST.map((language) => (

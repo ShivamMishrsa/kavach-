@@ -7,6 +7,7 @@ describe('errorKey', () => {
     expect(errorKey(new ApiError('invalid_input', 'x'))).toBe('errors.invalid');
     expect(errorKey(new ApiError('network', 'x'))).toBe('errors.network');
     expect(errorKey(new ApiError('rate_limited', 'x'))).toBe('errors.rateLimited');
+    expect(errorKey(new ApiError('busy', 'x'))).toBe('errors.busy');
   });
 
   it('never shows technical text for anything else', () => {

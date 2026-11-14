@@ -10,6 +10,7 @@ export default function NotFound() {
   return (
     <main id="main" className="mx-auto flex min-h-dvh max-w-md flex-col justify-center gap-4 px-4">
       <StateMessage
+        heading="h1"
         icon={SearchX}
         title={t('notFound.title')}
         message={t('notFound.body')}

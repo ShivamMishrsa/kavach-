@@ -7,9 +7,10 @@ React + Vite + TypeScript website and PWA. Mobile-first, English default with re
 | Command | What it does |
 |---|---|
 | `npm run dev` | Dev server on http://localhost:5173 |
-| `npm run build` | Type-check and production build |
+| `npm run build` | Type-check, production build, then write the six public pages out as finished HTML (`scripts/prerender.mjs`) |
 | `npm run lint` | oxlint |
 | `npm test` | Vitest unit tests |
+| `npm run test:browsers` | Playwright: the built site (`npm run build` first) in Chromium, Firefox and WebKit at phone size (`browser-tests/`). First time: `npx playwright install` |
 | `npm run check:contrast` | WCAG contrast check of the colour tokens (light, dark, high contrast) |
 | `npm run format` | Prettier |
 
@@ -25,6 +26,8 @@ React + Vite + TypeScript website and PWA. Mobile-first, English default with re
 - `src/components/`: shared components; `components/ui/` holds the design-system building blocks
 - `src/routes.tsx`: all routes (pages load lazily). Public pages (`/`, `/help`, `/emergency`, `/privacy`, `/terms`, `/limitations`) give their title in `handle` and are indexable; every other page is `noindex`.
 - `src/i18n/legal/`: privacy policy, terms and limitations. English and Hindi only; other languages see English with a note.
+- Speed and safety: English is the only language in the first download; the others are fetched when used (`i18n/loaders.ts`). Fonts are regular and bold only. `vite.config.ts` writes `_headers` with a strict Content-Security-Policy (the preview server uses it too, so the browser tests run under it) and compresses files in preview.
+- Public pages (`src/publicPages.ts`) are rendered in Node at build time and written to `index.html`, `help.html`, `privacy.html` and so on, in English with the default look, so search engines and slow phones get text before any script runs (`src/entry-server.tsx`). The app replaces them on start; a small inline script (`scripts/skip-prerender.js`, allowed by hash in the CSP) hides them from anyone who would see another language, colours, text size or address. Details: ADR-0004, decision 11.
 - Build options: `VITE_SITE_URL` writes `sitemap.xml` (and its line in `robots.txt`); `VITE_MAINTENANCE=true` builds a site that shows only the maintenance page.
 - `src/pages/DesignSystem.tsx`: internal page at `/design` showing every component
 

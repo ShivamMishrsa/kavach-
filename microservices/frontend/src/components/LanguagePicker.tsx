@@ -1,6 +1,6 @@
 import { Check } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { LANGUAGE_LIST, isLanguage, type Language } from '@/i18n';
+import { LANGUAGE_LIST, isLanguage, setLanguage, type Language } from '@/i18n';
 import { cn } from '@/lib/utils';
 
 interface LanguagePickerProps {
@@ -15,7 +15,7 @@ export function LanguagePicker({ onSelect }: LanguagePickerProps) {
   const { t, i18n } = useTranslation();
 
   function choose(language: Language) {
-    void i18n.changeLanguage(language);
+    void setLanguage(language);
     onSelect?.(language);
   }
 

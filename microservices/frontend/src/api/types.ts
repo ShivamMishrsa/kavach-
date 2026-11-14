@@ -125,6 +125,7 @@ export type ApiErrorCode =
   | 'rate_limited'
   | 'unauthorized'
   | 'forbidden'
+  | 'busy'
   | 'network';
 
 /** The signed-in person, as the server knows them. */

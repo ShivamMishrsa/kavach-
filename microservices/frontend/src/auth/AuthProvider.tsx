@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
-import i18n, { isLanguage } from '@/i18n';
+import i18n, { isLanguage, setLanguage } from '@/i18n';
 import { api, isMockApi } from '@/api/client';
 import { createBrowserStorage } from '@/api/mock/storage';
 import type { Account, AccountPatch } from '@/api/types';
@@ -85,7 +85,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const outcome = signInOutcome(wasGuestReady, savedValid);
       let current = found;
       if (outcome.adoptSavedLanguage && isLanguage(found.language)) {
-        await i18n.changeLanguage(found.language);
+        await setLanguage(found.language);
       }
       if (outcome.saveCurrentLanguage) {
         current = await api.updateAccount({ language: i18n.language });
@@ -144,7 +144,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const savedValid = isLanguage(saved);
         const outcome = signInOutcome(session?.kind === 'guest' && onboarded, savedValid);
         store({ kind: 'user', email: clean });
-        if (outcome.adoptSavedLanguage && savedValid) void i18n.changeLanguage(saved);
+        if (outcome.adoptSavedLanguage && savedValid) void setLanguage(saved);
         if (outcome.saveCurrentLanguage) writeProfileLanguage(storage, clean, i18n.language);
         setOnboardedFlag(outcome.onboarded);
         return outcome.destination;

@@ -1,5 +1,5 @@
 import type { ComponentType } from 'react';
-import { createBrowserRouter, type RouteObject } from 'react-router';
+import type { RouteObject } from 'react-router';
 import { AppShell } from '@/layouts/AppShell';
 import { PublicLayout } from '@/layouts/PublicLayout';
 import { RootLayout, type RouteHandle } from '@/layouts/RootLayout';
@@ -101,5 +101,3 @@ export const routes: RouteObject[] = [
     ],
   },
 ];
-
-export const router = createBrowserRouter(routes);

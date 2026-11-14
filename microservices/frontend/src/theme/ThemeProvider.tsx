@@ -18,7 +18,9 @@ interface ThemeContextValue extends Prefs {
   setHighContrast: (value: boolean) => void;
 }
 
-const STORAGE_KEY = 'kavach.prefs';
+/** Also read by scripts/skip-prerender.js, which runs before this code. */
+// eslint-disable-next-line react-refresh/only-export-components
+export const STORAGE_KEY = 'kavach.prefs';
 /** Light is the default, as decided by the product owner. */
 const DEFAULT_PREFS: Prefs = { theme: 'light', text: 'normal', highContrast: false };
 
@@ -39,6 +41,16 @@ function loadPrefs(): Prefs {
   } catch {
     return DEFAULT_PREFS;
   }
+}
+
+/**
+ * Whether the page will look the way its pre-rendered HTML does: light, normal text size, normal
+ * contrast. If not, showing that HTML first would flash the wrong look.
+ */
+// eslint-disable-next-line react-refresh/only-export-components
+export function startsLikePrerendered(): boolean {
+  const { theme, text, highContrast } = loadPrefs();
+  return theme === 'light' && text === 'normal' && !highContrast;
 }
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);

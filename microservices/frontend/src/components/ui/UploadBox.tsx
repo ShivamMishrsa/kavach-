@@ -79,6 +79,7 @@ export function UploadBox({ accept = DEFAULT_ACCEPT, maxMb = 10, onFile }: Uploa
         ref={fileInput}
         type="file"
         accept={accept.join(',')}
+        aria-label={t('upload.chooseFile')}
         className="sr-only"
         tabIndex={-1}
         onChange={(event) => accept_(event.target.files?.[0])}
@@ -88,6 +89,7 @@ export function UploadBox({ accept = DEFAULT_ACCEPT, maxMb = 10, onFile }: Uploa
         type="file"
         accept="image/*"
         capture="environment"
+        aria-label={t('upload.camera')}
         className="sr-only"
         tabIndex={-1}
         onChange={(event) => accept_(event.target.files?.[0])}

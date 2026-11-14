@@ -8,7 +8,12 @@ export default function Maintenance() {
   const { t } = useTranslation();
   return (
     <main id="main" className="mx-auto flex min-h-dvh max-w-md flex-col justify-center gap-4 px-4">
-      <StateMessage icon={Wrench} title={t('maintenance.title')} message={t('maintenance.body')} />
+      <StateMessage
+        heading="h1"
+        icon={Wrench}
+        title={t('maintenance.title')}
+        message={t('maintenance.body')}
+      />
       <EmergencyStrip />
     </main>
   );

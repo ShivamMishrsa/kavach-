@@ -302,6 +302,13 @@ describe('limits', () => {
     });
   });
 
+  it('reports a service that has reached its daily limit as busy', async () => {
+    respond = () => json({ error: { code: 'busy' } }, 503);
+    await expect(api.createScan({ kind: 'link', url: 'example.com' })).rejects.toMatchObject({
+      code: 'busy',
+    });
+  });
+
   it('reports a body that was too big as invalid_input', async () => {
     respond = () => json({ error: { code: 'invalid_input' } }, 413);
     await expect(api.createScan({ kind: 'link', url: 'example.com' })).rejects.toMatchObject({

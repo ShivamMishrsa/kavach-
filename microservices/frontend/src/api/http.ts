@@ -56,6 +56,7 @@ export function createHttpApi(baseUrl: string, options: HttpApiOptions = {}): Ap
     if (response.status === 401) return new ApiError('unauthorized', 'Not signed in');
     if (response.status === 403) return new ApiError('forbidden', 'Not allowed');
     if (response.status === 429) return new ApiError('rate_limited', 'Too many tries');
+    if (response.status === 503) return new ApiError('busy', 'Very busy');
     if (response.status === 404) return new ApiError(whenMissing, 'Check not found');
     return new Error(`Server error ${response.status}`);
   }

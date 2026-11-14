@@ -27,7 +27,9 @@
           "We try to hide Aadhaar numbers and email addresses in the text we keep. This is not guaranteed to catch every case.",
           "Consent and feedback records are kept in a log and deleted automatically after 90 days.",
           "Our own server does not write IP addresses to its logs. The hosting service or a proxy in front of it may keep ordinary connection logs; we will state which, and for how long, before launch.",
-          "A sign-in link works once and expires after 15 minutes. A sign-in lasts 14 days unless you sign out. An account and its saved history stay until you delete the account, or until nobody has signed in to it for 12 months, when it is deleted automatically. We do not warn by email before that yet."
+          "A sign-in link works once and expires after 15 minutes. A sign-in lasts 14 days unless you sign out. An account and its saved history stay until you delete the account, or until nobody has signed in to it for 12 months, when it is deleted automatically. We do not warn by email before that yet.",
+          "Backups of the account database and the logs are kept for up to 30 days, so deleted data can remain in a backup for that long.",
+          "Counters about how the service is used (how many checks, their outcome and risk level, how long they took) hold no personal detail and are kept without a time limit."
         ]
       },
       {
