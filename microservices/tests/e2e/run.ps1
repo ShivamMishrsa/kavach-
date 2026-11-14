@@ -4,7 +4,8 @@
 #      backend or Tesseract is not set up (see microservices/backend/README.md).
 # Usage (from anywhere):  powershell -File microservices/tests/e2e/run.ps1 [-OutDir <folder>]
 # Needs: Node 22+ and Microsoft Edge or Google Chrome.
-param([string]$OutDir = (Join-Path $env:TEMP 'kavach-e2e'))
+# Add -Only flow,languages,perf,prerender,a11y,backend,accounts to run just those suites (default: all).
+param([string]$OutDir = (Join-Path $env:TEMP 'kavach-e2e'), [string[]]$Only = @())
 
 $ErrorActionPreference = 'Stop'
 $microservices = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
@@ -32,6 +33,8 @@ function Stop-Tree($process) {
   Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue
 }
 
+function Wanted($suite) { $Only.Count -eq 0 -or $Only -contains $suite }
+
 $started = @()
 $exit = 0
 Push-Location $frontend
@@ -42,17 +45,40 @@ try {
   $started += Start-Process $browser -PassThru -ArgumentList '--headless=new', '--disable-gpu', '--remote-debugging-port=9222', "--user-data-dir=$(Join-Path $OutDir 'browser-profile')", 'about:blank'
   Start-Sleep -Seconds 7
 
-  Write-Host '--- English demo flow ---'
-  node (Join-Path $PSScriptRoot 'flow.mjs') $OutDir
-  if ($LASTEXITCODE -ne 0) { $exit = 1 }
+  if (Wanted 'flow') {
+    Write-Host '--- English demo flow ---'
+    node (Join-Path $PSScriptRoot 'flow.mjs') $OutDir
+    if ($LASTEXITCODE -ne 0) { $exit = 1 }
+  }
 
-  Write-Host '--- Regional languages (demo) ---'
-  node (Join-Path $PSScriptRoot 'languages.mjs') $OutDir hi ta bn mr te gu
-  if ($LASTEXITCODE -ne 0) { $exit = 1 }
+  if (Wanted 'languages') {
+    Write-Host '--- Regional languages (demo) ---'
+    node (Join-Path $PSScriptRoot 'languages.mjs') $OutDir hi ta bn mr te gu
+    if ($LASTEXITCODE -ne 0) { $exit = 1 }
+  }
+
+  if (Wanted 'perf') {
+    Write-Host '--- Speed on a slow phone and network ---'
+    node (Join-Path $PSScriptRoot 'perf.mjs') $OutDir
+    if ($LASTEXITCODE -ne 0) { $exit = 1 }
+  }
+
+  if (Wanted 'prerender') {
+    Write-Host '--- Public pages written out in advance ---'
+    node (Join-Path $PSScriptRoot 'prerender.mjs') $OutDir
+    if ($LASTEXITCODE -ne 0) { $exit = 1 }
+  }
+
+  if (Wanted 'a11y') {
+    Write-Host '--- Accessibility (axe) ---'
+    node (Join-Path $PSScriptRoot 'a11y.mjs') $OutDir
+    if ($LASTEXITCODE -ne 0) { $exit = 1 }
+  }
 
   # ----- real backend -----
-  Write-Host '--- Real backend: photo of a notice -> Hindi result ---'
-  if (-not (Test-Path $backendPython)) {
+  if (-not (Wanted 'backend') -and -not (Wanted 'accounts')) {
+    # not asked for
+  } elseif (-not (Test-Path $backendPython)) {
     Write-Warning 'SKIPPED: backend virtual environment not found (see microservices/backend/README.md).'
   } else {
     $env:KAVACH_CORS_ORIGINS = 'http://localhost:4174'
@@ -71,15 +97,22 @@ try {
     } else {
       $env:VITE_API_URL = 'http://localhost:8001'
       npx vite build --outDir (Join-Path $OutDir 'dist-real') --emptyOutDir | Out-Null
-      Remove-Item Env:VITE_API_URL
+      node scripts/prerender.mjs (Join-Path $OutDir 'dist-real') | Out-Null
+      # The preview server writes the Content-Security-Policy from this variable, so it stays set.
       $started += Start-Hidden 'cmd.exe' @('/c', "npx vite preview --outDir `"$(Join-Path $OutDir 'dist-real')`" --port 4174 --strictPort") $frontend
+      Remove-Item Env:VITE_API_URL
       Start-Sleep -Seconds 3
-      node (Join-Path $PSScriptRoot 'backend.mjs') $OutDir $notice
-      if ($LASTEXITCODE -ne 0) { $exit = 1 }
+      if (Wanted 'backend') {
+        Write-Host '--- Real backend: photo of a notice -> Hindi result ---'
+        node (Join-Path $PSScriptRoot 'backend.mjs') $OutDir $notice
+        if ($LASTEXITCODE -ne 0) { $exit = 1 }
+      }
 
-      Write-Host '--- Real backend: accounts (emailed link, sync, export, delete) ---'
-      node (Join-Path $PSScriptRoot 'accounts.mjs') $OutDir
-      if ($LASTEXITCODE -ne 0) { $exit = 1 }
+      if (Wanted 'accounts') {
+        Write-Host '--- Real backend: accounts (emailed link, sync, export, delete) ---'
+        node (Join-Path $PSScriptRoot 'accounts.mjs') $OutDir
+        if ($LASTEXITCODE -ne 0) { $exit = 1 }
+      }
     }
   }
 } finally {

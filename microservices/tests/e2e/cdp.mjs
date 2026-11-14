@@ -23,13 +23,18 @@ export async function connect({ out, base, prefix, width = 390 }) {
 
   let lastId = 0;
   const pending = new Map();
+  const listeners = new Map();
   ws.onmessage = (event) => {
     const message = JSON.parse(event.data);
     if (message.id && pending.has(message.id)) {
       pending.get(message.id)(message);
       pending.delete(message.id);
+    } else if (message.method) {
+      for (const listener of listeners.get(message.method) ?? []) listener(message.params);
     }
   };
+  /** Calls `listener` for every event of this kind the browser sends (for example Log.entryAdded). */
+  const on = (method, listener) => listeners.set(method, [...(listeners.get(method) ?? []), listener]);
 
   const send = (method, params = {}) =>
     new Promise((resolve) => {
@@ -135,6 +140,7 @@ export async function connect({ out, base, prefix, width = 390 }) {
 
   /** Prints the summary and ends the process: exit code 1 if any check failed. */
   function finish() {
+    check('No Content-Security-Policy violation and no uncaught error on any page', problems.length === 0, problems.slice(0, 3).join(' | '));
     const failed = results.filter((pass) => !pass).length;
     console.log(`\n${results.length - failed}/${results.length} checks passed`);
     ws.onclose = null;
@@ -142,6 +148,12 @@ export async function connect({ out, base, prefix, width = 390 }) {
     process.exit(failed ? 1 : 0);
   }
 
+  // The site runs under a strict Content-Security-Policy, and no page may throw an uncaught error.
+  const problems = [];
+  on('Log.entryAdded', ({ entry }) => /Content Security Policy|Refused to/i.test(entry.text) && problems.push(entry.text));
+  on('Runtime.exceptionThrown', ({ exceptionDetails }) => problems.push(`uncaught error: ${exceptionDetails.exception?.description ?? exceptionDetails.text}`));
+  await send('Log.enable');
+  await send('Runtime.enable');
   await send('Page.enable');
   await send('Emulation.setDeviceMetricsOverride', {
     width,
@@ -152,6 +164,7 @@ export async function connect({ out, base, prefix, width = 390 }) {
 
   return {
     send,
+    on,
     sleep,
     ev,
     waitFor,

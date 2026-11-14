@@ -15,9 +15,13 @@ powershell -File microservices/tests/e2e/run.ps1
 | `flow.mjs` | The whole English demo flow on the in-browser mock: guest start, language, consent, pasted-text scan, progress, result, feedback, details, evidence summary, history, link check, expiry, checklist, help, settings, log in / sign up / delete account, landing page (claims, sections, language and theme buttons, phone and desktop layout), public legal / help / 1930 pages (Hindi, English fallback note, page titles, search-engine settings), 404, desktop layout |
 | `languages.mjs` | For each regional language (demo): the app opens in that language, no raw translation keys on screen, the result and evidence summary work, 1930 is reachable |
 | `accounts.mjs` | Against the **real backend**: sign up with an emailed link (read from the development outbox), language kept in the account, a used link is refused, history sync (kind, risk and time only), a signed-in check is not reachable without the session, data export, sign out on all devices, sign in again, account deletion and a fresh start for the same address |
+| `perf.mjs` | How fast the site opens on a slow phone (slow network, processor 4 times slower): first paint and download size for the landing page and the app, in English, Hindi and Tamil, with a size and time budget. The preview server compresses files like a real host |
+| `a11y.mjs` | Accessibility with axe-core on every main screen: light, dark, high contrast, largest text, Hindi, dialogs and the consent card. Any violation fails |
 | `backend.mjs` | Against the **real backend**: a photo of a fake notice is uploaded, read by Tesseract and judged by the rules, and the result, reasons, old-law note, details and evidence summary are shown in Hindi; the fingerprint equals the file's real SHA-256; "Delete now" really removes the scan on the server; a bank alert is low, a look-alike link is high; agreeing to consent is recorded (no IP address); the evidence summary PDF downloads and the fingerprint shown equals the SHA-256 of the downloaded file |
 
-`run.ps1` runs the demo checks first, then the real-backend check. The real-backend check is **skipped with a warning** when the backend's virtual environment or Tesseract (English + Hindi) is not set up; see `microservices/backend/README.md`.
+Every suite also fails if the page breaks the site's Content-Security-Policy or throws an uncaught error. `run.ps1 -Only perf,a11y` runs just the named suites (`flow`, `languages`, `perf`, `a11y`, `backend`, `accounts`).
+
+`run.ps1` runs the demo checks first, then the real-backend checks. The real-backend check is **skipped with a warning** when the backend's virtual environment or Tesseract (English + Hindi) is not set up; see `microservices/backend/README.md`.
 
 Screenshots are saved to the output folder (default `%TEMP%\kavach-e2e`).
 `languages.mjs` also accepts `PREFS` (a JSON theme/text-size setting) and `PREFIX` environment variables to capture dark mode or large text.
