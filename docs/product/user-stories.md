@@ -32,7 +32,7 @@
 Landing (/) ── Check now ──> Welcome (/start)
   public pages: Help, 1930 + checklist, Privacy, Terms, Limitations
 
-Welcome (first run) ── Sign up ──┐
+Welcome (first run) ── Sign up ──┐   (email link: /auth/verify opens the account)
         ├── Log in ──────────────┼──> Choose language ──> App
         └── Continue as guest ───┘
 

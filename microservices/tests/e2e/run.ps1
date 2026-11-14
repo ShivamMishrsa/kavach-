@@ -57,6 +57,8 @@ try {
   } else {
     $env:KAVACH_CORS_ORIGINS = 'http://localhost:4174'
     $env:KAVACH_DATA_DIR = Join-Path $OutDir 'backend-data'
+    $env:KAVACH_SITE_URL = 'http://localhost:4174'  # the sign-in links in the emails point here
+    Remove-Item -Recurse -Force $env:KAVACH_DATA_DIR -ErrorAction SilentlyContinue  # start from nothing
     $server = Start-Hidden $backendPython @('-m', 'uvicorn', 'app.main:app', '--port', '8001') $backend
     $started += $server
     $ready = $false
@@ -73,6 +75,10 @@ try {
       $started += Start-Hidden 'cmd.exe' @('/c', "npx vite preview --outDir `"$(Join-Path $OutDir 'dist-real')`" --port 4174 --strictPort") $frontend
       Start-Sleep -Seconds 3
       node (Join-Path $PSScriptRoot 'backend.mjs') $OutDir $notice
+      if ($LASTEXITCODE -ne 0) { $exit = 1 }
+
+      Write-Host '--- Real backend: accounts (emailed link, sync, export, delete) ---'
+      node (Join-Path $PSScriptRoot 'accounts.mjs') $OutDir
       if ($LASTEXITCODE -ne 0) { $exit = 1 }
     }
   }
