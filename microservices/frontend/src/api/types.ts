@@ -92,7 +92,33 @@ export interface FeedbackInput {
   note?: string;
 }
 
-export type ApiErrorCode = 'not_found' | 'expired' | 'invalid_input' | 'network';
+/** The words of the evidence summary PDF. The backend lays them out; the details and the
+ * fingerprints in it come from the backend's own record of the scan. */
+export interface DossierText {
+  title: string;
+  disclaimer: string;
+  summaryTitle: string;
+  summary: string;
+  detailsTitle: string;
+  detailLabels: Record<EntityType, string>;
+  evidenceTitle: string;
+  evidenceHint: string;
+  /** Contains "{time}", which the backend replaces with the time it recorded. */
+  capturedAt: string;
+  keepOriginals: string;
+  scriptTitle: string;
+  script: string;
+}
+
+export interface DossierFile {
+  /** Short-lived signed link to the PDF. */
+  url: string;
+  /** SHA-256 of the PDF exactly as it downloads. */
+  sha256: string;
+  generatedAt: string;
+}
+
+export type ApiErrorCode = 'not_found' | 'expired' | 'invalid_input' | 'rate_limited' | 'network';
 
 export class ApiError extends Error {
   readonly code: ApiErrorCode;
@@ -112,4 +138,8 @@ export interface ApiClient {
   deleteScan(id: string): Promise<void>;
   deleteAllScans(): Promise<void>;
   sendFeedback(input: FeedbackInput): Promise<void>;
+  /** Makes the evidence summary PDF from the confirmed details. Not available in the demo. */
+  createDossier(id: string, text: DossierText): Promise<DossierFile>;
+  /** Tells the backend which consent text was agreed to or withdrawn. */
+  recordConsent(version: string, granted: boolean): Promise<void>;
 }

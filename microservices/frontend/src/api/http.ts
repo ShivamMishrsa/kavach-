@@ -1,7 +1,14 @@
 import { createHistory } from './history';
 import { createBrowserStorage, type KeyValueStorage } from './mock/storage';
 import { SAMPLE_TEXT } from './samples';
-import { ApiError, type ApiClient, type Entity, type FeedbackInput, type Scan } from './types';
+import {
+  ApiError,
+  type ApiClient,
+  type DossierFile,
+  type Entity,
+  type FeedbackInput,
+  type Scan,
+} from './types';
 
 export interface HttpApiOptions {
   fetch?: typeof fetch;
@@ -24,7 +31,10 @@ export function createHttpApi(baseUrl: string, options: HttpApiOptions = {}): Ap
 
   /** Turns a failed response into an error the screens understand. */
   function failure(response: Response, whenMissing: 'expired' | 'not_found'): Error {
-    if (response.status === 400) return new ApiError('invalid_input', 'Not usable');
+    if (response.status === 400 || response.status === 413) {
+      return new ApiError('invalid_input', 'Not usable');
+    }
+    if (response.status === 429) return new ApiError('rate_limited', 'Too many tries');
     if (response.status === 404) return new ApiError(whenMissing, 'Check not found');
     return new Error(`Server error ${response.status}`);
   }
@@ -86,6 +96,26 @@ export function createHttpApi(baseUrl: string, options: HttpApiOptions = {}): Ap
       // Checks older than 15 minutes are already gone from the server; the rest are deleted now.
       await Promise.allSettled(history.list().map((item) => remove(item.id)));
       history.clear();
+    },
+
+    async createDossier(id, text) {
+      const response = await request(`/v1/scans/${encodeURIComponent(id)}/dossier`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(text),
+      });
+      if (!response.ok) throw failure(response, 'expired');
+      const file = (await response.json()) as DossierFile;
+      return { ...file, url: `${base}${file.url}` };
+    },
+
+    async recordConsent(version, granted) {
+      const response = await request('/v1/consent', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ version, granted }),
+      });
+      if (!response.ok) throw failure(response, 'not_found');
     },
 
     async sendFeedback(input: FeedbackInput) {

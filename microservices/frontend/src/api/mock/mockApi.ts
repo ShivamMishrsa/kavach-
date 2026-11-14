@@ -230,6 +230,14 @@ export function createMockApi(options: MockApiOptions = {}): ApiClient {
       storage.removeItem(HISTORY_KEY);
     },
 
+    async createDossier() {
+      throw new Error('The PDF needs the real backend');
+    },
+
+    async recordConsent() {
+      /* the demo keeps no consent log */
+    },
+
     async sendFeedback(input: FeedbackInput) {
       await pause();
       const all = read<FeedbackInput[]>(storage, FEEDBACK_KEY, []);

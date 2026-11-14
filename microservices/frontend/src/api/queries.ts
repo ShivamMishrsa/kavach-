@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from './client';
-import type { Entity, FeedbackInput, Scan, ScanInput } from './types';
+import type { DossierText, Entity, FeedbackInput, Scan, ScanInput } from './types';
 
 export const queryKeys = {
   scan: (id: string) => ['scan', id] as const,
@@ -40,6 +40,10 @@ export function useConfirmEntities(id: string) {
     mutationFn: (entities: Entity[]) => api.confirmEntities(id, entities),
     onSuccess: (scan: Scan) => client.setQueryData(queryKeys.scan(id), scan),
   });
+}
+
+export function useCreateDossier(id: string) {
+  return useMutation({ mutationFn: (text: DossierText) => api.createDossier(id, text) });
 }
 
 export function useDeleteScan() {

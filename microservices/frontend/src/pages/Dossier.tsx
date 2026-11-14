@@ -1,15 +1,19 @@
-import { FileDown, Phone } from 'lucide-react';
+import { FileDown, Loader2, Phone } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Navigate } from 'react-router';
-import type { Scan } from '@/api/types';
+import { toast } from 'sonner';
+import { isMockApi } from '@/api/client';
+import { useCreateDossier } from '@/api/queries';
+import type { DossierText, EntityType, Scan } from '@/api/types';
 import { CopyButton } from '@/components/CopyButton';
 import { PageHeader } from '@/components/PageHeader';
 import { WithScan } from '@/components/WithScan';
 import { Button } from '@/components/ui/button';
 import { buttonVariants } from '@/components/ui/button-variants';
 import { Textarea } from '@/components/ui/Textarea';
-import { buildDossierText, scriptValues, sortEntities } from '@/lib/dossier';
+import { ENTITY_ORDER, buildDossierText, buildScript, sortEntities } from '@/lib/dossier';
+import { errorKey } from '@/lib/errors';
 import { displayValue, formatDateTime, formatTime, shortHash } from '@/lib/format';
 
 function Summary({ scan, id }: { scan: Scan; id: string }) {
@@ -26,26 +30,48 @@ function Summary({ scan, id }: { scan: Scan; id: string }) {
     }),
   );
 
-  const script = t(
-    'dossier.script',
-    scriptValues(entities, (value) => displayValue(value, language), t('dossier.notAvailable')),
-  );
+  const script = buildScript(entities, t, (value) => displayValue(value, language));
 
-  const text = buildDossierText({
+  const words = {
     title: t('dossier.title'),
     disclaimer: t('dossier.disclaimer'),
     summaryTitle: t('dossier.summaryTitle'),
     summary,
     detailsTitle: t('dossier.detailsTitle'),
+    evidenceTitle: t('dossier.evidenceTitle'),
+    scriptTitle: t('dossier.scriptTitle'),
+    script,
+  };
+
+  const text = buildDossierText({
+    ...words,
     details: entities.map((entity) => ({
       label: t(`fields.${entity.type}`),
       value: displayValue(entity.value, language),
     })),
-    evidenceTitle: t('dossier.evidenceTitle'),
     evidence: scan.evidence,
-    scriptTitle: t('dossier.scriptTitle'),
-    script,
   });
+
+  // The words of the PDF. The backend adds the confirmed details and the fingerprints itself.
+  const pdfText: DossierText = {
+    ...words,
+    detailLabels: Object.fromEntries(
+      ENTITY_ORDER.map((type) => [type, t(`fields.${type}`)]),
+    ) as Record<EntityType, string>,
+    evidenceHint: t('dossier.evidenceHint'),
+    capturedAt: t('dossier.capturedAt', { time: '{time}' }),
+    keepOriginals: t('dossier.keepOriginals'),
+  };
+  const createPdf = useCreateDossier(id);
+
+  async function downloadPdf() {
+    try {
+      const file = await createPdf.mutateAsync(pdfText);
+      window.location.assign(file.url); // the backend sends it as a download, so the page stays
+    } catch (problem) {
+      toast.error(t(errorKey(problem)));
+    }
+  }
 
   return (
     <div className="flex flex-col gap-5">
@@ -132,10 +158,33 @@ function Summary({ scan, id }: { scan: Scan; id: string }) {
 
       <div className="flex flex-col gap-2">
         <CopyButton text={text} label={t('dossier.copyAll')} />
-        <Button variant="outline" disabled>
-          <FileDown className="size-5" aria-hidden="true" />
-          {t('dossier.pdfSoon')}
+        <Button
+          variant="outline"
+          disabled={isMockApi || createPdf.isPending}
+          onClick={() => void downloadPdf()}
+        >
+          {createPdf.isPending ? (
+            <Loader2 className="size-5 animate-spin" aria-hidden="true" />
+          ) : (
+            <FileDown className="size-5" aria-hidden="true" />
+          )}
+          {isMockApi ? t('dossier.pdfSoon') : t('dossier.pdfDownload')}
         </Button>
+        {createPdf.data && (
+          <div className="flex flex-col gap-1 rounded-card border border-border bg-surface p-3 text-sm">
+            <span className="text-muted">{t('dossier.pdfFingerprint')}</span>
+            <code className="font-mono break-all" data-testid="pdf-sha256">
+              {createPdf.data.sha256}
+            </code>
+            <div>
+              <CopyButton
+                text={createPdf.data.sha256}
+                label={t('dossier.copyHash')}
+                variant="ghost"
+              />
+            </div>
+          </div>
+        )}
         <a
           href="tel:1930"
           className={buttonVariants({ variant: 'danger', size: 'lg', block: true })}

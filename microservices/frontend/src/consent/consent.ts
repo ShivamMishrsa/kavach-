@@ -1,6 +1,6 @@
 /**
  * Versioned consent. If the consent text changes, bump CONSENT_VERSION and everyone is asked again.
- * The real, audit-logged consent record is created by the backend in Step 5.
+ * Every grant or withdrawal is also recorded by the backend (version, time, hashed IP address).
  */
 export const CONSENT_VERSION = '2026-11-v1';
 export const CONSENT_KEY = 'kavach.consent';

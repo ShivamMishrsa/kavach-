@@ -1,3 +1,4 @@
+import type { TFunction } from 'i18next';
 import type { Entity, EntityType } from '@/api/types';
 
 export const ENTITY_ORDER: EntityType[] = ['utr', 'upi', 'amount', 'datetime', 'phone', 'link'];
@@ -17,23 +18,26 @@ export function missingTypes(entities: Entity[]): EntityType[] {
 }
 
 /**
- * Values for the text to read to the helpline. Anything missing becomes `fallback`,
- * so the script never contains an empty gap or invented data.
+ * The text to read to the helpline: one short sentence for each detail the person confirmed.
+ * A detail that is missing is left out, so the script never has a gap or invented data.
  */
-export function scriptValues(
+export function buildScript(
   entities: Entity[],
+  t: TFunction,
   formatDate: (value: string) => string,
-  fallback: string,
-) {
-  const get = (type: EntityType) => entityValue(entities, type) ?? fallback;
-  const date = entityValue(entities, 'datetime');
-  return {
-    utr: get('utr'),
-    upi: get('upi'),
-    amount: get('amount'),
-    phone: get('phone'),
-    date: date ? formatDate(date) : fallback,
-  };
+): string {
+  const value = (type: EntityType) => entityValue(entities, type);
+  const date = value('datetime');
+  const sentences = [
+    t('dossier.scriptIntro'),
+    date && t('dossier.scriptDate', { date: formatDate(date) }),
+    value('amount') && t('dossier.scriptAmount', { amount: value('amount') }),
+    value('upi') && t('dossier.scriptUpi', { upi: value('upi') }),
+    value('utr') && t('dossier.scriptUtr', { utr: value('utr') }),
+    value('phone') && t('dossier.scriptPhone', { phone: value('phone') }),
+    t('dossier.scriptClose'),
+  ];
+  return sentences.filter(Boolean).join(' ');
 }
 
 export interface DossierTextInput {

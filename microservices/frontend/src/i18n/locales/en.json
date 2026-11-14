@@ -200,7 +200,8 @@
   "errors": {
     "invalid": "We could not read that. Try another file or paste the text.",
     "network": "No connection. Please check your internet and try again.",
-    "generic": "Something went wrong. Please try again."
+    "generic": "Something went wrong. Please try again.",
+    "rateLimited": "Too many tries. Please wait a few minutes and try again."
   },
   "home": {
     "title": "What would you like to check?",
@@ -351,11 +352,18 @@
     "keepOriginals": "Keep your original photos, screenshots and chats on your phone. We delete our copy.",
     "scriptTitle": "What to say to the helpline",
     "scriptHint": "Read this when you call 1930.",
-    "script": "Hello, I want to report a cyber fraud. On {{date}} I sent {{amount}} to UPI ID {{upi}}. The transaction reference (UTR) is {{utr}}. The scammer's phone number is {{phone}}. Please help me stop this payment.",
     "copyScript": "Copy script",
     "copyAll": "Copy everything",
     "pdfSoon": "PDF download (coming next)",
-    "notAvailable": "not available"
+    "pdfDownload": "Download PDF",
+    "pdfFingerprint": "PDF fingerprint (SHA-256)",
+    "scriptIntro": "Hello, I want to report a cyber fraud.",
+    "scriptDate": "It happened on {{date}}.",
+    "scriptAmount": "I sent {{amount}}.",
+    "scriptUpi": "The money went to UPI ID {{upi}}.",
+    "scriptUtr": "The transaction reference (UTR) is {{utr}}.",
+    "scriptPhone": "The scammer's phone number is {{phone}}.",
+    "scriptClose": "Please help me stop this payment."
   },
   "sentMoney": {
     "title": "Already sent money?",

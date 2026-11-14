@@ -5,6 +5,7 @@ export function errorKey(error: unknown): string {
   if (error instanceof ApiError) {
     if (error.code === 'invalid_input') return 'errors.invalid';
     if (error.code === 'network') return 'errors.network';
+    if (error.code === 'rate_limited') return 'errors.rateLimited';
   }
   return 'errors.generic';
 }

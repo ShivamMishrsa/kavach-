@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { createHttpApi } from './http';
 import { createMemoryStorage } from './mock/storage';
 import { SAMPLE_TEXT } from './samples';
-import { ApiError, type Scan } from './types';
+import { ApiError, type DossierText, type Scan } from './types';
 
 interface Call {
   url: string;
@@ -228,6 +228,83 @@ describe('sendFeedback', () => {
   it('fails when the server refuses it', async () => {
     respond = () => json({}, 400);
     await expect(api.sendFeedback({ scanId: 'abc', type: 'other' })).rejects.toMatchObject({
+      code: 'invalid_input',
+    });
+  });
+});
+
+const words: DossierText = {
+  title: 'Evidence summary',
+  disclaimer: 'Not an FIR.',
+  summaryTitle: 'What happened',
+  summary: 'I received a scam message.',
+  detailsTitle: 'Details',
+  detailLabels: {
+    utr: 'UTR',
+    upi: 'UPI',
+    phone: 'Phone',
+    amount: 'Amount',
+    datetime: 'Time',
+    link: 'Link',
+  },
+  evidenceTitle: 'Fingerprints',
+  evidenceHint: 'Shows the original was not changed.',
+  capturedAt: 'Recorded {time}',
+  keepOriginals: 'Keep your originals.',
+  scriptTitle: 'What to say',
+  script: 'Hello.',
+};
+
+describe('createDossier', () => {
+  it('sends the words and returns a link that points at the backend', async () => {
+    respond = () =>
+      json(
+        {
+          url: '/v1/scans/abc/dossier.pdf?exp=1&sig=2',
+          sha256: 'f'.repeat(64),
+          generatedAt: 'now',
+        },
+        201,
+      );
+    const file = await api.createDossier('abc', words);
+    expect(calls[0].url).toBe('http://api.test/v1/scans/abc/dossier');
+    expect(calls[0].init?.method).toBe('POST');
+    expect(JSON.parse(calls[0].init?.body as string)).toEqual(words);
+    expect(file.url).toBe('http://api.test/v1/scans/abc/dossier.pdf?exp=1&sig=2');
+    expect(file.sha256).toBe('f'.repeat(64));
+  });
+
+  it('says "expired" when the check is gone and "invalid" when details were not confirmed', async () => {
+    respond = () => json({}, 404);
+    await expect(api.createDossier('abc', words)).rejects.toMatchObject({ code: 'expired' });
+    respond = () => json({}, 400);
+    await expect(api.createDossier('abc', words)).rejects.toMatchObject({ code: 'invalid_input' });
+  });
+});
+
+describe('recordConsent', () => {
+  it('posts the version and the choice', async () => {
+    respond = () => new Response(null, { status: 204 });
+    await api.recordConsent('2026-11-v1', true);
+    expect(calls[0].url).toBe('http://api.test/v1/consent');
+    expect(JSON.parse(calls[0].init?.body as string)).toEqual({
+      version: '2026-11-v1',
+      granted: true,
+    });
+  });
+});
+
+describe('limits', () => {
+  it('reports too many tries as rate_limited', async () => {
+    respond = () => json({ error: { code: 'rate_limited' } }, 429);
+    await expect(api.createScan({ kind: 'link', url: 'example.com' })).rejects.toMatchObject({
+      code: 'rate_limited',
+    });
+  });
+
+  it('reports a body that was too big as invalid_input', async () => {
+    respond = () => json({ error: { code: 'invalid_input' } }, 413);
+    await expect(api.createScan({ kind: 'link', url: 'example.com' })).rejects.toMatchObject({
       code: 'invalid_input',
     });
   });
