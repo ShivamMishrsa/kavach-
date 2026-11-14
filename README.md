@@ -14,7 +14,7 @@ Multilingual (English default, Indian regional languages) scam-triage web app (m
 | `microservices/tests` | Browser end-to-end checks (`e2e/run.ps1`) and cross-module tests |
 | `build-phases` | The 9 website build steps (checklists) |
 | `design-mockups` | UI mockups (Option A is the chosen design) |
-| `docs` | Architecture decisions, user stories, API contract |
+| `docs` | Architecture decisions, user stories, API contract, [benchmarks](docs/benchmarks.md), [deploy runbook](docs/deploy.md), [usability test kit](docs/usability-test.md) |
 
 Planning PDFs (master document, roadmap, microservice architecture) are in the repo root.
 
@@ -41,6 +41,12 @@ cp .env.example .env
 uvicorn app.main:app --reload   # http://localhost:8000/health
 pytest
 ```
+
+## How well does it work?
+
+Measured on sets the team wrote (no real person's messages), small, with wide uncertainty: see
+[`docs/benchmarks.md`](docs/benchmarks.md) for the numbers, what they do not show, and the mistakes
+the rules still make. No accuracy figure is claimed for the product.
 
 ## Rules
 
