@@ -30,7 +30,7 @@ Evidence dossier, versioned consent, aur 15-minute deletion jo sach me kaam kare
 - Bengali PDF se text copy karo to kuch vowel signs control characters ban jaate hain (fpdf2 ki limitation); page dekhne/print karne par sahi hai.
 - **Rate limit aur scans ek process ki memory me hain:** ek worker. Zyada workers ke liye Redis (Step 8). Reverse proxy ke peeche asli client IP trusted header se lena hoga (Step 8 deploy).
 - **`KAVACH_SECRET` production me fix set karna hai**; warna har restart par links aur IP hashes badal jaate hain.
-- Consent log abhi flat file (`data/consent.jsonl`); DB aur retention rule Step 7 me. Consent ka server record best-effort hai (offline ho to sirf device par rehta hai).
+- Consent log abhi flat file (`data/consent.jsonl`); DB Step 7 me. Retention ab lagu hai (Step 6 me): consent aur feedback records 90 din baad apne-aap delete. Consent ka server record best-effort hai (offline ho to sirf device par rehta hai).
 - Feedback note me free text (jaise naam) hat nahi sakta; sirf numbers, ids aur email hatte hain.
 - PDF ka layout ek page ka simple summary hai; asli police/portal ke format se match karna legal review ke baad.
 - Hindi/Marathi/aur baaki translations AI drafts hain; naye keys (PDF button, rate-limit message, 1930 script ke vaakya) bhi.

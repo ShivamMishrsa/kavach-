@@ -29,6 +29,9 @@
 ## Screen map
 
 ```
+Landing (/) ── Check now ──> Welcome (/start)
+  public pages: Help, 1930 + checklist, Privacy, Terms, Limitations
+
 Welcome (first run) ── Sign up ──┐
         ├── Log in ──────────────┼──> Choose language ──> App
         └── Continue as guest ───┘

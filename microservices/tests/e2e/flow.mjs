@@ -9,7 +9,33 @@ await go('/');
 await ev('localStorage.clear()');
 await go('/');
 
+// ---------- landing page ----------
+check('Landing shows the headline', await waitText('Check before you get scammed'));
+check('Landing shows a sample result that is marked as not real', (await ev(hasText('Sample result (not a real check)'))) && (await ev(`!!document.querySelector('section[aria-labelledby=risk-title]')`)));
+check('Landing has the scam types, three steps, privacy, API teaser and FAQ', (await ev(`['types','how','privacy','api','faq'].every((id) => !!document.getElementById(id))`)) && (await ev(hasText('Planned'))));
+check('Landing makes no accuracy or certainty claim', !(await ev(`/\\d+\\s?%\\s?(accura|sure|certain)/i.test(document.body.innerText)`)));
+check('Landing fits a phone screen without sideways scrolling', await ev('document.documentElement.scrollWidth <= window.innerWidth'));
+check('Landing keeps the 1930 strip and the not-a-verdict note', (await ev('!!document.querySelector("a[href=\\"tel:1930\\"]")')) && (await ev(hasText('not a final verdict'))));
+check('Landing title and search engine settings are right', (await waitFor(`document.title.startsWith('Check before you get scammed')`)) && (await ev(`!document.querySelector('meta[name=robots]')`)));
+await shot('00-landing');
+await setValue('header select', 'hi');
+check('The language menu in the header switches the landing page', (await waitText('ठगी')) && (await ev('document.documentElement.lang')) === 'hi');
+await setValue('header select', 'en');
+await ev(`document.querySelector('header button[aria-label=\"Change theme\"]').click()`);
+check('The theme button in the header switches to dark', await waitFor(`document.documentElement.dataset.theme === 'dark'`));
+await shot('00-landing-dark');
+await ev(`document.querySelector('header button[aria-label=\"Change theme\"]').click()`);
+await send('Emulation.setDeviceMetricsOverride', { width: 1280, height: 900, deviceScaleFactor: 1, mobile: false });
+await sleep(400);
+check('On a desktop the header shows the page links and the sample sits beside the headline', await ev(`(() => { const nav = document.querySelector('header nav'); const card = document.querySelector('section[aria-labelledby=risk-title]'); const h1 = document.querySelector('h1'); return getComputedStyle(nav).display !== 'none' && card.getBoundingClientRect().left > h1.getBoundingClientRect().right - 10; })()`));
+await shot('00-landing-desktop');
+await send('Emulation.setDeviceMetricsOverride', { width: 390, height: 900, deviceScaleFactor: 1, mobile: true });
+await sleep(300);
+await clickText('main a', 'Check now');
+
 // ---------- first run ----------
+check('Check now opens the welcome screen', await waitFor(`location.pathname === '/start'`));
+check('Welcome keeps search engines out', await waitFor(`document.querySelector('meta[name=robots]')?.content === 'noindex'`));
 check('Welcome shows guest, log in and sign up', (await waitText('Continue without account')) && (await ev(hasText('Log in'))) && (await ev(hasText('Sign up'))));
 check('Default language is English', (await ev('document.documentElement.lang')) === 'en');
 check('Demo mode banner is visible', await ev(hasText('Demo mode')));
@@ -17,7 +43,8 @@ check('1930 helpline strip is visible on welcome', await ev('!!document.querySel
 await shot('01-welcome');
 
 await go('/app');
-check('The app is protected: /app redirects to welcome without a session', (await pathname()) === '/');
+check('The app is protected: /app redirects to the landing page without a session', (await pathname()) === '/');
+await go('/start');
 
 await clickText('button', 'Continue without account');
 check('Guest goes to the language screen', (await waitFor(`location.pathname === '/language'`)) && (await ev(hasText('Choose your language'))));
@@ -186,12 +213,11 @@ await clickText('button', 'Delete account');
 check('Delete account asks for confirmation', await waitFor(`!!document.querySelector('[role=dialog]')`));
 await shot('11-delete-dialog');
 await clickText('[role=dialog] button', 'Delete account');
-check('Deleting the account returns to the welcome screen', (await waitFor(`location.pathname === '/'`)) && (await waitText('Continue without account')));
+check('Deleting the account returns to the landing page', (await waitFor(`location.pathname === '/'`)) && (await waitText('Check before you get scammed')));
 check('The account profile was removed', await ev(`localStorage.getItem('kavach.session') === null && !Object.keys(localStorage).some(k => k.startsWith('kavach.profile.'))`));
 
 // ---------- fresh login (new person) goes through the language screen ----------
-await clickText('a', 'Log in');
-await waitFor(`location.pathname === '/login'`);
+await go('/login');
 await setValue('input[type=email]', 'new.person@example.com');
 await clickText('button', 'Send sign-in link');
 await waitText('Check your email');
@@ -215,14 +241,40 @@ await clickText('button', 'Continue (demo)');
 check('Signing in again goes straight to the app (language remembered)', await waitFor(`location.pathname === '/app'`));
 await go('/app/settings');
 await clickText('button', 'Sign out');
-check('Sign out returns to the welcome screen', await waitFor(`location.pathname === '/'`));
+check('Sign out returns to the landing page', await waitFor(`location.pathname === '/'`));
+
+// ---------- public pages ----------
+for (const [route, title, heading] of [
+  ['/privacy', 'Privacy policy', 'What we handle'],
+  ['/terms', 'Terms of use', 'No guarantee'],
+  ['/limitations', 'Limitations', 'What Kavach cannot do'],
+  ['/help', 'Help', 'Common questions'],
+]) {
+  await go(route);
+  check(`${route} opens for visitors with its title and content`, (await waitText(heading)) && (await waitFor(`document.title.startsWith(${JSON.stringify(title)})`)) && (await ev(`!document.querySelector('meta[name=robots]')`)));
+}
+await go('/privacy');
+check('The privacy page carries the "draft, not yet reviewed by a lawyer" notice', await ev(hasText('not yet been reviewed by a lawyer')));
+await shot('13-privacy');
+await ev(`localStorage.setItem('kavach.lang','hi')`);
+await go('/privacy');
+check('The privacy page is available in Hindi', await waitText('गोपनीयता नीति'));
+await ev(`localStorage.setItem('kavach.lang','ta')`);
+await go('/terms');
+check('In a language without legal text the English page opens with a note', (await waitText('No guarantee')) && (await ev(hasText('இந்தப் பக்கம் ஆங்கிலத்திலும்'))));
+await ev(`localStorage.setItem('kavach.lang','en')`);
+await go('/emergency');
+check('The 1930 page works without an account: call, portal and checklist', (await waitText('First-hour checklist')) && (await ev(hasText('Report on cybercrime.gov.in'))) && (await ev('!!document.querySelector("main a[href=\\"tel:1930\\"]")')));
+await clickText('main a', 'Prepare my evidence summary');
+check('Without an account that button leads to the welcome screen', await waitFor(`location.pathname === '/start'`));
 
 // ---------- 404 ----------
 await go('/nothing-here');
 check('Unknown address shows the not-found page', await waitText('We could not find that page'));
+check('The not-found page keeps the 1930 strip', await ev('!!document.querySelector("a[href=\\"tel:1930\\"]")'));
 
 // ---------- desktop layout ----------
-await go('/');
+await go('/start');
 await clickText('button', 'Continue without account');
 await waitFor(`location.pathname === '/language'`);
 await clickText('button', 'Continue', true);

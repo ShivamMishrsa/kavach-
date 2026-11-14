@@ -30,7 +30,7 @@ The backend also serves interactive docs at `/docs`.
 | `listHistory()` | (client) | read from the device |
 | `createDossier(id, text)` | `POST /v1/scans/{id}/dossier` | JSON with the words of the PDF (`DossierText`, all translated by the website). Only for a finished scan whose details the person has confirmed (`400` otherwise). The PDF contains the **confirmed** details and the server's own fingerprints, never anything else. Returns `201` `{url, sha256, generatedAt, linkExpiresAt}`; `sha256` is of the PDF exactly as downloaded |
 | (the `url` above) | `GET /v1/scans/{id}/dossier.pdf?exp=&sig=` | Signed link, valid 5 minutes (never longer than the scan). Sent as an attachment. Any wrong, changed or expired link gives `404` |
-| `recordConsent(version, granted)` | `POST /v1/consent` | JSON; `204`. Appends version, time and a keyed hash of the IP address to the consent log. An unknown version is refused (`400`) |
+| `recordConsent(version, granted)` | `POST /v1/consent` | JSON; `204`. Appends version, time and a keyed hash of the IP address to the consent log (deleted after 90 days). An unknown version is refused (`400`) |
 | `sendFeedback(input)` | `POST /v1/feedback` | JSON; type + optional note (max 500 chars); `204`; no file content |
 | | `GET /health` | `{"status": "ok", "ocr": "ready" \| "unavailable", ...}` |
 

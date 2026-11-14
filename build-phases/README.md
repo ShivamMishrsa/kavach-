@@ -18,7 +18,7 @@ Website pehle (mobile-first), phir PWA. Ye 9 steps `Project Kavach - Phase-wise 
 | 3 | [Mobile-first screens (mock data)](03-mobile-first-screens.md) | 1 (light), 3 | Done (results simulated) |
 | 4 | [Minimal backend (OCR + rules + Hindi result)](04-minimal-backend.md) | 6, 7, 8 (minimal) | Done (rules unmeasured) |
 | 5 | [Dossier PDF + consent + auto-delete](05-dossier-consent-delete.md) | 9, 5 (basic) | Done (PDF in all 7 languages) |
-| 6 | [Landing, help, privacy pages](06-landing-help-privacy.md) | 3, 10 | Not started |
+| 6 | [Landing, help, privacy pages](06-landing-help-privacy.md) | 3, 10 | Done (legal text is a draft) |
 | 7 | [Auth + settings](07-auth-settings.md) | 4, 10 | Not started |
 | 8 | [Accuracy, tests, deploy](08-accuracy-tests-deploy.md) | 14, 15, 16 | Not started |
 | 9 | [PWA + packaging](09-pwa-packaging.md) | 18 | Not started |

@@ -12,7 +12,7 @@ powershell -File microservices/tests/e2e/run.ps1
 
 | Script | What it checks |
 |---|---|
-| `flow.mjs` | The whole English demo flow on the in-browser mock: guest start, language, consent, pasted-text scan, progress, result, feedback, details, evidence summary, history, link check, expiry, checklist, help, settings, log in / sign up / delete account, 404, desktop layout |
+| `flow.mjs` | The whole English demo flow on the in-browser mock: guest start, language, consent, pasted-text scan, progress, result, feedback, details, evidence summary, history, link check, expiry, checklist, help, settings, log in / sign up / delete account, landing page (claims, sections, language and theme buttons, phone and desktop layout), public legal / help / 1930 pages (Hindi, English fallback note, page titles, search-engine settings), 404, desktop layout |
 | `languages.mjs` | For each regional language (demo): the app opens in that language, no raw translation keys on screen, the result and evidence summary work, 1930 is reachable |
 | `backend.mjs` | Against the **real backend**: a photo of a fake notice is uploaded, read by Tesseract and judged by the rules, and the result, reasons, old-law note, details and evidence summary are shown in Hindi; the fingerprint equals the file's real SHA-256; "Delete now" really removes the scan on the server; a bank alert is low, a look-alike link is high; agreeing to consent is recorded (no IP address); the evidence summary PDF downloads and the fingerprint shown equals the SHA-256 of the downloaded file |
 

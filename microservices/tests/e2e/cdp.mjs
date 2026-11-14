@@ -14,6 +14,13 @@ export async function connect({ out, base, prefix, width = 390 }) {
   const ws = new WebSocket(page.webSocketDebuggerUrl);
   await new Promise((resolve) => (ws.onopen = resolve));
 
+  // A lost browser must show up as a failure. Without this the script can end silently.
+  const abort = (reason) => {
+    console.log(`FAIL  ${reason}`);
+    process.exit(1);
+  };
+  ws.onclose = () => abort('the browser closed the connection');
+
   let lastId = 0;
   const pending = new Map();
   ws.onmessage = (event) => {
@@ -27,7 +34,11 @@ export async function connect({ out, base, prefix, width = 390 }) {
   const send = (method, params = {}) =>
     new Promise((resolve) => {
       const id = ++lastId;
-      pending.set(id, resolve);
+      const timer = setTimeout(() => abort(`no answer from the browser to ${method}`), 30000);
+      pending.set(id, (message) => {
+        clearTimeout(timer);
+        resolve(message);
+      });
       ws.send(JSON.stringify({ id, method, params }));
     });
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -126,6 +137,7 @@ export async function connect({ out, base, prefix, width = 390 }) {
   function finish() {
     const failed = results.filter((pass) => !pass).length;
     console.log(`\n${results.length - failed}/${results.length} checks passed`);
+    ws.onclose = null;
     ws.close();
     process.exit(failed ? 1 : 0);
   }

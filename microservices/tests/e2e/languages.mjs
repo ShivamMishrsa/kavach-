@@ -13,6 +13,11 @@ const { sleep, ev, send, waitFor, check, shot, finish } = await connect({
 for (const lang of langs) {
   await send('Page.navigate', { url: base + '/' });
   await sleep(800);
+  await ev(`localStorage.clear(); localStorage.setItem('kavach.lang','${lang}')`);
+  await send('Page.navigate', { url: base + '/' });
+  await sleep(1200);
+  check(`[${lang}] landing page fits the phone and shows no raw translation key`, (await ev('document.documentElement.scrollWidth <= window.innerWidth')) && !(await ev(`/\\b(landing|site|welcome|help)\\.[a-zA-Z]+\\b/.test(document.body.innerText)`)));
+  await shot(`${lang}-0-landing`);
   await ev(`localStorage.clear(); localStorage.setItem('kavach.session', '{"kind":"guest"}'); localStorage.setItem('kavach.onboarded','1'); localStorage.setItem('kavach.lang','${lang}'); localStorage.setItem('kavach.consent', JSON.stringify({version:'2026-11-v1', grantedAt:new Date().toISOString()})); ${process.env.PREFS ? `localStorage.setItem('kavach.prefs', ${JSON.stringify(process.env.PREFS)});` : ''}`);
   await send('Page.navigate', { url: base + '/app' });
   await sleep(1500);
