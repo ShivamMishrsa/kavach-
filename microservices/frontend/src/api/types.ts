@@ -118,7 +118,35 @@ export interface DossierFile {
   generatedAt: string;
 }
 
-export type ApiErrorCode = 'not_found' | 'expired' | 'invalid_input' | 'rate_limited' | 'network';
+export type ApiErrorCode =
+  | 'not_found'
+  | 'expired'
+  | 'invalid_input'
+  | 'rate_limited'
+  | 'unauthorized'
+  | 'forbidden'
+  | 'network';
+
+/** The signed-in person, as the server knows them. */
+export interface Account {
+  id: string;
+  email: string;
+  /** The language they chose, or null before they chose one. */
+  language: string | null;
+  /** True when the type, risk level and time of each check are also kept in the account. */
+  syncHistory: boolean;
+}
+
+/** One place the account is signed in. The id is not a secret. */
+export interface SignIn {
+  id: string;
+  createdAt: string;
+  expiresAt: string;
+  /** True for the browser that is asking. */
+  current: boolean;
+}
+
+export type AccountPatch = Partial<Pick<Account, 'language' | 'syncHistory'>>;
 
 export class ApiError extends Error {
   readonly code: ApiErrorCode;
@@ -142,4 +170,23 @@ export interface ApiClient {
   createDossier(id: string, text: DossierText): Promise<DossierFile>;
   /** Tells the backend which consent text was agreed to or withdrawn. */
   recordConsent(version: string, granted: boolean): Promise<void>;
+
+  /** Emails a one-time sign-in link. The answer is the same whether or not the address has an account. */
+  requestSignInLink(email: string, language: string): Promise<void>;
+  /** Uses the secret from the link. Rejects with `unauthorized` when it is wrong, used or expired. */
+  verifySignIn(token: string): Promise<Account>;
+  /** The account behind the session cookie, or null when nobody is signed in. */
+  getAccount(): Promise<Account | null>;
+  updateAccount(patch: AccountPatch): Promise<Account>;
+  signOut(everywhere: boolean): Promise<void>;
+  /** Sends a confirmation link to the NEW address; the address changes when it is opened. */
+  requestEmailChange(email: string, language: string): Promise<void>;
+  confirmEmailChange(token: string): Promise<Account>;
+  listSignIns(): Promise<SignIn[]>;
+  endSignIn(id: string): Promise<void>;
+  /** Everything the server holds about the account, as a file. */
+  exportAccount(): Promise<Blob>;
+  deleteAccount(): Promise<void>;
+  /** Puts the checks remembered on this device into the account (only after sync is on). */
+  uploadHistory(): Promise<void>;
 }

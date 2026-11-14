@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router';
 import { toast } from 'sonner';
 import { useDeleteAllScans } from '@/api/queries';
 import { useAuth } from '@/auth/AuthProvider';
+import { AccountPanel } from '@/components/AccountPanel';
 import { PageHeader } from '@/components/PageHeader';
 import { SettingsPanel } from '@/components/SettingsPanel';
 import { Button } from '@/components/ui/button';
@@ -26,7 +27,7 @@ function Section({ id, title, children }: { id: string; title: string; children:
 export default function Settings() {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
-  const { session, signOut, deleteAccount } = useAuth();
+  const { session } = useAuth();
   const { consent, granted, grant, withdraw } = useConsent();
   const deleteAll = useDeleteAllScans();
 
@@ -82,47 +83,7 @@ export default function Settings() {
 
       <Section id="account" title={t('settings.account')}>
         {session?.kind === 'user' ? (
-          <>
-            <p>{t('settings.signedInAs', { email: session.email })}</p>
-            <div className="flex flex-wrap gap-2">
-              <Button
-                variant="outline"
-                onClick={() => {
-                  signOut();
-                  navigate('/');
-                }}
-              >
-                {t('settings.signOut')}
-              </Button>
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button variant="outline">{t('settings.deleteAccount')}</Button>
-                </DialogTrigger>
-                <DialogContent
-                  title={t('settings.deleteAccountTitle')}
-                  description={t('settings.deleteAccountBody')}
-                >
-                  <div className="flex gap-2">
-                    <DialogClose asChild>
-                      <Button
-                        variant="danger"
-                        onClick={async () => {
-                          await deleteAll.mutateAsync();
-                          deleteAccount();
-                          navigate('/');
-                        }}
-                      >
-                        {t('settings.deleteAccount')}
-                      </Button>
-                    </DialogClose>
-                    <DialogClose asChild>
-                      <Button variant="ghost">{t('common.cancel')}</Button>
-                    </DialogClose>
-                  </div>
-                </DialogContent>
-              </Dialog>
-            </div>
-          </>
+          <AccountPanel email={session.email} />
         ) : (
           <>
             <p className="text-muted">{t('settings.guestInfo')}</p>

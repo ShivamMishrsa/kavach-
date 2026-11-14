@@ -309,3 +309,194 @@ describe('limits', () => {
     });
   });
 });
+
+const ACCOUNT = { id: 'usr_1', email: 'ravi@example.com', language: null, syncHistory: false };
+
+/** Answers like the server: accounts for /v1/auth, 204 for history, a scan for everything else. */
+function serve(account = ACCOUNT) {
+  respond = ({ url, init }) => {
+    if (url.includes('/v1/history')) return new Response(null, { status: 204 });
+    if (url.includes('/v1/auth/profile')) {
+      return json({ ...account, ...JSON.parse(init?.body as string) });
+    }
+    if (url.includes('/v1/auth')) return json(account);
+    return json(scan(), 201);
+  };
+}
+
+const historyCalls = () => calls.filter((call) => call.url.includes('/v1/history'));
+
+describe('signing in', () => {
+  it('sends the session cookie with every request', async () => {
+    await api.createScan({ kind: 'link', url: 'example.com' });
+    expect(calls.every((call) => call.init?.credentials === 'include')).toBe(true);
+  });
+
+  it('asks for a sign-in link in the language of the screen', async () => {
+    respond = () => json({}, 202);
+    await api.requestSignInLink('ravi@example.com', 'hi');
+    expect(calls[0].url).toBe('http://api.test/v1/auth/magic-link');
+    expect(JSON.parse(calls[0].init?.body as string)).toEqual({
+      email: 'ravi@example.com',
+      language: 'hi',
+    });
+  });
+
+  it('reports a link that was too often asked for as rate_limited', async () => {
+    respond = () => json({ error: { code: 'rate_limited' } }, 429);
+    await expect(api.requestSignInLink('a@b.co', 'en')).rejects.toMatchObject({
+      code: 'rate_limited',
+    });
+  });
+
+  it('returns the account for a good link and says unauthorized for a bad one', async () => {
+    serve();
+    expect(await api.verifySignIn('x'.repeat(43))).toEqual(ACCOUNT);
+    respond = () => json({ error: { code: 'unauthorized' } }, 401);
+    await expect(api.verifySignIn('y'.repeat(43))).rejects.toMatchObject({ code: 'unauthorized' });
+  });
+
+  it('knows nobody is signed in when the server answers 401', async () => {
+    respond = () => json({ error: { code: 'unauthorized' } }, 401);
+    expect(await api.getAccount()).toBeNull();
+  });
+
+  it('signs out here or everywhere', async () => {
+    respond = () => new Response(null, { status: 204 });
+    await api.signOut(false);
+    await api.signOut(true);
+    expect(calls.map((call) => call.url)).toEqual([
+      'http://api.test/v1/auth/logout',
+      'http://api.test/v1/auth/logout-all',
+    ]);
+  });
+
+  it('downloads the account data as a file', async () => {
+    respond = () => new Response('{"account":{}}');
+    expect(await (await api.exportAccount()).text()).toBe('{"account":{}}');
+    expect(calls[0].url).toBe('http://api.test/v1/account/export');
+  });
+
+  it('deleting the account also forgets the history on this device', async () => {
+    await api.createScan({ kind: 'link', url: 'example.com' });
+    respond = () => new Response(null, { status: 204 });
+    await api.deleteAccount();
+    expect(calls.at(-1)?.init?.method).toBe('DELETE');
+    expect(await api.listHistory()).toEqual([]);
+  });
+});
+
+describe('history in the account', () => {
+  it('stays on this device while sync is off', async () => {
+    serve();
+    await api.getAccount();
+    await api.createScan({ kind: 'link', url: 'example.com' });
+    expect(historyCalls()).toEqual([]);
+    expect(await api.listHistory()).toHaveLength(1);
+  });
+
+  it('is copied to the account, and read from it, once sync is on', async () => {
+    serve();
+    await api.updateAccount({ syncHistory: true });
+    await api.createScan({ kind: 'link', url: 'example.com' });
+    expect(historyCalls().map((call) => call.init?.method)).toEqual(['PUT']);
+    const sent = JSON.parse(historyCalls()[0].init?.body as string).items;
+    expect(sent).toEqual([
+      { id: 'abc', kind: 'notice', riskLevel: null, createdAt: '2026-11-13T10:00:00Z' },
+    ]);
+
+    respond = () => json([{ id: 'from-server', kind: 'link', riskLevel: 'low', createdAt: 'x' }]);
+    expect((await api.listHistory())[0].id).toBe('from-server');
+  });
+
+  it('falls back to this device when the account cannot be reached', async () => {
+    serve();
+    await api.updateAccount({ syncHistory: true });
+    await api.createScan({ kind: 'link', url: 'example.com' });
+    respond = () => {
+      throw new TypeError('offline');
+    };
+    expect(await api.listHistory()).toHaveLength(1);
+  });
+
+  it('never fails a check because the copy to the account failed', async () => {
+    serve();
+    await api.updateAccount({ syncHistory: true });
+    respond = ({ url }) =>
+      url.includes('/v1/history') ? new Response(null, { status: 500 }) : json(scan(), 201);
+    await expect(api.createScan({ kind: 'link', url: 'example.com' })).resolves.toMatchObject({
+      id: 'abc',
+    });
+  });
+
+  it('deleting a check or all of them reaches the account too', async () => {
+    serve();
+    await api.updateAccount({ syncHistory: true });
+    await api.createScan({ kind: 'link', url: 'example.com' });
+    calls = [];
+    respond = () => new Response(null, { status: 204 });
+    await api.deleteScan('abc');
+    await api.deleteAllScans();
+    const deleted = calls.filter((call) => call.url.includes('/v1/history'));
+    expect(deleted.map((call) => call.url)).toEqual([
+      'http://api.test/v1/history/abc',
+      'http://api.test/v1/history',
+    ]);
+  });
+
+  it('uploads the checks remembered on this device in chunks', async () => {
+    serve();
+    for (let index = 0; index < 3; index++) {
+      respond = () => json(scan({ id: `scan-id-${index}` }), 201);
+      await api.createScan({ kind: 'link', url: 'example.com' });
+    }
+    serve();
+    await api.updateAccount({ syncHistory: true });
+    calls = [];
+    await api.uploadHistory();
+    expect(JSON.parse(calls[0].init?.body as string).items).toHaveLength(3);
+  });
+
+  it('stops copying after sign out', async () => {
+    serve();
+    await api.updateAccount({ syncHistory: true });
+    respond = () => new Response(null, { status: 204 });
+    await api.signOut(false);
+    calls = [];
+    respond = () => json(scan(), 201);
+    await api.createScan({ kind: 'link', url: 'example.com' });
+    expect(historyCalls()).toEqual([]);
+  });
+});
+
+describe('email address and sign-ins', () => {
+  it('asks for a link to the new address, in the language of the screen', async () => {
+    respond = () => json({}, 202);
+    await api.requestEmailChange('new@example.com', 'ta');
+    expect(calls[0].url).toBe('http://api.test/v1/account/email');
+    expect(JSON.parse(calls[0].init?.body as string)).toEqual({
+      email: 'new@example.com',
+      language: 'ta',
+    });
+  });
+
+  it('returns the changed account for a good link and says unauthorized for a bad one', async () => {
+    respond = () => json({ ...ACCOUNT, email: 'new@example.com' });
+    expect((await api.confirmEmailChange('x'.repeat(43))).email).toBe('new@example.com');
+    expect(calls[0].url).toBe('http://api.test/v1/account/email/confirm');
+    respond = () => json({ error: { code: 'unauthorized' } }, 401);
+    await expect(api.confirmEmailChange('y'.repeat(43))).rejects.toMatchObject({
+      code: 'unauthorized',
+    });
+  });
+
+  it('lists the sign-ins and ends one by its id', async () => {
+    const rows = [{ id: 'abc123', createdAt: 'x', expiresAt: 'y', current: true }];
+    respond = () => json(rows);
+    expect(await api.listSignIns()).toEqual(rows);
+    respond = () => new Response(null, { status: 204 });
+    await api.endSignIn('abc/123');
+    expect(calls.at(-1)?.url).toBe('http://api.test/v1/auth/sessions/abc%2F123');
+    expect(calls.at(-1)?.init?.method).toBe('DELETE');
+  });
+});

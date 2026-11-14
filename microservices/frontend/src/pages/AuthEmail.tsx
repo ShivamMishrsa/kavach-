@@ -3,31 +3,45 @@ import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router';
+import { isMockApi } from '@/api/client';
 import { useAuth } from '@/auth/AuthProvider';
 import { validateEmail } from '@/auth/session';
 import { PageHeader } from '@/components/PageHeader';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/Input';
+import { errorKey } from '@/lib/errors';
 
 /**
- * Log in and sign up share one screen: passwordless email link.
- * DEMO: no email is sent yet; real sign-in is built in Step 7.
+ * Log in and sign up share one screen: passwordless email link. With the real backend the link
+ * is emailed; in the demo nothing is sent and a button simulates opening it.
  */
 export function AuthEmail({ mode }: { mode: 'login' | 'signup' }) {
   const { t } = useTranslation();
-  const { signIn, continueAsGuest } = useAuth();
+  const { signIn, requestLink, continueAsGuest } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [error, setError] = useState<string | undefined>();
   const [sent, setSent] = useState(false);
+  const [pending, setPending] = useState(false);
 
-  function submit(event: FormEvent) {
+  async function submit(event: FormEvent) {
     event.preventDefault();
     if (!validateEmail(email)) {
       setError(t('auth.emailError'));
       return;
     }
     setError(undefined);
+    if (!isMockApi) {
+      setPending(true);
+      try {
+        await requestLink(email);
+      } catch (failure) {
+        setError(t(errorKey(failure)));
+        return;
+      } finally {
+        setPending(false);
+      }
+    }
     setSent(true);
   }
 
@@ -40,11 +54,13 @@ export function AuthEmail({ mode }: { mode: 'login' | 'signup' }) {
           </span>
           <h1 className="text-2xl font-extrabold">{t('auth.checkTitle')}</h1>
           <p>{t('auth.checkBody', { email: email.trim() })}</p>
-          <p className="text-sm text-muted">{t('auth.demoNote')}</p>
+          <p className="text-sm text-muted">{t(isMockApi ? 'auth.demoNote' : 'auth.linkNote')}</p>
         </div>
-        <Button size="lg" block onClick={() => navigate(signIn(email))}>
-          {t('auth.continueDemo')}
-        </Button>
+        {isMockApi && (
+          <Button size="lg" block onClick={() => navigate(signIn(email))}>
+            {t('auth.continueDemo')}
+          </Button>
+        )}
         <Button variant="ghost" block onClick={() => setSent(false)}>
           {t('auth.useOtherEmail')}
         </Button>
@@ -71,8 +87,8 @@ export function AuthEmail({ mode }: { mode: 'login' | 'signup' }) {
           autoComplete="email"
           inputMode="email"
         />
-        <Button type="submit" size="lg" block>
-          {t('auth.sendLink')}
+        <Button type="submit" size="lg" block disabled={pending}>
+          {pending ? t('common.loading') : t('auth.sendLink')}
         </Button>
       </form>
 

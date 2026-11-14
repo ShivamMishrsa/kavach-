@@ -5,6 +5,7 @@ import type { DossierText, Entity, FeedbackInput, Scan, ScanInput } from './type
 export const queryKeys = {
   scan: (id: string) => ['scan', id] as const,
   history: ['history'] as const,
+  signIns: ['sign-ins'] as const,
 };
 
 /** Polls while the check is still running, then stops. */

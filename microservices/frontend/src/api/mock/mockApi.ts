@@ -238,6 +238,26 @@ export function createMockApi(options: MockApiOptions = {}): ApiClient {
       /* the demo keeps no consent log */
     },
 
+    // The demo has no server accounts: its sign-in is simulated by the auth provider.
+    async requestSignInLink() {},
+    async verifySignIn() {
+      throw new ApiError('unauthorized', 'Demo');
+    },
+    getAccount: async () => null,
+    async updateAccount() {
+      throw new ApiError('unauthorized', 'Demo');
+    },
+    async signOut() {},
+    async requestEmailChange() {},
+    async confirmEmailChange() {
+      throw new ApiError('unauthorized', 'Demo');
+    },
+    listSignIns: async () => [],
+    async endSignIn() {},
+    exportAccount: async () => new Blob([]),
+    async deleteAccount() {},
+    async uploadHistory() {},
+
     async sendFeedback(input: FeedbackInput) {
       await pause();
       const all = read<FeedbackInput[]>(storage, FEEDBACK_KEY, []);

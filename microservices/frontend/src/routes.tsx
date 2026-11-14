@@ -50,6 +50,8 @@ export const routes: RouteObject[] = [
       {
         element: <PublicLayout />,
         children: [
+          { path: 'auth/verify', ...page(() => import('@/pages/AuthVerify')) },
+          { path: 'auth/confirm-email', ...page(() => import('@/pages/AuthConfirmEmail')) },
           {
             element: <RedirectIfReady />,
             children: [{ path: 'start', ...page(() => import('@/pages/Welcome')) }],
