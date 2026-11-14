@@ -52,6 +52,9 @@ class Settings:
     # The consent text the website shows. A record for any other version is refused.
     consent_version: str = "2026-11-v1"
 
+    # Consent and feedback records are deleted after this many days (the privacy policy says so).
+    retention_days: int = 90
+
     # Evidence summary (PDF) download links, and the sweep that deletes expired scans.
     download_link_seconds: int = 5 * 60
     purge_interval_seconds: float = 60

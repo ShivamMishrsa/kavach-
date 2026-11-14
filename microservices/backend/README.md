@@ -87,6 +87,7 @@ the result is `low` only if there was enough clear text to judge, otherwise `can
 Body size cap (also for streamed bodies), 20 tries per 10 minutes per person and action (scan, PDF,
 feedback, consent), security headers, short signed PDF links. Set `KAVACH_SECRET` in production.
 Behind a reverse proxy the client address must come from a trusted header; that is done at deploy (Step 8).
+Consent and feedback records are deleted after 90 days (`retention_days`, checked once an hour). The server's own access log, which would print client IPs, is switched off in code. A hosting service or proxy in front may still keep its own logs (Step 8).
 
 ## Known limits
 
