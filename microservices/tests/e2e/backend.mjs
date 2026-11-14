@@ -2,7 +2,8 @@
 // read by Tesseract, judged by the rules, and the result is shown in Hindi.
 // Usage: node backend.mjs <outDir> <noticeImage>   (normally started by run.ps1)
 import { createHash } from 'node:crypto';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync, rmSync } from 'node:fs';
+import path from 'node:path';
 import { connect } from './cdp.mjs';
 
 const [out, noticeImage] = process.argv.slice(2);
@@ -10,7 +11,7 @@ const api = 'http://localhost:8001';
 const hi = JSON.parse(
   readFileSync(new URL('../../frontend/src/i18n/locales/hi.json', import.meta.url), 'utf8'),
 );
-const { sleep, ev, waitFor, hasText, waitText, clickText, setValue, chooseFile, pathname, go, shot, check, finish } =
+const { send, sleep, ev, waitFor, hasText, waitText, clickText, setValue, chooseFile, pathname, go, shot, check, finish } =
   await connect({ out, base: 'http://localhost:4174', prefix: 'backend' });
 
 const lastEnabledButton = (scope) =>
@@ -19,18 +20,24 @@ const resultShown = (ms = 25000) =>
   waitFor(`!!document.querySelector('section[aria-labelledby=risk-title]')`, ms);
 const apiScan = async (id) => fetch(`${api}/v1/scans/${id}`);
 
-// A guest who chose Hindi and already gave consent.
+// A guest who chose Hindi. Consent is given on screen below, so the backend records it.
 await go('/');
 await ev(`localStorage.clear();
   localStorage.setItem('kavach.session', '{"kind":"guest"}');
   localStorage.setItem('kavach.onboarded', '1');
-  localStorage.setItem('kavach.lang', 'hi');
-  localStorage.setItem('kavach.consent', JSON.stringify({ version: '2026-11-v1', grantedAt: new Date().toISOString() }));`);
+  localStorage.setItem('kavach.lang', 'hi');`);
 await go('/app');
 check('Real mode: no "demo mode" banner', !(await ev(hasText(hi.common.demoBanner))));
 
 // ---------- photo of a notice ----------
 await go('/app/scan/notice');
+await clickText('button', hi.consent.agree);
+const consentLog = path.join(out, 'backend-data', 'consent.jsonl');
+for (let i = 0; i < 30 && !existsSync(consentLog); i++) await sleep(200);
+const consentText = existsSync(consentLog) ? readFileSync(consentLog, 'utf8') : '';
+const record = consentText ? JSON.parse(consentText.trim().split('\n')[0]) : {};
+check('Agreeing to the consent is recorded by the backend', record.version === '2026-11-v1' && record.granted === true && /^[0-9a-f]{64}$/.test(record.person));
+check('The consent record holds no IP address', consentText !== '' && !/127\.0\.0\.1|::1/.test(consentText));
 await chooseFile('input[type=file]:not([capture])', noticeImage);
 check('The chosen photo is previewed', await waitFor(`!!document.querySelector('img[alt]')`, 4000));
 await ev(lastEnabledButton('main fieldset'));
@@ -72,6 +79,19 @@ await sleep(500);
 check('Summary script has the UPI id and UTR', await ev(`(() => { const t = document.querySelector('blockquote')?.innerText ?? ''; return t.includes('safe.verification@upi') && t.includes('400000000001'); })()`));
 check('Summary shows the fingerprint of the photo', await ev(hasText(fingerprint.slice(0, 10))));
 await shot('2-dossier');
+
+// ---------- the PDF ----------
+await send('Browser.setDownloadBehavior', { behavior: 'allow', downloadPath: out });
+const pdfFile = path.join(out, 'kavach-evidence-summary.pdf');
+rmSync(pdfFile, { force: true }); // a file left by an earlier run would be saved under another name
+await clickText('button', hi.dossier.pdfDownload);
+const shownHash = await waitFor(`document.querySelector('[data-testid=pdf-sha256]')?.textContent`, 20000);
+check('The PDF fingerprint is shown after the PDF is made', /^[0-9a-f]{64}$/.test(shownHash || ''));
+for (let i = 0; i < 40 && !existsSync(pdfFile); i++) await sleep(250);
+const pdf = existsSync(pdfFile) ? readFileSync(pdfFile) : Buffer.alloc(0);
+check('A PDF was downloaded', pdf.subarray(0, 5).toString() === '%PDF-');
+check('The shown fingerprint is the SHA-256 of the downloaded file', createHash('sha256').update(pdf).digest('hex') === shownHash);
+await shot('2b-dossier-pdf');
 check('The backend kept the details the person confirmed', (await (await apiScan(scanId)).json()).confirmedEntities?.length > 0);
 
 // ---------- delete now ----------

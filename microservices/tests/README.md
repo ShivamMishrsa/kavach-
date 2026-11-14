@@ -14,7 +14,7 @@ powershell -File microservices/tests/e2e/run.ps1
 |---|---|
 | `flow.mjs` | The whole English demo flow on the in-browser mock: guest start, language, consent, pasted-text scan, progress, result, feedback, details, evidence summary, history, link check, expiry, checklist, help, settings, log in / sign up / delete account, 404, desktop layout |
 | `languages.mjs` | For each regional language (demo): the app opens in that language, no raw translation keys on screen, the result and evidence summary work, 1930 is reachable |
-| `backend.mjs` | Against the **real backend**: a photo of a fake notice is uploaded, read by Tesseract and judged by the rules, and the result, reasons, old-law note, details and evidence summary are shown in Hindi; the fingerprint equals the file's real SHA-256; "Delete now" really removes the scan on the server; a bank alert is low, a look-alike link is high |
+| `backend.mjs` | Against the **real backend**: a photo of a fake notice is uploaded, read by Tesseract and judged by the rules, and the result, reasons, old-law note, details and evidence summary are shown in Hindi; the fingerprint equals the file's real SHA-256; "Delete now" really removes the scan on the server; a bank alert is low, a look-alike link is high; agreeing to consent is recorded (no IP address); the evidence summary PDF downloads and the fingerprint shown equals the SHA-256 of the downloaded file |
 
 `run.ps1` runs the demo checks first, then the real-backend check. The real-backend check is **skipped with a warning** when the backend's virtual environment or Tesseract (English + Hindi) is not set up; see `microservices/backend/README.md`.
 

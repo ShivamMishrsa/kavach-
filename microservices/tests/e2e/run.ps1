@@ -56,7 +56,7 @@ try {
     Write-Warning 'SKIPPED: backend virtual environment not found (see microservices/backend/README.md).'
   } else {
     $env:KAVACH_CORS_ORIGINS = 'http://localhost:4174'
-    $env:KAVACH_FEEDBACK_PATH = Join-Path $OutDir 'feedback.jsonl'
+    $env:KAVACH_DATA_DIR = Join-Path $OutDir 'backend-data'
     $server = Start-Hidden $backendPython @('-m', 'uvicorn', 'app.main:app', '--port', '8001') $backend
     $started += $server
     $ready = $false
