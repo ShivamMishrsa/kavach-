@@ -1,4 +1,4 @@
-import { FlaskConical, Phone, Share2, Trash2 } from 'lucide-react';
+import { FlaskConical, Phone, Share2, Trash2, TriangleAlert } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router';
@@ -7,6 +7,7 @@ import { useDeleteScan } from '@/api/queries';
 import type { Scan } from '@/api/types';
 import { FeedbackDialog } from '@/components/FeedbackDialog';
 import { PageHeader } from '@/components/PageHeader';
+import { StateMessage } from '@/components/StateMessage';
 import { WithScan } from '@/components/WithScan';
 import { Button } from '@/components/ui/button';
 import { buttonVariants } from '@/components/ui/button-variants';
@@ -62,6 +63,13 @@ function Done({ scan, id }: { scan: Scan; id: string }) {
   const next = t(`next.${level}`, { returnObjects: true });
   const steps = Array.isArray(next) ? (next as string[]) : [];
   const showDetails = level === 'very_high' || level === 'high' || result.entities.length > 0;
+  // The old law sections named in the notice are shown right under the reason about them.
+  const reasons = result.reasonCodes.flatMap((code) => [
+    t(`reasons.${code}`),
+    ...(code === 'outdated_section'
+      ? result.statutes.map(({ cited, current }) => t('statutes.line', { cited, current }))
+      : []),
+  ]);
 
   async function warnFamily() {
     const outcome = await shareOrCopy(
@@ -86,11 +94,7 @@ function Done({ scan, id }: { scan: Scan; id: string }) {
         </p>
       )}
 
-      <RiskCard
-        level={level}
-        reasons={result.reasonCodes.map((code) => t(`reasons.${code}`))}
-        onWrongResult={() => setFeedbackOpen(true)}
-      />
+      <RiskCard level={level} reasons={reasons} onWrongResult={() => setFeedbackOpen(true)} />
 
       {steps.length > 0 && (
         <section
@@ -152,12 +156,30 @@ function Done({ scan, id }: { scan: Scan; id: string }) {
   );
 }
 
+function Failed() {
+  const { t } = useTranslation();
+  return (
+    <StateMessage
+      icon={TriangleAlert}
+      title={t('errors.generic')}
+      message={t('errors.invalid')}
+      action={
+        <Link to="/app" className={buttonVariants()}>
+          {t('common.goHome')}
+        </Link>
+      }
+    />
+  );
+}
+
 export default function ScanView() {
   return (
     <WithScan>
-      {(scan, id) =>
-        scan.status === 'done' ? <Done scan={scan} id={id} /> : <Processing scan={scan} id={id} />
-      }
+      {(scan, id) => {
+        if (scan.status === 'done') return <Done scan={scan} id={id} />;
+        if (scan.status === 'failed') return <Failed />;
+        return <Processing scan={scan} id={id} />;
+      }}
     </WithScan>
   );
 }

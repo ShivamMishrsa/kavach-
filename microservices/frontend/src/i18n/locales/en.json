@@ -72,6 +72,9 @@
     "lookalike_domain": "The web address imitates a known bank or agency",
     "insecure_link": "The link does not use a secure connection (https)"
   },
+  "statutes": {
+    "line": "{{cited}} is now {{current}} (since 1 July 2024)"
+  },
   "steps": {
     "received": "File received securely",
     "read": "Text was read",

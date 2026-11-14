@@ -44,6 +44,7 @@ describe('analyzeText', () => {
       riskLevel: 'cannot_verify',
       reasonCodes: [],
       entities: [],
+      statutes: [],
     });
   });
 

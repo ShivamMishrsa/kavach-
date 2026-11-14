@@ -48,7 +48,7 @@ export function extractEntities(text: string, now: Date): Entity[] {
 export function analyzeText(text: string, now: Date): ScanResult {
   const trimmed = text.trim();
   if (trimmed.length < 8) {
-    return { riskLevel: 'cannot_verify', reasonCodes: [], entities: [] };
+    return { riskLevel: 'cannot_verify', reasonCodes: [], entities: [], statutes: [] };
   }
   const strong = STRONG.filter(([, pattern]) => pattern.test(trimmed)).map(([code]) => code);
   const supporting = SUPPORTING.filter(([, pattern]) => pattern.test(trimmed)).map(
@@ -64,6 +64,7 @@ export function analyzeText(text: string, now: Date): ScanResult {
     riskLevel,
     reasonCodes: [...strong, ...supporting],
     entities: extractEntities(trimmed, now),
+    statutes: [],
   };
 }
 
@@ -146,7 +147,7 @@ export function analyzeLink(input: string): ScanResult | null {
   else if (isOfficial(host)) riskLevel = 'low';
   else riskLevel = 'cannot_verify';
 
-  return { riskLevel, reasonCodes: reasons, entities };
+  return { riskLevel, reasonCodes: reasons, entities, statutes: [] };
 }
 
 // ---------- demo samples and simulated uploads ----------
@@ -171,19 +172,21 @@ export function sampleResult(sample: SampleId, now: Date): ScanResult {
           { type: 'amount', value: '₹50,000' },
           { type: 'datetime', value: earlier },
         ],
+        statutes: [{ cited: 'IPC 420', current: 'BNS 318(4)' }],
       };
     case 'courier_link':
       return {
         riskLevel: 'high',
         reasonCodes: ['urgency', 'lookalike_domain'],
         entities: [{ type: 'link', value: 'http://sbi-kyc-update.example/verify' }],
+        statutes: [],
       };
     case 'medium_message':
-      return { riskLevel: 'medium', reasonCodes: ['urgency'], entities: [] };
+      return { riskLevel: 'medium', reasonCodes: ['urgency'], entities: [], statutes: [] };
     case 'unclear_photo':
-      return { riskLevel: 'cannot_verify', reasonCodes: [], entities: [] };
+      return { riskLevel: 'cannot_verify', reasonCodes: [], entities: [], statutes: [] };
     case 'bank_alert':
-      return { riskLevel: 'low', reasonCodes: [], entities: [] };
+      return { riskLevel: 'low', reasonCodes: [], entities: [], statutes: [] };
   }
 }
 

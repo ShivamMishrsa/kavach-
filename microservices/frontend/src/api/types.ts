@@ -40,10 +40,17 @@ export interface StageProgress {
   status: StageStatus;
 }
 
+/** An old law section named in the notice, and the section that replaced it on 1 July 2024. */
+export interface Statute {
+  cited: string;
+  current: string;
+}
+
 export interface ScanResult {
   riskLevel: RiskLevel;
   reasonCodes: ReasonCode[];
   entities: Entity[];
+  statutes: Statute[];
 }
 
 export interface Scan {

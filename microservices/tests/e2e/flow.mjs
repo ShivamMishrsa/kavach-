@@ -1,72 +1,10 @@
-// End-to-end browser test of the whole Step 3 flow over the DevTools protocol (headless Edge).
+// End-to-end browser test of the whole demo flow (in-browser mock, no backend), headless Edge.
 // Usage: node flow.mjs <outDir>   (normally started by run.ps1)
-import { writeFileSync } from 'node:fs';
-import path from 'node:path';
+import { connect } from './cdp.mjs';
 
-const out = process.argv[2];
-const base = 'http://localhost:4173';
-const targets = await (await fetch('http://127.0.0.1:9222/json')).json();
-const page = targets.find((t) => t.type === 'page');
-const ws = new WebSocket(page.webSocketDebuggerUrl);
-await new Promise((resolve) => (ws.onopen = resolve));
+const { sleep, ev, send, waitFor, hasText, waitText, clickText, setValue, pathname, go, shot, check, finish } =
+  await connect({ out: process.argv[2], base: 'http://localhost:4173', prefix: 'flow' });
 
-let id = 0;
-const pending = new Map();
-ws.onmessage = (event) => {
-  const msg = JSON.parse(event.data);
-  if (msg.id && pending.has(msg.id)) {
-    pending.get(msg.id)(msg);
-    pending.delete(msg.id);
-  }
-};
-const send = (method, params = {}) =>
-  new Promise((resolve) => {
-    const myId = ++id;
-    pending.set(myId, resolve);
-    ws.send(JSON.stringify({ id: myId, method, params }));
-  });
-const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-async function ev(expression) {
-  const res = await send('Runtime.evaluate', { expression, returnByValue: true, awaitPromise: true });
-  if (res.result.exceptionDetails) return { __error: JSON.stringify(res.result.exceptionDetails).slice(0, 300) };
-  return res.result.result.value;
-}
-async function waitFor(expression, ms = 9000) {
-  const end = Date.now() + ms;
-  while (Date.now() < end) {
-    const value = await ev(expression);
-    if (value && !value.__error) return value;
-    await sleep(150);
-  }
-  return false;
-}
-const hasText = (s) => `document.body.innerText.includes(${JSON.stringify(s)})`;
-const waitText = (s, ms) => waitFor(hasText(s), ms);
-const clickText = (selector, text, exact = false) =>
-  ev(`(() => { const els = [...document.querySelectorAll(${JSON.stringify(selector)})]; const el = els.find(e => { const t = e.textContent.trim().replace(/\\s+/g,' '); return ${exact} ? t === ${JSON.stringify(text)} : t.includes(${JSON.stringify(text)}); }); if (!el) return false; el.click(); return true; })()`);
-const setValue = (selector, value) =>
-  ev(`(() => { const el = document.querySelector(${JSON.stringify(selector)}); if (!el) return false; const proto = el.tagName === 'SELECT' ? HTMLSelectElement.prototype : el.tagName === 'TEXTAREA' ? HTMLTextAreaElement.prototype : HTMLInputElement.prototype; Object.getOwnPropertyDescriptor(proto, 'value').set.call(el, ${JSON.stringify(value)}); el.dispatchEvent(new Event(el.tagName === 'SELECT' ? 'change' : 'input', { bubbles: true })); return true; })()`);
-const path_ = () => ev('location.pathname');
-async function go(p) {
-  await send('Page.navigate', { url: base + p });
-  await sleep(900);
-}
-async function shot(name) {
-  const metrics = await send('Page.getLayoutMetrics');
-  const h = Math.min(Math.ceil(metrics.result.cssContentSize.height), 2600);
-  const w = Math.ceil(metrics.result.cssContentSize.width);
-  const r = await send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: true, clip: { x: 0, y: 0, width: w, height: h, scale: 1 } });
-  writeFileSync(path.join(out, `flow-${name}.png`), Buffer.from(r.result.data, 'base64'));
-}
-
-const results = [];
-function check(name, pass, detail = '') {
-  results.push({ name, pass: Boolean(pass) });
-  console.log(`${pass ? 'PASS' : 'FAIL'}  ${name}${!pass && detail ? '  -> ' + detail : ''}`);
-}
-
-await send('Page.enable');
-await send('Emulation.setDeviceMetricsOverride', { width: 390, height: 900, deviceScaleFactor: 1, mobile: true });
 await go('/');
 await ev('localStorage.clear()');
 await go('/');
@@ -79,7 +17,7 @@ check('1930 helpline strip is visible on welcome', await ev('!!document.querySel
 await shot('01-welcome');
 
 await go('/app');
-check('The app is protected: /app redirects to welcome without a session', (await path_()) === '/');
+check('The app is protected: /app redirects to welcome without a session', (await pathname()) === '/');
 
 await clickText('button', 'Continue without account');
 check('Guest goes to the language screen', (await waitFor(`location.pathname === '/language'`)) && (await ev(hasText('Choose your language'))));
@@ -119,7 +57,7 @@ check('Result never shows an accuracy percentage or "100%"', !(await ev(`/\\d+\\
 check('Result shows what to do now and the disclaimer', (await ev(hasText('What to do now'))) && (await ev(hasText('not a final verdict'))));
 check('Deletion time is shown', await ev(hasText('will be deleted at')));
 await shot('06-result');
-const scanUrl = await path_();
+const scanUrl = await pathname();
 
 // feedback dialog
 await clickText('button', 'Result looks wrong?');
@@ -189,7 +127,7 @@ check('Unclear photo sample gives "Could not verify"', await waitText('Could not
 check('Could not verify never says it is safe', !(await ev(hasText('safe to'))));
 
 // ---------- expiry ----------
-const expiredId = (await path_()).split('/').pop();
+const expiredId = (await pathname()).split('/').pop();
 await ev(`(() => { const s = JSON.parse(localStorage.getItem('kavach.mock.scans')); for (const k in s) s[k].expiresAt = new Date(Date.now()-1000).toISOString(); localStorage.setItem('kavach.mock.scans', JSON.stringify(s)); })()`);
 await go('/app/scan/' + expiredId);
 check('An expired check shows the "deleted" screen', await waitText('This check was deleted'));
@@ -294,7 +232,4 @@ await sleep(500);
 check('Desktop shows the side navigation', await ev(`(() => { const navs = [...document.querySelectorAll('nav[aria-label="Main menu"]')]; const shown = navs.filter(n => getComputedStyle(n).display !== 'none' && n.getBoundingClientRect().width > 0); return shown.length === 1 && shown[0].getBoundingClientRect().left < 100 && shown[0].getBoundingClientRect().top < 300; })()`));
 await shot('12-desktop-home');
 
-const failed = results.filter((r) => !r.pass).length;
-console.log(`\n${results.length - failed}/${results.length} checks passed`);
-ws.close();
-process.exit(failed ? 1 : 0);
+finish();

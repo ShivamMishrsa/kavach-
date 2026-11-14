@@ -22,6 +22,10 @@ uploads/
 tmp/
 *.log
 
+# backend: OCR language files (downloaded, see backend README) and feedback written at runtime
+microservices/backend/tessdata/
+microservices/backend/data/
+
 # OS / editor
 .DS_Store
 Thumbs.db

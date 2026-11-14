@@ -1,10 +1,17 @@
-# Runs the browser end-to-end checks against the production build, in headless Edge or Chrome.
+# Runs the browser end-to-end checks in headless Edge or Chrome (Windows).
+#   1. Demo flow on the in-browser mock: English flow + the regional languages.
+#   2. Real flow against the backend (Tesseract + rules). Skipped, with a warning, when the
+#      backend or Tesseract is not set up (see microservices/backend/README.md).
 # Usage (from anywhere):  powershell -File microservices/tests/e2e/run.ps1 [-OutDir <folder>]
-# Needs: Node 22+, a built frontend (this script builds it), and Microsoft Edge or Google Chrome.
+# Needs: Node 22+ and Microsoft Edge or Google Chrome.
 param([string]$OutDir = (Join-Path $env:TEMP 'kavach-e2e'))
 
 $ErrorActionPreference = 'Stop'
-$frontend = (Resolve-Path (Join-Path $PSScriptRoot '..\..\frontend')).Path
+$microservices = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
+$frontend = Join-Path $microservices 'frontend'
+$backend = Join-Path $microservices 'backend'
+$backendPython = Join-Path $backend '.venv\Scripts\python.exe'
+$notice = Join-Path $backend 'tests\fixtures\notice_en.png'
 New-Item -ItemType Directory -Force $OutDir | Out-Null
 
 $browser = @(
@@ -14,28 +21,63 @@ $browser = @(
 ) | Where-Object { Test-Path $_ } | Select-Object -First 1
 if (-not $browser) { throw 'Install Microsoft Edge or Google Chrome to run the e2e checks.' }
 
-Push-Location $frontend
-npm run build | Out-Null
-$server = Start-Process cmd.exe -ArgumentList '/c', 'npx vite preview --port 4173 --strictPort' -WorkingDirectory $frontend -PassThru -WindowStyle Hidden
-$profileDir = Join-Path $OutDir 'browser-profile'
-$engine = Start-Process $browser -ArgumentList '--headless=new', '--disable-gpu', '--remote-debugging-port=9222', "--user-data-dir=$profileDir", 'about:blank' -PassThru
-Start-Sleep -Seconds 7
+function Start-Hidden($file, $arguments, $directory) {
+  Start-Process $file -ArgumentList $arguments -WorkingDirectory $directory -PassThru -WindowStyle Hidden
+}
 
+function Stop-Tree($process) {
+  if (-not $process) { return }
+  Get-CimInstance Win32_Process -Filter "ParentProcessId=$($process.Id)" |
+    ForEach-Object { Stop-Tree (Get-Process -Id $_.ProcessId -ErrorAction SilentlyContinue) }
+  Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue
+}
+
+$started = @()
 $exit = 0
+Push-Location $frontend
 try {
-  Write-Host '--- English end-to-end flow ---'
+  # ----- demo build (no backend) -----
+  npm run build | Out-Null
+  $started += Start-Hidden 'cmd.exe' @('/c', 'npx vite preview --port 4173 --strictPort') $frontend
+  $started += Start-Process $browser -PassThru -ArgumentList '--headless=new', '--disable-gpu', '--remote-debugging-port=9222', "--user-data-dir=$(Join-Path $OutDir 'browser-profile')", 'about:blank'
+  Start-Sleep -Seconds 7
+
+  Write-Host '--- English demo flow ---'
   node (Join-Path $PSScriptRoot 'flow.mjs') $OutDir
   if ($LASTEXITCODE -ne 0) { $exit = 1 }
 
-  Write-Host '--- Regional languages ---'
+  Write-Host '--- Regional languages (demo) ---'
   node (Join-Path $PSScriptRoot 'languages.mjs') $OutDir hi ta bn mr te gu
   if ($LASTEXITCODE -ne 0) { $exit = 1 }
+
+  # ----- real backend -----
+  Write-Host '--- Real backend: photo of a notice -> Hindi result ---'
+  if (-not (Test-Path $backendPython)) {
+    Write-Warning 'SKIPPED: backend virtual environment not found (see microservices/backend/README.md).'
+  } else {
+    $env:KAVACH_CORS_ORIGINS = 'http://localhost:4174'
+    $env:KAVACH_FEEDBACK_PATH = Join-Path $OutDir 'feedback.jsonl'
+    $server = Start-Hidden $backendPython @('-m', 'uvicorn', 'app.main:app', '--port', '8001') $backend
+    $started += $server
+    $ready = $false
+    for ($i = 0; $i -lt 30 -and -not $ready; $i++) {
+      Start-Sleep -Seconds 1
+      try { $ready = (Invoke-RestMethod 'http://localhost:8001/health').ocr -eq 'ready' } catch { }
+    }
+    if (-not $ready) {
+      Write-Warning 'SKIPPED: the backend did not start, or Tesseract (English + Hindi) is not ready.'
+    } else {
+      $env:VITE_API_URL = 'http://localhost:8001'
+      npx vite build --outDir (Join-Path $OutDir 'dist-real') --emptyOutDir | Out-Null
+      Remove-Item Env:VITE_API_URL
+      $started += Start-Hidden 'cmd.exe' @('/c', "npx vite preview --outDir `"$(Join-Path $OutDir 'dist-real')`" --port 4174 --strictPort") $frontend
+      Start-Sleep -Seconds 3
+      node (Join-Path $PSScriptRoot 'backend.mjs') $OutDir $notice
+      if ($LASTEXITCODE -ne 0) { $exit = 1 }
+    }
+  }
 } finally {
-  Stop-Process -Id $engine.Id -Force -ErrorAction SilentlyContinue
-  Get-CimInstance Win32_Process |
-    Where-Object { $_.CommandLine -match 'vite' -and $_.CommandLine -match '4173' } |
-    ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }
-  Stop-Process -Id $server.Id -Force -ErrorAction SilentlyContinue
+  foreach ($process in $started) { Stop-Tree $process }
   Pop-Location
 }
 Write-Host "Screenshots are in $OutDir"
