@@ -11,7 +11,12 @@ export const test = base.extend<{ watch: void }>({
   watch: [
     async ({ page }, use) => {
       const problems: string[] = [];
-      page.on('pageerror', (error) => problems.push(`error: ${error.message}`));
+      page.on('pageerror', (error) => {
+        // WebKit reports a service worker update check that was cut short (the page closed or went
+        // offline) as an error of the page. It is not one.
+        if (/sw\.js.*access control checks/.test(error.message)) return;
+        problems.push(`error: ${error.message}`);
+      });
       await page.addInitScript(() => {
         document.addEventListener('securitypolicyviolation', (event) => {
           const spy = window as unknown as Spy;

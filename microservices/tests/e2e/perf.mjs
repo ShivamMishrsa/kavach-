@@ -3,14 +3,17 @@
 // The preview server compresses files like a real host does, so the sizes are what a person downloads.
 // Usage: node perf.mjs <outDir>   (normally started by run.ps1; add -Only perf to run just this)
 import { writeFileSync } from 'node:fs';
+import http from 'node:http';
 import path from 'node:path';
 import { connect } from './cdp.mjs';
 
 // What the pages must stay under on that network. Measured, then rounded up a little.
 const BUDGET = {
-  landingKilobytes: 240, // everything downloaded to show the landing page, compressed (it includes the page written out in advance, about 8 KB)
+  landingKilobytes: 255, // measured 241 to 247. Everything downloaded to show the landing page, compressed: the page written out in advance (about 8 KB), the manifest and icon (about 3 KB) and the offline code
   landingFirstPaintMs: 3500,
   appFirstPaintMs: 4000,
+  // Saving the whole app on the phone (service worker), once, after the page has loaded.
+  offlineInstallKilobytes: 400,
 };
 const RUNS = 3;
 
@@ -93,6 +96,11 @@ async function measure(name, route, prepare) {
 
 await send('Network.enable');
 await send('Network.setCacheDisabled', { cacheDisabled: true });
+// The page's own download is measured here. Saving the app for offline use is a separate, one-time
+// background download (measured at the end), so the worker is kept from installing during a load.
+await send('Page.addScriptToEvaluateOnNewDocument', {
+  source: "Object.defineProperty(ServiceWorkerContainer.prototype, 'register', { value: () => new Promise(() => {}) })",
+});
 
 const asGuest = (lang) => () =>
   ev(`localStorage.clear(); localStorage.setItem('kavach.session', '{"kind":"guest"}'); localStorage.setItem('kavach.onboarded','1'); localStorage.setItem('kavach.lang','${lang}'); localStorage.setItem('kavach.consent', JSON.stringify({version:'2026-11-v1', grantedAt:new Date().toISOString()}))`);
@@ -112,4 +120,25 @@ check(`Landing page paints within ${BUDGET.landingFirstPaintMs} ms on a slow pho
 for (const row of rows.slice(2)) {
   check(`${row.page} paints within ${BUDGET.appFirstPaintMs} ms on a slow phone`, row.firstPaintMs <= BUDGET.appFirstPaintMs, `${row.firstPaintMs} ms`);
 }
+
+// ---------- what saving the app for offline use downloads, once ----------
+const get = (route) =>
+  new Promise((resolve, reject) => {
+    http.get(`http://localhost:4173${route}`, { headers: { 'accept-encoding': 'gzip' } }, (response) => {
+      let bytes = 0;
+      let body = '';
+      response.on('data', (chunk) => {
+        bytes += chunk.length;
+        body += route === '/sw.js' ? chunk : '';
+      });
+      response.on('end', () => resolve({ bytes, body }));
+    }).on('error', reject);
+  });
+const worker = await new Promise((resolve) => http.get('http://localhost:4173/sw.js', (r) => { let t = ''; r.on('data', (c) => (t += c)); r.on('end', () => resolve(t)); }));
+const saved = JSON.parse(worker.match(/const PRECACHE = (\[[\s\S]*?\]);/)[1]);
+let installBytes = 0;
+for (const route of saved) installBytes += (await get(route)).bytes;
+const installKilobytes = Math.round(installBytes / 1024);
+console.log(`Saving the app for offline use: ${saved.length} files, ${installKilobytes} KB once (compressed), after the page has loaded and the phone is idle`);
+check(`Saving the app for offline use downloads at most ${BUDGET.offlineInstallKilobytes} KB`, installKilobytes <= BUDGET.offlineInstallKilobytes, `${installKilobytes} KB`);
 finish();

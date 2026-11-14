@@ -4,7 +4,7 @@
 #      backend or Tesseract is not set up (see microservices/backend/README.md).
 # Usage (from anywhere):  powershell -File microservices/tests/e2e/run.ps1 [-OutDir <folder>]
 # Needs: Node 22+ and Microsoft Edge or Google Chrome.
-# Add -Only flow,languages,perf,prerender,a11y,backend,accounts to run just those suites (default: all).
+# Add -Only flow,languages,perf,prerender,a11y,backend,offline,accounts,record to run just those suites (default: all).
 param([string]$OutDir = (Join-Path $env:TEMP 'kavach-e2e'), [string[]]$Only = @())
 
 $ErrorActionPreference = 'Stop'
@@ -76,7 +76,7 @@ try {
   }
 
   # ----- real backend -----
-  if (-not (Wanted 'backend') -and -not (Wanted 'accounts')) {
+  if (-not (Wanted 'backend') -and -not (Wanted 'accounts') -and -not (Wanted 'offline') -and -not (Wanted 'record')) {
     # not asked for
   } elseif (-not (Test-Path $backendPython)) {
     Write-Warning 'SKIPPED: backend virtual environment not found (see microservices/backend/README.md).'
@@ -105,6 +105,20 @@ try {
       if (Wanted 'backend') {
         Write-Host '--- Real backend: photo of a notice -> Hindi result ---'
         node (Join-Path $PSScriptRoot 'backend.mjs') $OutDir $notice
+        if ($LASTEXITCODE -ne 0) { $exit = 1 }
+      }
+
+      if (Wanted 'offline') {
+        Write-Host '--- Real backend: checks kept while offline ---'
+        node (Join-Path $PSScriptRoot 'offline.mjs') $OutDir $notice
+        if ($LASTEXITCODE -ne 0) { $exit = 1 }
+      }
+
+      # Not part of the default run: records the demo video (docs/demo-script.md) against the real
+      # backend. Only with -Only record.
+      if ($Only -contains 'record') {
+        Write-Host '--- Recording the demo video ---'
+        node (Join-Path (Join-Path $frontend 'scripts') 'record-demo.mjs') 'http://localhost:4174' (Join-Path $OutDir 'kavach-demo.webm')
         if ($LASTEXITCODE -ne 0) { $exit = 1 }
       }
 

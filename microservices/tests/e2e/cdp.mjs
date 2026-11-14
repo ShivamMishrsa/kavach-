@@ -6,9 +6,10 @@ import path from 'node:path';
 /**
  * Connects to the browser and returns the helpers the checks use.
  * @param {{ out: string, base: string, prefix: string, width?: number }} options
- *   out: folder for screenshots; base: address of the website; prefix: screenshot file prefix.
+ *   out: folder for screenshots; base: address of the website; prefix: screenshot file prefix;
+ *   serviceWorker: true to let the page use its service worker (default: bypassed).
  */
-export async function connect({ out, base, prefix, width = 390 }) {
+export async function connect({ out, base, prefix, width = 390, serviceWorker = false }) {
   const targets = await (await fetch('http://127.0.0.1:9222/json')).json();
   const page = targets.find((target) => target.type === 'page');
   const ws = new WebSocket(page.webSocketDebuggerUrl);
@@ -155,6 +156,11 @@ export async function connect({ out, base, prefix, width = 390 }) {
   await send('Log.enable');
   await send('Runtime.enable');
   await send('Page.enable');
+  // The site keeps itself on the phone with a service worker. Unless a suite is about that, every
+  // load goes to the network, so a run never sees an older build's files and the speed suite
+  // measures a cold start.
+  await send('Network.enable');
+  await send('Network.setBypassServiceWorker', { bypass: !serviceWorker });
   await send('Emulation.setDeviceMetricsOverride', {
     width,
     height: 900,

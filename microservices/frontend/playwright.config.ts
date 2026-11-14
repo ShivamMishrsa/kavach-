@@ -14,7 +14,9 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI ? [['list'], ['github']] : 'list',
-  use: { baseURL: 'http://localhost:4173', trace: 'retain-on-failure' },
+  // The service worker keeps files between tests, which would hide a broken build: it is off here,
+  // and on in pwa.spec.ts, which is about it.
+  use: { baseURL: 'http://localhost:4173', trace: 'retain-on-failure', serviceWorkers: 'block' },
   webServer: {
     // The built site (the demo build: no backend), served with the production headers.
     command: 'npx vite preview --port 4173 --strictPort',
