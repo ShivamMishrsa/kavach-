@@ -211,6 +211,13 @@ enlarged and their contrast stretched, and tilted photos are straightened.
 | tilted | 41.2% / 6.8% | 94% (30/32) | 89% (16/18) | 0.31 s / 0.37 s |
 | noisy | 1.1% / 1.0% | 97% (31/32) | 94% (17/18) | 0.31 s / 0.39 s |
 
+A photo counts as unclear (the answer is then "cannot verify", never "low risk") when Tesseract's
+average word confidence is below 60 out of 100. It was 50 until a blurred demo sample sat just above
+the line and was answered "low risk" about a message full of scam words. Raising it to 60 changed
+nothing on the degraded photos measured above (50, 60 and 65 gave the same counts), so it was not
+tuned on them; the blurred sample now says "cannot verify". A drawn-text average can still be high
+while the body is garbled if a clean heading dominates it, which real photos rarely have.
+
 What this does and does not show: drawn text is easier than a real photograph (shadows, folds,
 glare, a stamp over a line, a screen photographed at an angle). A photo that is read badly gets the
 answer "we could not check this" only when Tesseract itself reports low confidence; text that is

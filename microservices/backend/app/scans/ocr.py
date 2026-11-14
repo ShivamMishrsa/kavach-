@@ -14,7 +14,7 @@ from PIL import Image, ImageOps, UnidentifiedImageError
 from pytesseract import Output
 
 # Below this average word confidence (0-100) a photo counts as unclear.
-MIN_CONFIDENCE = 50.0
+MIN_CONFIDENCE = 60.0
 # A PDF page with at least this much real text needs no OCR.
 MIN_TEXT_LAYER_CHARS = 40
 RENDER_SCALE = 2.0
