@@ -9,6 +9,9 @@ from typing import Annotated
 from fastapi import Depends, Request
 
 from app.core.config import Settings
+from app.core.errors import rate_limited
+from app.core.ratelimit import RateLimiter
+from app.core.signing import keyed_hash
 from app.scans.ocr import Ocr
 from app.scans.store import ScanStore
 
@@ -20,6 +23,7 @@ class Services:
     ocr: Ocr
     executor: Executor
     clock: Callable[[], datetime]
+    limiter: RateLimiter
 
 
 def get_services(request: Request) -> Services:
@@ -28,3 +32,19 @@ def get_services(request: Request) -> Services:
 
 
 ServicesDep = Annotated[Services, Depends(get_services)]
+
+
+def person_key(request: Request, services: Services) -> str:
+    """Who is asking, as a keyed hash of the IP address (the address itself is never kept)."""
+    host = request.client.host if request.client else "unknown"
+    return keyed_hash(services.settings.secret, host)
+
+
+def limited(action: str):
+    """A route dependency that refuses a person who tries `action` too often."""
+
+    def check(request: Request, services: ServicesDep) -> None:
+        if not services.limiter.allow(action, person_key(request, services)):
+            raise rate_limited()
+
+    return Depends(check)

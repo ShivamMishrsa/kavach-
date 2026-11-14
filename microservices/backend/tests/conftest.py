@@ -83,19 +83,24 @@ def clock() -> Clock:
 
 @pytest.fixture
 def settings(tmp_path: Path) -> Settings:
-    return replace(default_settings, feedback_path=tmp_path / "feedback.jsonl")
+    return replace(default_settings, data_dir=tmp_path)
 
 
 @pytest.fixture
 def make_client(settings: Settings, clock: Clock) -> Callable[..., TestClient]:
-    def build(ocr: FakeOcr | None = None, executor: Executor | None = None) -> TestClient:
+    def build(
+        ocr: FakeOcr | None = None,
+        executor: Executor | None = None,
+        config: Settings | None = None,
+        host: str = "testclient",
+    ) -> TestClient:
         app = create_app(
-            settings,
+            config or settings,
             ocr=ocr or FakeOcr(),
             executor=executor or InlineExecutor(),
             clock=clock,
         )
-        return TestClient(app)
+        return TestClient(app, client=(host, 50000))
 
     return build
 

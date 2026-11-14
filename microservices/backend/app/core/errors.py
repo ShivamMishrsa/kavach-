@@ -6,7 +6,7 @@ from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
-ErrorCode = Literal["not_found", "invalid_input"]
+ErrorCode = Literal["not_found", "invalid_input", "rate_limited"]
 
 
 class ApiProblem(Exception):
@@ -27,16 +27,20 @@ def invalid_input() -> ApiProblem:
     return ApiProblem("invalid_input", 400)
 
 
-def _body(code: ErrorCode, status_code: int) -> JSONResponse:
+def rate_limited() -> ApiProblem:
+    return ApiProblem("rate_limited", 429)
+
+
+def error_response(code: ErrorCode, status_code: int) -> JSONResponse:
     return JSONResponse({"error": {"code": code}}, status_code=status_code)
 
 
 def install_error_handlers(app: FastAPI) -> None:
     @app.exception_handler(ApiProblem)
     async def _problem(_: Request, problem: ApiProblem) -> JSONResponse:
-        return _body(problem.code, problem.status_code)
+        return error_response(problem.code, problem.status_code)
 
     @app.exception_handler(RequestValidationError)
     async def _invalid(_: Request, __: RequestValidationError) -> JSONResponse:
         # The details can echo what the person sent, so they are not returned or logged.
-        return _body("invalid_input", 400)
+        return error_response("invalid_input", 400)

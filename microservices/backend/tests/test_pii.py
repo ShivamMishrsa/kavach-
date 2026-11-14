@@ -1,5 +1,11 @@
 from app.detection.entities import extract_entities
-from app.detection.pii import AADHAAR_PLACEHOLDER, PAN_PLACEHOLDER, redact_pii, verhoeff_valid
+from app.detection.pii import (
+    AADHAAR_PLACEHOLDER,
+    EMAIL_PLACEHOLDER,
+    PAN_PLACEHOLDER,
+    redact_pii,
+    verhoeff_valid,
+)
 
 
 def with_check_digit(prefix: str) -> str:
@@ -73,3 +79,8 @@ def test_pan_is_redacted():
 def test_ordinary_text_is_unchanged():
     text = "Call 9000000000, pay Rs 5000 to safe@upi, ref 12345"
     assert redact_pii(text) == text
+
+
+def test_email_addresses_are_redacted_but_upi_ids_are_not():
+    assert redact_pii("mail ramesh.k@gmail.com now") == f"mail {EMAIL_PLACEHOLDER} now"
+    assert redact_pii("pay to ramesh@oksbi") == "pay to ramesh@oksbi"

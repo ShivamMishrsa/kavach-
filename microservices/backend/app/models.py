@@ -89,3 +89,38 @@ class FeedbackRequest(CamelModel):
     scan_id: Annotated[str, StringConstraints(max_length=64)]
     type: FeedbackType
     note: Annotated[str, StringConstraints(strip_whitespace=True, max_length=500)] | None = None
+
+
+_Heading = Annotated[str, StringConstraints(max_length=200)]
+_Paragraph = Annotated[str, StringConstraints(max_length=2000)]
+
+
+class DossierText(CamelModel):
+    """The words of the evidence summary, in the person's language. The website supplies them
+    (all the translations live there); the details and fingerprints come from the server's own
+    record of the scan, never from here."""
+
+    title: _Heading
+    disclaimer: _Paragraph
+    summary_title: _Heading
+    summary: _Paragraph
+    details_title: _Heading
+    detail_labels: dict[EntityType, _Heading]
+    evidence_title: _Heading
+    evidence_hint: _Paragraph
+    captured_at: _Heading  # contains "{time}", replaced by the recorded time
+    keep_originals: _Paragraph
+    script_title: _Heading
+    script: _Paragraph
+
+
+class DossierFile(CamelModel):
+    url: str  # signed, short-lived, relative to the API address
+    sha256: str  # of the PDF exactly as it will be downloaded
+    generated_at: datetime
+    link_expires_at: datetime
+
+
+class ConsentRequest(CamelModel):
+    version: Annotated[str, StringConstraints(max_length=32)]
+    granted: bool

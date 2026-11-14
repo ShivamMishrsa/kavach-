@@ -1,6 +1,7 @@
 """Settings loaded from environment variables. No secrets in code."""
 
 import os
+import secrets
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -40,10 +41,36 @@ class Settings:
     max_image_pixels: int = 40_000_000
     workers: int = 2
 
-    # Feedback is the only thing written to disk (type and a short note, never a file).
-    feedback_path: Path = field(
-        default_factory=lambda: Path(os.getenv("KAVACH_FEEDBACK_PATH", "data/feedback.jsonl"))
+    # What is written to disk: only feedback and consent records, never a file or a result.
+    data_dir: Path = field(default_factory=lambda: Path(os.getenv("KAVACH_DATA_DIR", "data")))
+    # Signs download links and hides IP addresses in the consent log. Set a fixed value in
+    # production, otherwise a new one is made at every start (links and IP hashes then change).
+    secret: bytes = field(
+        default_factory=lambda: (os.getenv("KAVACH_SECRET") or secrets.token_hex(32)).encode()
     )
+
+    # The consent text the website shows. A record for any other version is refused.
+    consent_version: str = "2026-11-v1"
+
+    # Evidence summary (PDF) download links, and the sweep that deletes expired scans.
+    download_link_seconds: int = 5 * 60
+    purge_interval_seconds: float = 60
+
+    # Abuse limits: tries per person (by hashed IP address) in a time window, for each action.
+    rate_limit: int = 20
+    rate_window_seconds: int = 10 * 60
+
+    @property
+    def feedback_path(self) -> Path:
+        return self.data_dir / "feedback.jsonl"
+
+    @property
+    def consent_path(self) -> Path:
+        return self.data_dir / "consent.jsonl"
+
+    @property
+    def max_body_bytes(self) -> int:
+        return self.max_upload_bytes + 64 * 1024  # a file plus the form around it
 
 
 settings = Settings()

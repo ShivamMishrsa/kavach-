@@ -240,6 +240,18 @@ def test_feedback_is_stored_without_any_file(make_client, settings):
     assert set(first) == {"at", "scanId", "type", "note"}
 
 
+def test_personal_details_are_taken_out_of_a_feedback_note(make_client, settings):
+    note = (
+        "It is genuine. Call me on 9000000000 or ramesh.k@gmail.com, UPI ramesh@oksbi, "
+        "UTR 400000000001, PAN ABCPE1234F, see https://example.com/page"
+    )
+    make_client().post("/v1/feedback", json={"scanId": "abc", "type": "false_alarm", "note": note})
+    stored = json.loads(settings.feedback_path.read_text("utf-8"))["note"]
+    for private in ("9000000000", "ramesh", "400000000001", "ABCPE1234F"):
+        assert private not in stored, private
+    assert "It is genuine" in stored and "https://example.com/page" in stored  # the point stays
+
+
 @pytest.mark.parametrize(
     "body",
     [

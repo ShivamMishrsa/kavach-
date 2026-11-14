@@ -1,8 +1,10 @@
 """Where scans live while they are being worked on: in memory only, for 15 minutes.
 
 Nothing here is written to disk. The uploaded file is never stored at all (it is read once and
-dropped); what is kept is the result, the details the person confirmed, and the fingerprints.
-Expired scans are removed whenever the store is used, so an expired scan can never be read.
+dropped); what is kept is the result, the details the person confirmed, the fingerprints and the
+evidence summary PDF made from them. Expired scans are removed whenever the store is used, so an
+expired scan can never be read, and a background sweep (see main.py) removes them even when
+nobody is using it.
 """
 
 import secrets
@@ -38,6 +40,7 @@ class _Record:
     stages_done: int = 1  # "received" is done as soon as the scan exists
     result: ScanResult | None = None
     confirmed: list[Entity] | None = None
+    dossier: bytes | None = None
 
 
 class ScanStore:
@@ -94,6 +97,25 @@ class ScanStore:
                 return None
             record.confirmed = entities
             return self._snapshot(record)
+
+    def attach_dossier(self, scan_id: str, pdf: bytes) -> bool:
+        with self._lock:
+            self._purge()
+            record = self._records.get(scan_id)
+            if record:
+                record.dossier = pdf
+            return record is not None
+
+    def dossier(self, scan_id: str) -> bytes | None:
+        with self._lock:
+            self._purge()
+            record = self._records.get(scan_id)
+            return record.dossier if record else None
+
+    def purge(self) -> None:
+        """Removes every expired scan now."""
+        with self._lock:
+            self._purge()
 
     def delete(self, scan_id: str) -> None:
         with self._lock:

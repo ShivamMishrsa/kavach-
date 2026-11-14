@@ -6,3 +6,5 @@ python-dotenv==1.2.4
 pillow==13.0.0
 pytesseract==0.3.13
 pypdfium2==5.15.2
+fpdf2==2.9.0
+uharfbuzz==0.57.0

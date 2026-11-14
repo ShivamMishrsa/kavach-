@@ -9,7 +9,7 @@ from app.detection.links import normalize_url
 from app.models import ConfirmEntitiesRequest, EvidenceHash, Scan, ScanKind
 from app.scans.ingest import detect_file_kind, fingerprint, read_limited, safe_name
 from app.scans.pipeline import FileSource, LinkSource, Source, TextSource, run_scan
-from app.services import Services, ServicesDep
+from app.services import Services, ServicesDep, limited
 
 router = APIRouter(prefix="/v1/scans", tags=["scans"])
 
@@ -51,7 +51,7 @@ async def _read_input(
     raise invalid_input()
 
 
-@router.post("", response_model=Scan, status_code=201)
+@router.post("", response_model=Scan, status_code=201, dependencies=[limited("scan")])
 async def create_scan(
     services: ServicesDep,
     kind: Annotated[ScanKind, Form()],
