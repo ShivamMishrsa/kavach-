@@ -12,11 +12,14 @@ from app.models import Entity, ScanResult
 
 # Fewer letters and digits than this is too little to say anything about.
 MIN_READABLE_CHARS = 20
+# Text read from a photo can be very long (a page of noise). Only the start is judged, which keeps
+# the time of a check bounded whatever the picture holds.
+MAX_JUDGED_CHARS = 50_000
 
 
 def assess_text(text: str, *, confident: bool = True) -> ScanResult:
     """`confident` is False when the text came from a photo that was hard to read."""
-    clean = redact_pii(unicodedata.normalize("NFC", text))
+    clean = redact_pii(unicodedata.normalize("NFC", text[:MAX_JUDGED_CHARS]))
     entities = extract_entities(clean)
 
     reasons = detect_signals(clean)

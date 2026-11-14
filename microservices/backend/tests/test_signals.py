@@ -67,3 +67,74 @@ def test_several_signals_together():
         "urgency",
         "safe_account",
     }
+
+
+# Found by measuring the rules on the labelled sets (see docs/benchmarks.md).
+def test_the_threat_may_come_in_the_sentence_after_the_video_call():
+    text = "Talk to the officer on a WhatsApp video call. Failing which an arrest will follow."
+    assert "digital_arrest" in detect_signals(text)
+
+
+def test_a_weak_word_in_another_sentence_does_not_count():
+    assert "digital_arrest" not in detect_signals(
+        "Join the zoom call. We discuss the investigation."
+    )
+
+
+def test_warranty_is_not_a_warrant():
+    assert "digital_arrest" not in detect_signals("Join the video call about the warranty claim.")
+    assert "digital_arrest" in detect_signals("Stay on the video call, a warrant is issued.")
+
+
+def test_hindi_in_english_letters_is_understood():
+    assert "digital_arrest" in detect_signals("Video call par rahiye, warna giraftari hogi")
+    assert "payment_demand" in detect_signals("40,000 rupees transfer karein")
+    assert "secrecy" in detect_signals("Family ko bhi nahi batana")
+    assert "urgency" in detect_signals("turant call karo")
+
+
+def test_telling_a_relative_a_surprise_is_not_secrecy():
+    assert "secrecy" not in detect_signals("dad ko mat batana ki surprise party hai")
+
+
+def test_offering_to_pay_is_not_a_demand_to_pay():
+    assert "payment_demand" not in detect_signals("I will transfer Rs 800 tonight")
+    assert "payment_demand" in detect_signals("You will transfer Rs 800 tonight")
+
+
+def test_a_deposit_account_is_not_a_demand_to_deposit():
+    assert "payment_demand" not in detect_signals("Your fixed deposit of Rs 1,00,000 matures soon")
+    assert "payment_demand" in detect_signals("Deposit Rs 1,00,000 now")
+
+
+def test_a_hindi_credit_alert_is_not_a_demand_to_deposit():
+    assert "payment_demand" not in detect_signals("आपके खाते में ₹12,000 जमा हुए हैं। शेष ₹31,450।")
+    assert "payment_demand" in detect_signals("अभी ₹12,000 जमा करें")
+
+
+def test_the_banks_own_otp_warning_is_not_secrecy_pressure():
+    assert "secrecy" not in detect_signals("Aapka login OTP 3382 hai. Kisi ko mat batayein.")
+    assert "secrecy" in detect_signals("Aapke account mein problem hai. Kisi ko mat batayein.")
+
+
+def test_hindi_stay_on_the_call_after_an_official_is_recognised():
+    assert "digital_arrest" in detect_signals("सीबीआई का नोटिस है। वीडियो कॉल चालू रखिए।")
+    assert "digital_arrest" not in detect_signals("दोस्तों के साथ वीडियो कॉल चालू रखिए।")
+
+
+def test_an_or_else_threat_on_a_video_call_from_an_official_is_recognised():
+    assert "digital_arrest" in detect_signals(
+        "Customs officer here. Video call pe aaiye, warna police aayegi"
+    )
+    assert "digital_arrest" not in detect_signals(
+        "Video call pe aaiye, warna hum movie miss kar denge"
+    )
+
+
+def test_a_warrant_that_will_be_issued_is_urgent():
+    assert "urgency" in detect_signals("A warrant will be issued unless you settle")
+    assert "urgency" not in detect_signals("The warranty will be issued with the invoice")
+
+
+def test_a_supervision_account_in_hindi_is_a_safe_account_demand():
+    assert "safe_account" in detect_signals("पैसे आरबीआई के निगरानी खाते में डालिए")

@@ -46,7 +46,7 @@ def test_the_default_period_is_90_days(settings):
 
 
 def test_the_background_sweep_deletes_old_records(settings, clock):
-    fast = replace(settings, purge_interval_seconds=0.02)
+    fast = replace(settings, purge_interval_seconds=0.02, records_purge_seconds=0.02)
     app = create_app(fast, ocr=FakeOcr(), executor=InlineExecutor(), clock=clock)
     with TestClient(app) as client:
         assert (

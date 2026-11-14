@@ -6,7 +6,15 @@ from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
-ErrorCode = Literal["not_found", "invalid_input", "rate_limited", "unauthorized", "forbidden"]
+ErrorCode = Literal[
+    "not_found",
+    "invalid_input",
+    "rate_limited",
+    "unauthorized",
+    "forbidden",
+    "server_error",
+    "busy",
+]
 
 
 class ApiProblem(Exception):
@@ -33,6 +41,10 @@ def rate_limited() -> ApiProblem:
 
 def unauthorized() -> ApiProblem:
     return ApiProblem("unauthorized", 401)
+
+
+def busy() -> ApiProblem:
+    return ApiProblem("busy", 503)
 
 
 def forbidden() -> ApiProblem:

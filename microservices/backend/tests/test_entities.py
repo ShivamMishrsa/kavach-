@@ -98,3 +98,17 @@ def test_repeats_are_collapsed_and_capped():
 
 def test_nothing_found():
     assert extract_entities("hello, nothing to see here") == []
+
+
+def test_an_address_without_http_is_found_when_it_ends_like_a_real_one():
+    assert found("Reactivate at uidai-update.xyz/login now")["link"] == ["uidai-update.xyz/login"]
+    assert found("visit sbi.co.in.")["link"] == ["sbi.co.in"]
+
+
+def test_ordinary_text_with_dots_is_not_a_link():
+    assert "link" not in found("See e.g. the list, Mr.Sharma agreed and ravi@gmail.com wrote")
+
+
+def test_a_labelled_reference_number_is_not_a_phone_number():
+    assert "phone" not in found("PNR 8123456789 confirmed")
+    assert found("Call 9876543210")["phone"] == ["9876543210"]

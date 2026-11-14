@@ -40,8 +40,10 @@ _AADHAAR = re.compile(r"(?<!\d)[2-9]\d{3}[\s-]?\d{4}[\s-]?\d{4}(?!\d)")
 # Fourth letter of a PAN is the holder type (P person, C company, ...).
 _PAN = re.compile(r"\b[A-Z]{3}[ABCFGHLJPT][A-Z]\d{4}[A-Z]\b", re.IGNORECASE)
 
-# An email address always has a dot after the "@" part; a UPI id (name@bank) does not.
-_EMAIL = re.compile(r"[\w.+-]+@[\w-]+(?:\.[\w-]+)+")
+# An email address always has a dot after the "@" part; a UPI id (name@bank) does not. The
+# look-behind makes a match start only at the beginning of a run of such characters; without it a
+# long run of letters is searched again from every position, which takes seconds for a big photo.
+_EMAIL = re.compile(r"(?<![\w.+-])[\w.+-]+@[\w-]+(?:\.[\w-]+)+")
 
 _PAYMENT_LABEL = re.compile(r"utr|rrn|ref|txn|transaction|यूटीआर|संदर्भ|लेनदेन|ट्रांजैक्शन", re.IGNORECASE)
 _AADHAAR_LABEL = re.compile(r"aadhaar|aadhar|uidai|\buid\b|आधार", re.IGNORECASE)

@@ -1,6 +1,7 @@
 """Kavach backend entry point."""
 
 import asyncio
+import hmac
 import logging
 import time
 from collections.abc import AsyncIterator, Callable
@@ -8,23 +9,23 @@ from concurrent.futures import Executor, ThreadPoolExecutor
 from contextlib import asynccontextmanager
 from datetime import datetime, timedelta
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import PlainTextResponse
 
 from app.accounts.mail import FileMailer, Mailer, NoMailer, SmtpMailer
 from app.accounts.store import AccountStore
 from app.api import account, auth, consent, dossier, feedback, scans
 from app.core.config import Settings
 from app.core.config import settings as default_settings
-from app.core.errors import install_error_handlers
+from app.core.errors import install_error_handlers, not_found, unauthorized
 from app.core.jsonl import purge_older_than
+from app.core.metrics import Metrics
 from app.core.middleware import BodyLimit, SecurityHeaders
-from app.core.ratelimit import RateLimiter
+from app.core.ratelimit import DailyCap, RateLimiter
 from app.scans.ocr import Ocr, TesseractOcr
 from app.scans.store import ScanStore, utc_now
 from app.services import Services
-
-RECORDS_PURGE_SECONDS = 60 * 60
 
 
 def default_mailer(settings: Settings) -> Mailer:
@@ -49,9 +50,10 @@ def create_app(
 ) -> FastAPI:
     """The parts can be replaced, which is how the tests run without Tesseract or threads."""
     owns_executor = executor is None
+    metrics = Metrics()
     services = Services(
         settings=settings,
-        store=ScanStore(timedelta(seconds=settings.scan_ttl_seconds), clock),
+        store=ScanStore(timedelta(seconds=settings.scan_ttl_seconds), clock, metrics),
         ocr=ocr
         or TesseractOcr(
             languages=settings.ocr_languages,
@@ -73,6 +75,8 @@ def create_app(
             inactive_ttl=timedelta(days=settings.inactive_account_days),
         ),
         mailer=mailer or default_mailer(settings),
+        daily_scans=DailyCap(settings.max_scans_per_day, clock),
+        metrics=metrics,
     )
 
     def purge_old_records() -> None:
@@ -89,7 +93,7 @@ def create_app(
             services.store.purge()
             services.accounts.purge()
             if time.monotonic() >= next_records:
-                next_records = time.monotonic() + RECORDS_PURGE_SECONDS
+                next_records = time.monotonic() + settings.records_purge_seconds
                 await asyncio.to_thread(purge_old_records)
 
     @asynccontextmanager
@@ -116,7 +120,7 @@ def create_app(
     app.state.services = services
     # The last one added is the outermost, so every response (also the refusals) gets CORS headers.
     app.add_middleware(BodyLimit, max_bytes=settings.max_body_bytes)
-    app.add_middleware(SecurityHeaders, content_security_policy=not in_development)
+    app.add_middleware(SecurityHeaders, content_security_policy=not in_development, metrics=metrics)
     app.add_middleware(
         CORSMiddleware,
         allow_origins=settings.cors_origins,
@@ -128,6 +132,16 @@ def create_app(
     routers = (scans.router, dossier.router, consent.router, feedback.router)
     for router in (*routers, auth.router, account.router):
         app.include_router(router)
+
+    @app.get("/metrics", include_in_schema=False)
+    def show_metrics(request: Request) -> PlainTextResponse:
+        """Counters for the operator. Does not exist unless KAVACH_METRICS_TOKEN is set."""
+        if not settings.metrics_token:
+            raise not_found()
+        expected = f"Bearer {settings.metrics_token}".encode()
+        if not hmac.compare_digest(request.headers.get("authorization", "").encode(), expected):
+            raise unauthorized()
+        return PlainTextResponse(metrics.render())
 
     @app.get("/health")
     def health() -> dict[str, str]:

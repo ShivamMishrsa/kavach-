@@ -2,7 +2,7 @@
 
 from typing import Annotated
 
-from fastapi import APIRouter, Form, Response, UploadFile
+from fastapi import APIRouter, Depends, Form, Response, UploadFile
 
 from app.accounts.deps import OptionalUser, check_owner
 from app.core.errors import invalid_input, not_found
@@ -10,7 +10,7 @@ from app.detection.links import normalize_url
 from app.models import ConfirmEntitiesRequest, EvidenceHash, Scan, ScanKind
 from app.scans.ingest import detect_file_kind, fingerprint, read_limited, safe_name
 from app.scans.pipeline import FileSource, LinkSource, Source, TextSource, run_scan
-from app.services import Services, ServicesDep, limited
+from app.services import Services, ServicesDep, limited, within_daily_cap
 
 router = APIRouter(prefix="/v1/scans", tags=["scans"])
 
@@ -52,7 +52,12 @@ async def _read_input(
     raise invalid_input()
 
 
-@router.post("", response_model=Scan, status_code=201, dependencies=[limited("scan")])
+@router.post(
+    "",
+    response_model=Scan,
+    status_code=201,
+    dependencies=[limited("scan"), Depends(within_daily_cap)],
+)
 async def create_scan(
     services: ServicesDep,
     user: OptionalUser,

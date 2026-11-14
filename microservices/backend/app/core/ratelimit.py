@@ -32,3 +32,30 @@ class RateLimiter:
                 tries.popleft()
             if not tries:
                 del self._tries[key]
+
+
+class DailyCap:
+    """At most `limit` of something per UTC day, for everybody together (0 means no cap).
+
+    The per-person limits stop one person; this one stops the bill when many people (or many
+    made-up addresses) arrive at once.
+    """
+
+    def __init__(self, limit: int, clock: Callable[[], datetime]) -> None:
+        self._limit = limit
+        self._clock = clock
+        self._lock = threading.Lock()
+        self._day = ""
+        self._used = 0
+
+    def take(self) -> bool:
+        if self._limit <= 0:
+            return True
+        today = self._clock().date().isoformat()
+        with self._lock:
+            if today != self._day:
+                self._day, self._used = today, 0
+            if self._used >= self._limit:
+                return False
+            self._used += 1
+            return True

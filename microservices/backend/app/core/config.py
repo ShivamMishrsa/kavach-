@@ -76,6 +76,20 @@ class Settings:
     # Evidence summary (PDF) download links, and the sweep that deletes expired scans.
     download_link_seconds: int = 5 * 60
     purge_interval_seconds: float = 60
+    records_purge_seconds: float = 60 * 60  # old consent and feedback records, once an hour
+
+    # Reverse proxies in front of the API that add to X-Forwarded-For (0 = none: the header is
+    # ignored, which is what keeps a caller from picking their own address in the rate limits).
+    proxy_hops: int = field(default_factory=lambda: int(os.getenv("KAVACH_PROXY_HOPS", "0")))
+
+    # The most checks the service does in a UTC day, for everybody together. Past it, new checks
+    # are refused with "busy" until tomorrow. This is the cost cap (0 = no cap).
+    max_scans_per_day: int = field(
+        default_factory=lambda: int(os.getenv("KAVACH_MAX_SCANS_PER_DAY", "10000"))
+    )
+
+    # Counters for the operator at /metrics. The endpoint does not exist unless this is set.
+    metrics_token: str | None = field(default_factory=lambda: _optional("KAVACH_METRICS_TOKEN"))
 
     # Abuse limits: tries per person (by hashed IP address) in a time window, for each action.
     rate_limit: int = 20

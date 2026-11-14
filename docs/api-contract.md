@@ -44,6 +44,7 @@ The backend also serves interactive docs at `/docs`.
 | `exportAccount()` | `GET /v1/account/export` | JSON file with everything held about the account (account, number of sessions, history); no secrets |
 | `deleteAccount()` | `DELETE /v1/account` | `204`; removes the account, its sessions, history, unused sign-in links and any scan it still has |
 | `uploadHistory()` | `PUT /v1/history` | `{items: [{id, kind, riskLevel, createdAt}]}` (up to 200); `403` unless sync is on. The same call adds or updates single items. `DELETE /v1/history/{id}` and `DELETE /v1/history` remove them |
+| | `GET /metrics` | Counts for the operator (Prometheus text). Only exists when `KAVACH_METRICS_TOKEN` is set; needs `Authorization: Bearer <token>`. No personal data |
 | | `GET /health` | `{"status": "ok", "ocr": "ready" \| "unavailable", ...}` |
 
 ## Errors
@@ -51,6 +52,7 @@ The backend also serves interactive docs at `/docs`.
 `400` `{"error": {"code": "invalid_input"}}` (anything unusable: wrong type, too big, empty, two inputs at once, a bad link).
 `413` the same body, when the request is bigger than the limit (10 MB file plus 64 KB of form).
 `401` `{"error": {"code": "unauthorized"}}` (no session, or a wrong sign-in link). `403` `forbidden` (history sync is off, or an account-changing request came from a website that is not ours).
+`503` `{"error": {"code": "busy"}}` (the day's cap on checks was reached; reading results and signing in still work). `500` `{"error": {"code": "server_error"}}` (a mistake inside the server; nothing about it is sent).
 `404` `{"error": {"code": "not_found"}}` (unknown or expired scan, a bad download link, or a scan that belongs to another account).
 `429` `{"error": {"code": "rate_limited"}}` (more than 20 scans, PDFs, feedback or consent records in 10 minutes from one person; people are told apart by a keyed hash of their IP address). Reading is never limited.
 A scan whose processing failed (for example Tesseract is missing) has `status: "failed"` and no result.

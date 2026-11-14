@@ -1,0 +1,100 @@
+{"id":"t001","lang":"en","label":"scam","category":"digital_arrest","scope":"in","text":"This is the Narcotics Control Bureau. A FedEx parcel booked with your Aadhaar contains 140 grams of MDMA and 4 passports. Your number will be blocked. Connect to a Skype video call with our officer immediately, and do not speak about this case to anyone."}
+{"id":"t002","lang":"en","label":"scam","category":"safe_account","scope":"in","text":"Dear Sir, a case of money laundering has been registered against you at the Mumbai Crime Branch. For verification of your funds, you must deposit Rs 3,50,000 in the RBI escrow account till the investigation is complete. The amount will be refunded.","entities":[{"type":"amount","value":"Rs 3,50,000"}]}
+{"id":"t003","lang":"hi","label":"scam","category":"digital_arrest","scope":"in","text":"नमस्ते, मैं सीबीआई अधिकारी बोल रहा हूँ। आपके आधार कार्ड का इस्तेमाल मनी लॉन्ड्रिंग में हुआ है। अब आप वीडियो कॉल पर रहें, कॉल काटी तो गिरफ्तारी हो जाएगी।"}
+{"id":"t004","lang":"hi","label":"scam","category":"fake_notice","scope":"in","text":"आपके मोबाइल नंबर से अश्लील कॉल हुए हैं, इसलिए आपके नाम पर वारंट निकला है। मामला रफा-दफा करने के लिए ₹45,000 भेजें और इस बारे में किसी को न बताएं."}
+{"id":"t005","lang":"hinglish","label":"scam","category":"digital_arrest","scope":"in","text":"Sir yeh Supreme Court ka notice hai. Aapka naam hawala case mein aaya hai. Aap abhi WhatsApp video call par aaiye, nahi toh arrest ho jayega. Family ko bhi nahi batana."}
+{"id":"t006","lang":"en","label":"scam","category":"fake_notice","scope":"in","text":"Your parcel from Taiwan was seized by customs. To avoid a case under Section 420 IPC, pay Rs 18,500 as clearance fee today. Contact the officer: 9000033333.","entities":[{"type":"amount","value":"Rs 18,500"},{"type":"phone","value":"9000033333"}],"statutes":[["IPC 420","BNS 318(4)"]]}
+{"id":"t007","lang":"en","label":"scam","category":"fake_notice","scope":"in","text":"Final notice from Cyber Crime Cell: a warrant under Section 66D IT Act is pending. Pay the settlement amount of Rs 72,000 within 24 hours to officer.verma@okaxis.","entities":[{"type":"amount","value":"Rs 72,000"},{"type":"upi","value":"officer.verma@okaxis"}],"statutes":[]}
+{"id":"t008","lang":"en","label":"scam","category":"safe_account","scope":"in","text":"To protect your savings during the RBI investigation, transfer all your money to the Safe Custody Account. Share the transaction id with the officer on video call."}
+{"id":"t009","lang":"en","label":"scam","category":"digital_arrest","scope":"in","text":"You are being monitored by the Enforcement Directorate. Do not disconnect this call and do not talk to anybody. Pay Rs 1,50,000 to the verification account immediately."}
+{"id":"t010","lang":"hi","label":"scam","category":"safe_account","scope":"in","text":"आपके बैंक खाते में संदिग्ध लेनदेन मिला है। जाँच पूरी होने तक अपनी सारी रकम आरबीआई के सुरक्षित खाते में जमा करें। यह गुप्त रखना है।"}
+{"id":"t011","lang":"en","label":"scam","category":"fake_notice","scope":"in","text":"Mr Sharma, FIR no. 224/2026 has been registered under Section 420 and Section 406 IPC. A non-bailable warrant will be served. Contact the advocate on 9000044444 to settle by paying Rs 35,000.","entities":[{"type":"phone","value":"9000044444"},{"type":"amount","value":"Rs 35,000"}],"statutes":[["IPC 420","BNS 318(4)"],["IPC 406","BNS 316(2)"]]}
+{"id":"t012","lang":"en","label":"scam","category":"kyc_link","scope":"in","text":"Dear customer, your Axis Bank account will be frozen today. Complete KYC now: http://axis-bank-kyc.example/update"}
+{"id":"t013","lang":"en","label":"scam","category":"kyc_link","scope":"in","text":"ICICI: reward points worth Rs 9,870 expire today. Redeem at https://icici-rewards-claim.example"}
+{"id":"t014","lang":"en","label":"scam","category":"kyc_link","scope":"in","text":"UIDAI: your Aadhaar is suspended. Reactivate at uidai-update.xyz/login"}
+{"id":"t015","lang":"en","label":"scam","category":"kyc_link","scope":"in","text":"Income Tax refund of Rs 24,680 is approved. Claim it at https://incometax-refund.example/claim"}
+{"id":"t016","lang":"hi","label":"scam","category":"kyc_link","scope":"in","text":"आपका एसबीआई योनो खाता बंद होने वाला है। अभी केवाईसी अपडेट करें: http://sbi-yono-kyc.example"}
+{"id":"t017","lang":"en","label":"scam","category":"kyc_link","scope":"in","text":"Your PhonePe wallet is blocked. Verify now: https://phonepe-help-desk.example"}
+{"id":"t018","lang":"en","label":"scam","category":"digital_arrest","scope":"in","text":"The officer on the video call will explain the charges. You are under house arrest until the verification is complete. Do not leave your room."}
+{"id":"t019","lang":"hi","label":"scam","category":"digital_arrest","scope":"in","text":"आपके नाम से बुक पार्सल में नशीला पदार्थ मिला है। पुलिस आपको हिरासत में लेगी। अभी स्काइप वीडियो कॉल पर आइए।"}
+{"id":"t020","lang":"en","label":"scam","category":"fake_notice","scope":"in","text":"Court summons: Section 138 Negotiable Instruments Act cheque bounce case. Pay Rs 28,000 now to avoid an arrest warrant.","statutes":[]}
+{"id":"t021","lang":"en","label":"scam","category":"safe_account","scope":"in","text":"RBI directive: all customers must move deposits to the RBI safe account for verification. Do not inform bank staff."}
+{"id":"t022","lang":"hinglish","label":"scam","category":"safe_account","scope":"in","text":"Aapka Aadhaar misuse hua hai. CBI officer se video call par baat kijiye. Rs 90,000 jaldi se deposit kar dijiye verification account mein."}
+{"id":"t023","lang":"en","label":"scam","category":"digital_arrest","scope":"in","text":"NOTICE: your name has appeared in a cyber fraud FIR. An arrest team is on the way. To stop this, join the Zoom call link below and transfer Rs 55,000 as bond."}
+{"id":"t024","lang":"en","label":"scam","category":"fake_notice","scope":"in","text":"This is a final warning. Failing to pay the penalty of Rs 12,000 will lead to immediate arrest. Payment link: https://pay-police-fine.example"}
+{"id":"t025","lang":"hi","label":"scam","category":"safe_account","scope":"in","text":"आपका खाता सुरक्षा जाँच के लिए फ्रीज़ किया गया है। ₹1,20,000 वेरिफिकेशन खाते में ट्रांसफर करें।"}
+{"id":"t026","lang":"en","label":"scam","category":"fake_notice","scope":"in","text":"Your daughter has been arrested in a drug case. Call this number immediately and transfer Rs 75,000 for bail. Do not tell her mother."}
+{"id":"t027","lang":"en","label":"scam","category":"kyc_link","scope":"in","text":"Pay your pending traffic challan of Rs 500 at http://echallan-parivahan.example/pay"}
+{"id":"t028","lang":"en","label":"scam","category":"safe_account","scope":"in","text":"Your funds are under supervision. Do not use your own account. Send the money to the supervision account and keep this confidential."}
+{"id":"t029","lang":"hinglish","label":"scam","category":"fake_notice","scope":"in","text":"Aapke naam par FIR darj hai. Warrant nikal gaya hai. Giraftari se bachne ke liye 40,000 rupees transfer karein, kisi ko mat batana."}
+{"id":"t030","lang":"en","label":"scam","category":"digital_arrest","scope":"in","text":"Mumbai Cyber Police: you are a suspect in a cyber crime case and under digital surveillance. Remain available on video call until further orders."}
+{"id":"t031","lang":"en","label":"scam","category":"lottery","scope":"out","text":"Dear winner, your mobile number has won GBP 850,000 in the UK National Lottery. Send your bank details and pay Rs 6,000 tax to claim."}
+{"id":"t032","lang":"en","label":"scam","category":"job_offer","scope":"out","text":"Part time job: earn Rs 3,000-8,000 per day on Telegram. Complete simple tasks, pay a deposit of Rs 2,000 to start."}
+{"id":"t033","lang":"en","label":"scam","category":"loan_threat","scope":"out","text":"Instant loan Rs 50,000 without documents. Pay the processing fee Rs 1,499 first."}
+{"id":"t034","lang":"en","label":"scam","category":"sextortion","scope":"out","text":"Your video call recording is with us. Send Rs 25,000 in 1 hour or we upload it online."}
+{"id":"t035","lang":"en","label":"scam","category":"tech_support","scope":"out","text":"Your bank account has been hacked. Install AnyDesk and give us the code so our expert can secure your money."}
+{"id":"t036","lang":"en","label":"scam","category":"qr_refund","scope":"out","text":"To receive Rs 5,000 from the buyer, scan the QR code and enter your PIN."}
+{"id":"t037","lang":"en","label":"scam","category":"utility_threat","scope":"out","text":"Your electricity connection will be cut at 10 PM tonight. Contact 9000077777 now."}
+{"id":"t038","lang":"en","label":"scam","category":"investment","scope":"out","text":"Join our VIP stock group, 300% returns in 30 days. Transfer Rs 15,000 to the account to register."}
+{"id":"t039","lang":"en","label":"scam","category":"insurance","scope":"out","text":"Your LIC policy bonus of Rs 4,20,000 is pending. Pay Rs 8,000 GST to release it."}
+{"id":"t040","lang":"en","label":"scam","category":"subsidy","scope":"out","text":"Your LPG subsidy is on hold. Update your bank details at the link to receive it."}
+{"id":"t041","lang":"en","label":"scam","category":"gift_parcel","scope":"out","text":"I am a doctor working in the UK and want to send you a gift parcel. Pay Rs 25,000 customs fee to receive it."}
+{"id":"t042","lang":"en","label":"scam","category":"charity","scope":"out","text":"Help the flood victims. Donate any amount to 9000088888@paytm. Only today."}
+{"id":"t043","lang":"en","label":"scam","category":"crypto","scope":"out","text":"Deposit 0.5 BTC and get back 1 BTC in 24 hours, guaranteed."}
+{"id":"t044","lang":"en","label":"scam","category":"parcel_fee","scope":"out","text":"Your DHL parcel is stuck at customs. Pay Rs 3,500 now by UPI to release it."}
+{"id":"t045","lang":"en","label":"scam","category":"sim_upgrade","scope":"out","text":"Dear customer, your SIM card will expire. Reply YES to upgrade to a 5G SIM for free."}
+{"id":"t046","lang":"en","label":"scam","category":"fake_helpline","scope":"out","text":"For your refund call our helpline 1800-000-000. Tell the agent the OTP you receive."}
+{"id":"t047","lang":"hi","label":"scam","category":"lottery","scope":"out","text":"आपकी लॉटरी निकली है ₹25 लाख। इनाम लेने के लिए ₹4,500 टैक्स जमा करें।"}
+{"id":"t048","lang":"hi","label":"scam","category":"job_offer","scope":"out","text":"घर बैठे कमाएं ₹1,000 रोज़ाना। रजिस्ट्रेशन के लिए ₹500 भेजें।"}
+{"id":"t049","lang":"hi","label":"scam","category":"utility_threat","scope":"out","text":"आपका बिजली कनेक्शन आज रात कट जाएगा, तुरंत इस नंबर पर कॉल करें 9000099999।"}
+{"id":"t050","lang":"en","label":"scam","category":"prize_link","scope":"out","text":"Congratulations! You have won an iPhone 15. Click http://free-iphone-claim.example to receive your reward."}
+{"id":"t051","lang":"en","label":"benign","category":"bank_alert","text":"Dear Customer, INR 2,500.00 has been debited from your A/c ending 4321 on 11-Nov-26 towards UPI/412398765432/Swiggy. Not you? Call 1800-000-000. - Axis Bank","entities":[{"type":"amount","value":"INR 2,500.00"},{"type":"utr","value":"412398765432"}]}
+{"id":"t052","lang":"en","label":"benign","category":"bank_alert","text":"Your a/c XXXX7788 is credited with Rs. 18,000.00 on 09/11/2026 towards salary. Avl bal Rs. 41,205.30","entities":[{"type":"amount","value":"Rs. 18,000.00"},{"type":"amount","value":"Rs. 41,205.30"},{"type":"datetime","value":"09/11/2026"}]}
+{"id":"t053","lang":"en","label":"benign","category":"bank_alert","text":"Transaction alert: Rs 349 spent on your HDFC Bank Credit Card ending 9012 at NETFLIX on 08-11-2026 at 21:14.","entities":[{"type":"amount","value":"Rs 349"},{"type":"datetime","value":"08-11-2026 at 21:14"}]}
+{"id":"t054","lang":"en","label":"benign","category":"otp","text":"SBI: Your OTP for UPI registration is 902331. Valid for 10 mins. Never share this OTP with anyone. - SBI"}
+{"id":"t055","lang":"en","label":"benign","category":"bank_alert","text":"Kotak: Cheque no. 004512 for Rs 25,000 has been cleared."}
+{"id":"t056","lang":"en","label":"benign","category":"bank_alert","text":"Your fixed deposit of Rs 1,00,000 matures on 25/12/2026. Visit the nearest branch or open net banking at https://www.hdfcbank.com to renew.","entities":[{"type":"amount","value":"Rs 1,00,000"},{"type":"datetime","value":"25/12/2026"},{"type":"link","value":"https://www.hdfcbank.com"}]}
+{"id":"t057","lang":"en","label":"benign","category":"bank_alert","text":"Dear customer, we have never asked and will never ask for your PIN, OTP or password. Stay safe. - Bank of Baroda"}
+{"id":"t058","lang":"en","label":"benign","category":"bank_alert","text":"EMI of Rs 7,845 for loan A/c 1234 will be auto-debited on 05-12-2026. Maintain sufficient balance.","entities":[{"type":"amount","value":"Rs 7,845"},{"type":"datetime","value":"05-12-2026"}]}
+{"id":"t059","lang":"en","label":"benign","category":"otp","text":"123456 is your Uber verification code."}
+{"id":"t060","lang":"en","label":"benign","category":"otp","text":"Use 884210 as your Google verification code."}
+{"id":"t061","lang":"en","label":"benign","category":"otp","text":"Your Zomato OTP is 7311. Do not share it."}
+{"id":"t062","lang":"en","label":"benign","category":"otp","text":"Aadhaar OTP 553201 valid for 10 minutes. Do not share. - UIDAI"}
+{"id":"t063","lang":"en","label":"benign","category":"delivery","text":"Your Flipkart order will be delivered today between 2 PM and 6 PM. Delivery OTP 4412."}
+{"id":"t064","lang":"en","label":"benign","category":"delivery","text":"Blue Dart: AWB 51234567 is out for delivery."}
+{"id":"t065","lang":"en","label":"benign","category":"delivery","hard":true,"text":"Your Zomato rider is arriving within 5 minutes."}
+{"id":"t066","lang":"en","label":"benign","category":"delivery","text":"Amazon: your package was delivered. Rate your experience."}
+{"id":"t067","lang":"en","label":"benign","category":"delivery","text":"India Post: Speed Post article EN123456789IN was delivered at Pune on 10-11-2026."}
+{"id":"t068","lang":"en","label":"benign","category":"telecom","text":"Jio: your 1.5 GB/day data will be exhausted. Recharge with Rs 239 at https://www.jio.com"}
+{"id":"t069","lang":"en","label":"benign","category":"telecom","text":"Airtel: your bill of Rs 799 is due on 18 Nov. Pay on the Airtel Thanks app."}
+{"id":"t070","lang":"en","label":"benign","category":"telecom","text":"Vi: your recharge of Rs 199 expires tomorrow."}
+{"id":"t071","lang":"en","label":"benign","category":"govt_reminder","text":"Your driving licence renewal is due. Book a slot at https://parivahan.gov.in"}
+{"id":"t072","lang":"en","label":"benign","category":"govt_reminder","text":"EPFO: your PF balance is Rs 1,24,310. Check at https://www.epfindia.gov.in","entities":[{"type":"amount","value":"Rs 1,24,310"},{"type":"link","value":"https://www.epfindia.gov.in"}]}
+{"id":"t073","lang":"en","label":"benign","category":"govt_reminder","text":"The last date to link Aadhaar with PAN is 31 Dec. Do it at https://www.incometax.gov.in/iec"}
+{"id":"t074","lang":"en","label":"benign","category":"govt_reminder","text":"Property tax of Rs 4,200 for 2026-27 is due. Pay at https://pmc.gov.in before 30 Nov.","entities":[{"type":"amount","value":"Rs 4,200"},{"type":"link","value":"https://pmc.gov.in"}]}
+{"id":"t075","lang":"en","label":"benign","category":"awareness","hard":true,"text":"Cyber safety tip: scammers pose as police and keep you on a video call. Real police never do this. Do not transfer money, call 1930."}
+{"id":"t076","lang":"en","label":"benign","category":"awareness","hard":true,"text":"Police advisory: no agency conducts 'digital arrest'. If someone threatens arrest on a video call, disconnect and report on cybercrime.gov.in"}
+{"id":"t077","lang":"hi","label":"benign","category":"awareness","hard":true,"text":"पुलिस की सलाह: कोई भी एजेंसी वीडियो कॉल पर गिरफ्तारी नहीं करती। ऐसे कॉल पर पैसे ट्रांसफर न करें।"}
+{"id":"t078","lang":"en","label":"benign","category":"awareness","hard":true,"text":"Bank notice: fraudsters ask customers to move money into a 'safe account'. Banks never do this. Do not share your OTP or transfer funds."}
+{"id":"t079","lang":"en","label":"benign","category":"awareness","hard":true,"text":"Warning from RBI: beware of fake KYC messages with links like sbi-kyc-update. Delete them."}
+{"id":"t080","lang":"en","label":"benign","category":"awareness","hard":true,"text":"In the news: a pensioner lost Rs 40 lakh to fake CBI officers who held him on a video call for 6 days."}
+{"id":"t081","lang":"hi","label":"benign","category":"awareness","hard":true,"text":"सावधान रहें: ठग खुद को पुलिस बताकर वीडियो कॉल पर डराते हैं और पैसे माँगते हैं। 1930 पर शिकायत करें।"}
+{"id":"t082","lang":"en","label":"benign","category":"awareness","hard":true,"text":"Quiz: what should you do if someone says you are under digital arrest? Answer: hang up and call 1930."}
+{"id":"t083","lang":"en","label":"benign","category":"personal","hard":true,"text":"Can you send Rs 1,000 to Raju for the cake? I'll pay you back tomorrow."}
+{"id":"t084","lang":"en","label":"benign","category":"personal","hard":true,"text":"Rent is Rs 15,000, please transfer by the 5th."}
+{"id":"t085","lang":"en","label":"benign","category":"personal","hard":true,"text":"Bro pay the Rs 300 for the cab, I paid last time."}
+{"id":"t086","lang":"en","label":"benign","category":"personal","hard":true,"text":"Urgent: need the project files immediately, the client is waiting."}
+{"id":"t087","lang":"en","label":"benign","category":"personal","hard":true,"text":"Join the video call at 4 pm for the warranty claim discussion."}
+{"id":"t088","lang":"en","label":"benign","category":"personal","text":"The court has granted bail. No further action is needed from your side."}
+{"id":"t089","lang":"hinglish","label":"benign","category":"personal","text":"Mummy: arrey tum phone mat uthana, dad ko mat batana ki surprise party hai."}
+{"id":"t090","lang":"en","label":"benign","category":"personal","text":"Karan sir, as per Section 138 of the NI Act the notice period is 15 days. Please acknowledge.","statutes":[]}
+{"id":"t091","lang":"en","label":"benign","category":"travel","text":"IRCTC: PNR 8123456789 confirmed. Coach B2, seat 41. Train 12951 departs on 14-11-2026 at 17:00.","entities":[{"type":"datetime","value":"14-11-2026 at 17:00"}]}
+{"id":"t092","lang":"en","label":"benign","category":"travel","text":"Your Ola ride with Ravi is arriving in 3 mins. OTP 2841."}
+{"id":"t093","lang":"en","label":"benign","category":"ecommerce","text":"Your Myntra order #M-88123 is shipped. Track: https://www.myntra.com/track"}
+{"id":"t094","lang":"en","label":"benign","category":"utility_bill","text":"Water supply will be off tomorrow from 10 AM to 4 PM for maintenance."}
+{"id":"t095","lang":"en","label":"benign","category":"delivery","hard":true,"text":"Gas cylinder booking successful. Delivery within 3 days. Pay Rs 903 on delivery."}
+{"id":"t096","lang":"en","label":"benign","category":"personal","hard":true,"text":"Lecture at 6 pm on a zoom call, topic: criminal law and custody rights."}
+{"id":"t097","lang":"hi","label":"benign","category":"personal","text":"आज शाम 6 बजे ज़ूम पर मीटिंग है, आना ज़रूर।"}
+{"id":"t098","lang":"hi","label":"benign","category":"delivery","text":"आपका ऑर्डर डिलीवर हो गया है।"}
+{"id":"t099","lang":"en","label":"benign","category":"personal","text":"Happy Diwali! Wishing you and your family a prosperous year ahead."}
+{"id":"t100","lang":"en","label":"benign","category":"personal","text":"Meeting rescheduled to 3 PM. Please join the Teams call."}

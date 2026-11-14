@@ -56,3 +56,15 @@ def test_a_section_without_a_known_replacement_is_not_listed():
 
 def test_statute_shape():
     assert find_statutes("IPC 420")[0] == Statute(cited="IPC 420", current="BNS 318(4)")
+
+
+def test_a_list_of_sections_before_the_act():
+    assert cited("Sections 420, 406 and 120B of IPC") == [
+        ("IPC 420", "BNS 318(4)"),
+        ("IPC 406", "BNS 316(2)"),
+        ("IPC 120B", "BNS 61(2)"),
+    ]
+    assert cited("Section 420 and Section 406 IPC") == [
+        ("IPC 420", "BNS 318(4)"),
+        ("IPC 406", "BNS 316(2)"),
+    ]

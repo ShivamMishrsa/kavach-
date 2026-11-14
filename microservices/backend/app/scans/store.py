@@ -13,6 +13,7 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 
+from app.core.metrics import Metrics
 from app.models import (
     STAGES,
     Entity,
@@ -45,9 +46,15 @@ class _Record:
 
 
 class ScanStore:
-    def __init__(self, ttl: timedelta, clock: Callable[[], datetime] = utc_now) -> None:
+    def __init__(
+        self,
+        ttl: timedelta,
+        clock: Callable[[], datetime] = utc_now,
+        metrics: Metrics | None = None,
+    ) -> None:
         self._ttl = ttl
         self._clock = clock
+        self._metrics = metrics
         self._lock = threading.Lock()
         self._records: dict[str, _Record] = {}
 
@@ -80,12 +87,23 @@ class ScanStore:
             record = self._records.get(scan_id)
             if record:
                 record.status, record.stages_done, record.result = "done", len(STAGES), result
+                self._record(record, "done", result.risk_level)
 
     def fail(self, scan_id: str) -> None:
         with self._lock:
             record = self._records.get(scan_id)
             if record:
                 record.status = "failed"
+                self._record(record, "failed", None)
+
+    def _record(self, record: _Record, status: str, level: str | None) -> None:
+        """Counts a finished scan: only its kind, outcome, risk level and how long it took."""
+        if self._metrics is None:
+            return
+        self._metrics.count("scans", kind=record.kind, status=status)
+        if level:
+            self._metrics.count("risk_level", level=level)
+        self._metrics.scan_finished((self._clock() - record.created_at).total_seconds())
 
     def get(self, scan_id: str) -> Scan | None:
         with self._lock:

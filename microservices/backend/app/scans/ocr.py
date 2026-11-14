@@ -18,9 +18,48 @@ MIN_CONFIDENCE = 50.0
 # A PDF page with at least this much real text needs no OCR.
 MIN_TEXT_LAYER_CHARS = 40
 RENDER_SCALE = 2.0
+# Photos narrower than this are enlarged before reading (Tesseract reads small text badly), and
+# photos tilted by more than a degree are straightened (it drops or garbles tilted lines).
+SMALL_PHOTO_WIDTH = 1000
+ENLARGE_TO_WIDTH = 1400
+MAX_SKEW_DEGREES = 8
+MIN_SKEW_DEGREES = 1.0
 
 # PDFium (inside pypdfium2) is not thread-safe, and the scans run in several threads.
 _PDFIUM_LOCK = threading.Lock()
+
+
+def _tilt(image: Image.Image) -> float:
+    """The angle, in degrees, that makes the lines of text horizontal.
+
+    With the rows of a small copy averaged, horizontal lines give sharp jumps from one row to the
+    next. That sharpness is greatest at the right angle.
+    """
+    small = ImageOps.autocontrast(image.copy())
+    small.thumbnail((800, 800))
+    scores: dict[float, float] = {}
+    for tenth in range(-MAX_SKEW_DEGREES * 10, MAX_SKEW_DEGREES * 10 + 1, 5):
+        angle = tenth / 10
+        turned = small.rotate(angle, resample=Image.Resampling.BILINEAR, fillcolor=255)
+        rows = turned.resize((1, turned.height), Image.Resampling.BOX).tobytes()
+        scores[angle] = sum((rows[i + 1] - rows[i]) ** 2 for i in range(len(rows) - 1))
+    best = max(scores, key=lambda angle: scores[angle])
+    # Straighten only when it is clearly better than leaving the picture alone.
+    return best if scores[best] > 1.1 * scores[0.0] and abs(best) >= MIN_SKEW_DEGREES else 0.0
+
+
+def prepare(image: Image.Image, max_pixels: int) -> Image.Image:
+    """Makes a small, tilted or washed-out photo easier to read."""
+    angle = _tilt(image)
+    if angle:
+        image = image.rotate(angle, resample=Image.Resampling.BICUBIC, expand=True, fillcolor=255)
+    if image.width < SMALL_PHOTO_WIDTH:
+        factor = ENLARGE_TO_WIDTH / image.width
+        factor = min(factor, (max_pixels / max(image.width * image.height, 1)) ** 0.5)
+        if factor > 1:
+            size = (round(image.width * factor), round(image.height * factor))
+            image = image.resize(size, Image.Resampling.LANCZOS)
+    return ImageOps.autocontrast(image, cutoff=1)
 
 
 class OcrUnavailable(RuntimeError):
@@ -55,7 +94,9 @@ class TesseractOcr:
         max_pixels: int,
         command: str | None = None,
         tessdata_dir: str | None = None,
+        enhance: bool = True,
     ) -> None:
+        self._enhance = enhance
         self._languages = languages
         self._timeout = timeout
         self._max_pdf_pages = max_pdf_pages
@@ -84,7 +125,9 @@ class TesseractOcr:
 
     def read_image(self, data: bytes) -> Reading:
         image = self._open(data)
-        return self._recognize(image) if image else UNREADABLE
+        if image is None:
+            return UNREADABLE
+        return self._recognize(prepare(image, self._max_pixels) if self._enhance else image)
 
     def read_pdf(self, data: bytes) -> Reading:
         readings: list[Reading] = []

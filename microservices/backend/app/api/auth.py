@@ -43,6 +43,7 @@ def verify(body: VerifyRequest, response: Response, services: ServicesDep) -> Ac
     user = services.accounts.redeem(body.token)
     if user is None:
         raise unauthorized()
+    services.metrics.count("signins")
     settings = services.settings
     response.set_cookie(
         SESSION_COOKIE,

@@ -5,8 +5,9 @@ FastAPI service that checks a notice, message or link and returns a **risk level
 Why it is built this way: [`ADR-0002`](../../docs/decisions/ADR-0002-detection-approach.md) (detection) and
 [`ADR-0003`](../../docs/decisions/ADR-0003-pdf-and-abuse-limits.md) (PDF, consent, limits).
 
-Status: Step 5 (notice photo/PDF/text and link checks, evidence summary PDF, consent record, 15-minute
-deletion, abuse limits). Accounts come in Step 7.
+Status: Step 8 (checks, evidence summary PDF, consent, 15-minute deletion, accounts, measured accuracy
+and speed, abuse tests, backups, metrics). How to run it for real: [`docs/deploy.md`](../../docs/deploy.md).
+How well it works, with the limits of that claim: [`docs/benchmarks.md`](../../docs/benchmarks.md).
 
 ## Set up (Windows, PowerShell)
 
@@ -42,6 +43,16 @@ real Tesseract are skipped when it is not installed; everything else runs withou
 
 Run **one** worker. Scans live in the process's memory (see below), so several workers would not
 see each other's scans.
+
+```powershell
+.\.venv\Scripts\python.exe -m evaluation.run      # accuracy of the rules on the labelled sets
+.\.venv\Scripts\python.exe -m evaluation.ocr      # the photo path (needs Tesseract)
+.\.venv\Scripts\python.exe -m evaluation.latency  # how long a check takes (needs Tesseract)
+.\.venv\Scripts\python.exe -m app.tools.backup --to <folder>   # copy the data (see docs/deploy.md)
+```
+
+The labelled sets are in `evaluation/data/` (written by the team, no real person's message);
+`tests/test_evaluation.py` fails if a change makes the rules worse on them.
 
 ## How a scan works
 
@@ -86,19 +97,27 @@ the result is `low` only if there was enough clear text to judge, otherwise `can
 
 Body size cap (also for streamed bodies), 20 tries per 10 minutes per person and action (scan, PDF,
 feedback, consent), security headers, short signed PDF links. Set `KAVACH_SECRET` in production.
-Behind a reverse proxy the client address must come from a trusted header; that is done at deploy (Step 8).
+Behind a reverse proxy set `KAVACH_PROXY_HOPS` to the number of proxies: the address is then taken
+from the end of `X-Forwarded-For`, which a caller cannot write; with 0 the header is ignored.
+`KAVACH_MAX_SCANS_PER_DAY` is the cost cap on checks per day (past it: `503 busy`).
+`GET /metrics` (counts by outcome and risk level, no personal data) exists only when
+`KAVACH_METRICS_TOKEN` is set. A crash inside the server answers `500 server_error` with the same
+security headers and nothing about the cause. Hostile files, text and requests are tested in
+`tests/test_abuse.py`.
 **Accounts** (`/v1/auth`, `/v1/account`, `/v1/history`): no passwords. An emailed one-time link (15 minutes, used once) signs a person in and creates the account on first use. The session is a random secret in an `HttpOnly`, `SameSite=Lax` cookie (`Secure` outside development) that lasts 14 days; only its SHA-256 is stored, as with the sign-in links. Data is in `data/kavach.db` (SQLite for now; Postgres at deploy, Step 8): accounts, sessions, sign-in links, and the optional synced history (kind, risk level and time only). A sign-in request always answers the same, five emails per address per hour are sent, and requests that change an account must come from one of `KAVACH_CORS_ORIGINS`. A scan made while signed in can only be read by that account. A person can change their email address (a link to the NEW address; it changes only when opened) and see and end each sign-in. An account nobody has signed in to for 365 days (`inactive_account_days`) is deleted with its history. Emails exist in all 7 languages (drafts). Without SMTP settings, development writes emails to `data/outbox.jsonl`; production sends nothing. Run the API on the same site as the website (for example `api.example.in` and `example.in`), because the cookie is `SameSite=Lax`.
 
-Consent and feedback records are deleted after 90 days (`retention_days`, checked once an hour). The server's own access log, which would print client IPs, is switched off in code. A hosting service or proxy in front may still keep its own logs (Step 8).
+Consent and feedback records are deleted after 90 days (`retention_days`, checked once an hour). The server's own access log, which would print client IPs, is switched off in code. A hosting service or proxy in front may still keep its own logs; name them in the privacy policy.
 
 ## Known limits
 
 - **Rules, not a model.** It catches the common scripts and will miss new ones and flag some honest
-  messages. The thresholds are not tuned on real data yet (Step 8 measures them).
+  messages: about a quarter of honest messages on the team's test set, mostly ones that talk about
+  scams or ask for money (numbers and the reasons in `docs/benchmarks.md`). Nothing was tuned on real
+  people's messages.
 - Hindi OCR (Tesseract) is average: clear screenshots work, blurry or handwritten photos come back
   as `cannot_verify`.
 - No LLM is used (the explanation texts are fixed translations).
-- Limits and scans live in one process's memory, so run one worker; more need Redis (Step 8).
+- Limits and scans live in one process's memory, so run one worker; more need Redis (ADR-0004 says when).
 - Text copied out of a Bengali PDF can contain a few control characters (an fpdf2 quirk); the page itself is right.
 - No CAPTCHA: added only if the logs show abuse.
 - The IPC to BNS table covers ten sections and the official list must still be checked (verify).

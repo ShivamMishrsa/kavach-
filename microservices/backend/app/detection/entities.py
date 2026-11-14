@@ -9,10 +9,27 @@ import re
 from app.models import Entity, EntityType
 
 MAX_PER_TYPE = 5
+# The most an entity may hold (the API refuses longer). A longer link keeps its start, which is
+# where the host name is; any other value this long is not a real detail and is left out.
+MAX_VALUE_LENGTH = 500
 _ORDER: tuple[EntityType, ...] = ("utr", "upi", "phone", "amount", "datetime", "link")
 
 _LINK = re.compile(r"(?:https?://|www\.)[^\s<>\"']+", re.IGNORECASE)
 _LINK_TRAILING = ".,;:!?)]}'\""
+# An address written without "http" ("sbi-kyc.xyz/login"). Only well-known endings count, so that
+# "e.g." or "Mr.Sharma" are not read as links. Text after "@" is an email, which is removed earlier.
+_TLDS = (
+    "co.in|gov.in|nic.in|org.in|com|in|org|net|xyz|top|info|online|site|live|click|link|shop|vip"
+    "|club|icu|cc|me|app|buzz|store|help"
+).replace(".", r"\.")
+_BARE_LINK = re.compile(
+    rf"(?<![\w@./-])(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:{_TLDS})\b(?![\w@-])(?:/[^\s<>\"']*)?",
+    re.IGNORECASE,
+)
+# Numbers that look like a phone number but are labelled as something else.
+_OTHER_ID = re.compile(
+    r"\b(?:pnr|awb|order|booking|tracking)\s*(?:no|number|id)?[\s:#.\-]*\d{8,}", re.IGNORECASE
+)
 
 # name@handle, but not an email address (the handle of an email is followed by ".com" and so on).
 _UPI = re.compile(r"(?<![\w.@-])[\w.-]{2,}@[A-Za-z][A-Za-z0-9]+\b(?!\.[A-Za-z])")
@@ -57,8 +74,10 @@ def _take(pattern: re.Pattern[str], text: str, group: str | int = 0) -> tuple[li
 
 def extract_entities(text: str) -> list[Entity]:
     links, rest = _take(_LINK, text)
+    bare_links, rest = _take(_BARE_LINK, rest)
     upi, rest = _take(_UPI, rest)
     utr, rest = _take(_UTR_LABELLED, rest, "value")
+    _, rest = _take(_OTHER_ID, rest)
     amount, rest = _take(_AMOUNT, rest)
     when, rest = _take(_DATETIME, rest)
     phone, rest = _take(_PHONE, rest)
@@ -70,10 +89,11 @@ def extract_entities(text: str) -> list[Entity]:
         "phone": phone,
         "amount": amount,
         "datetime": when,
-        "link": [link.rstrip(_LINK_TRAILING) for link in links],
+        "link": [link.rstrip(_LINK_TRAILING) for link in links + bare_links],
     }
     return [
-        Entity(type=kind, value=value)
+        Entity(type=kind, value=value[:MAX_VALUE_LENGTH])
         for kind in _ORDER
         for value in list(dict.fromkeys(found[kind]))[:MAX_PER_TYPE]
+        if len(value) <= MAX_VALUE_LENGTH or kind == "link"
     ]

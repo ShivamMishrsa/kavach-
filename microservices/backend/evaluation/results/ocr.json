@@ -1,0 +1,210 @@
+{
+  "messages": 32,
+  "variants": {
+    "clean": {
+      "character_error_rate": 0.00809102402022756,
+      "same_risk_level_as_typed": {
+        "hits": 31,
+        "total": 32,
+        "value": 0.96875,
+        "interval": [
+          0.8425539219962727,
+          0.9944622826374491
+        ]
+      },
+      "same_warning_as_typed": {
+        "hits": 31,
+        "total": 32,
+        "value": 0.96875,
+        "interval": [
+          0.8425539219962727,
+          0.9944622826374491
+        ]
+      },
+      "scams_still_warned_about": {
+        "hits": 17,
+        "total": 18,
+        "value": 0.9444444444444444,
+        "interval": [
+          0.7424220019799247,
+          0.9901250641690756
+        ]
+      },
+      "read_with_confidence": {
+        "hits": 32,
+        "total": 32,
+        "value": 1.0,
+        "interval": [
+          0.8928172849426366,
+          1.0
+        ]
+      },
+      "ocr_seconds_p50": 0.2883163499936927,
+      "ocr_seconds_p95": 0.3504851900128415
+    },
+    "blurred": {
+      "character_error_rate": 0.01441213653603034,
+      "same_risk_level_as_typed": {
+        "hits": 31,
+        "total": 32,
+        "value": 0.96875,
+        "interval": [
+          0.8425539219962727,
+          0.9944622826374491
+        ]
+      },
+      "same_warning_as_typed": {
+        "hits": 31,
+        "total": 32,
+        "value": 0.96875,
+        "interval": [
+          0.8425539219962727,
+          0.9944622826374491
+        ]
+      },
+      "scams_still_warned_about": {
+        "hits": 17,
+        "total": 18,
+        "value": 0.9444444444444444,
+        "interval": [
+          0.7424220019799247,
+          0.9901250641690756
+        ]
+      },
+      "read_with_confidence": {
+        "hits": 32,
+        "total": 32,
+        "value": 1.0,
+        "interval": [
+          0.8928172849426366,
+          1.0
+        ]
+      },
+      "ocr_seconds_p50": 0.30433690003701486,
+      "ocr_seconds_p95": 0.3676652100228239
+    },
+    "small_and_compressed": {
+      "character_error_rate": 0.03742098609355247,
+      "same_risk_level_as_typed": {
+        "hits": 30,
+        "total": 32,
+        "value": 0.9375,
+        "interval": [
+          0.7985253275199642,
+          0.9826897968048427
+        ]
+      },
+      "same_warning_as_typed": {
+        "hits": 30,
+        "total": 32,
+        "value": 0.9375,
+        "interval": [
+          0.7985253275199642,
+          0.9826897968048427
+        ]
+      },
+      "scams_still_warned_about": {
+        "hits": 16,
+        "total": 18,
+        "value": 0.8888888888888888,
+        "interval": [
+          0.6719975513339578,
+          0.9689811315464172
+        ]
+      },
+      "read_with_confidence": {
+        "hits": 32,
+        "total": 32,
+        "value": 1.0,
+        "interval": [
+          0.8928172849426366,
+          1.0
+        ]
+      },
+      "ocr_seconds_p50": 0.3070086500083562,
+      "ocr_seconds_p95": 0.37227548003720584
+    },
+    "tilted": {
+      "character_error_rate": 0.06826801517067003,
+      "same_risk_level_as_typed": {
+        "hits": 30,
+        "total": 32,
+        "value": 0.9375,
+        "interval": [
+          0.7985253275199642,
+          0.9826897968048427
+        ]
+      },
+      "same_warning_as_typed": {
+        "hits": 30,
+        "total": 32,
+        "value": 0.9375,
+        "interval": [
+          0.7985253275199642,
+          0.9826897968048427
+        ]
+      },
+      "scams_still_warned_about": {
+        "hits": 16,
+        "total": 18,
+        "value": 0.8888888888888888,
+        "interval": [
+          0.6719975513339578,
+          0.9689811315464172
+        ]
+      },
+      "read_with_confidence": {
+        "hits": 32,
+        "total": 32,
+        "value": 1.0,
+        "interval": [
+          0.8928172849426366,
+          1.0
+        ]
+      },
+      "ocr_seconds_p50": 0.30601945001399145,
+      "ocr_seconds_p95": 0.3690232750173891
+    },
+    "noisy": {
+      "character_error_rate": 0.010366624525916562,
+      "same_risk_level_as_typed": {
+        "hits": 31,
+        "total": 32,
+        "value": 0.96875,
+        "interval": [
+          0.8425539219962727,
+          0.9944622826374491
+        ]
+      },
+      "same_warning_as_typed": {
+        "hits": 31,
+        "total": 32,
+        "value": 0.96875,
+        "interval": [
+          0.8425539219962727,
+          0.9944622826374491
+        ]
+      },
+      "scams_still_warned_about": {
+        "hits": 17,
+        "total": 18,
+        "value": 0.9444444444444444,
+        "interval": [
+          0.7424220019799247,
+          0.9901250641690756
+        ]
+      },
+      "read_with_confidence": {
+        "hits": 32,
+        "total": 32,
+        "value": 1.0,
+        "interval": [
+          0.8928172849426366,
+          1.0
+        ]
+      },
+      "ocr_seconds_p50": 0.31406769997556694,
+      "ocr_seconds_p95": 0.39263149999023883
+    }
+  }
+}

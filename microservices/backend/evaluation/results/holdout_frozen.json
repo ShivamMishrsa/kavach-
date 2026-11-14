@@ -1,0 +1,897 @@
+[
+  {
+    "split": "holdout",
+    "counts": {
+      "text": 80,
+      "links": 30
+    },
+    "all": {
+      "recall": {
+        "hits": 35,
+        "total": 54,
+        "value": 0.6481481481481481,
+        "interval": [
+          0.5148458381779774,
+          0.7617716827757998
+        ]
+      },
+      "false_alarm": {
+        "hits": 13,
+        "total": 56,
+        "value": 0.23214285714285715,
+        "interval": [
+          0.1409924724565329,
+          0.35768403351924316
+        ]
+      },
+      "precision": {
+        "hits": 35,
+        "total": 48,
+        "value": 0.7291666666666666,
+        "interval": [
+          0.5900276538379887,
+          0.8343419643836709
+        ]
+      },
+      "strong_recall": {
+        "hits": 22,
+        "total": 54,
+        "value": 0.4074074074074074,
+        "interval": [
+          0.2867801518924045,
+          0.5403338975114846
+        ]
+      },
+      "strong_false_alarm": {
+        "hits": 6,
+        "total": 56,
+        "value": 0.10714285714285714,
+        "interval": [
+          0.050038674581190865,
+          0.21468686751661398
+        ]
+      },
+      "missed_as_low": {
+        "hits": 11,
+        "total": 54,
+        "value": 0.2037037037037037,
+        "interval": [
+          0.1177393408658538,
+          0.32902561722659174
+        ]
+      },
+      "cannot_verify": {
+        "hits": 14,
+        "total": 110,
+        "value": 0.12727272727272726,
+        "interval": [
+          0.07734910586208317,
+          0.20235181190435725
+        ]
+      },
+      "levels": {
+        "scam": {
+          "very_high": 2,
+          "high": 20,
+          "medium": 13,
+          "cannot_verify": 8,
+          "low": 11
+        },
+        "benign": {
+          "very_high": 0,
+          "high": 6,
+          "medium": 7,
+          "cannot_verify": 6,
+          "low": 37
+        }
+      }
+    },
+    "text": {
+      "recall": {
+        "hits": 27,
+        "total": 38,
+        "value": 0.7105263157894737,
+        "interval": [
+          0.5524256173381024,
+          0.8299689373634387
+        ]
+      },
+      "false_alarm": {
+        "hits": 13,
+        "total": 42,
+        "value": 0.30952380952380953,
+        "interval": [
+          0.1907092651972273,
+          0.46026277766340595
+        ]
+      },
+      "precision": {
+        "hits": 27,
+        "total": 40,
+        "value": 0.675,
+        "interval": [
+          0.52017458088898,
+          0.7991568303733828
+        ]
+      },
+      "strong_recall": {
+        "hits": 14,
+        "total": 38,
+        "value": 0.3684210526315789,
+        "interval": [
+          0.23384013155413794,
+          0.5271632717573987
+        ]
+      },
+      "strong_false_alarm": {
+        "hits": 6,
+        "total": 42,
+        "value": 0.14285714285714285,
+        "interval": [
+          0.06715875684189933,
+          0.2784138235217878
+        ]
+      },
+      "missed_as_low": {
+        "hits": 11,
+        "total": 38,
+        "value": 0.2894736842105263,
+        "interval": [
+          0.17003106263656131,
+          0.44757438266189764
+        ]
+      },
+      "cannot_verify": {
+        "hits": 0,
+        "total": 80,
+        "value": 0.0,
+        "interval": [
+          0.0,
+          0.0458197362645751
+        ]
+      },
+      "levels": {
+        "scam": {
+          "very_high": 2,
+          "high": 12,
+          "medium": 13,
+          "cannot_verify": 0,
+          "low": 11
+        },
+        "benign": {
+          "very_high": 0,
+          "high": 6,
+          "medium": 7,
+          "cannot_verify": 0,
+          "low": 29
+        }
+      }
+    },
+    "links": {
+      "recall": {
+        "hits": 8,
+        "total": 16,
+        "value": 0.5,
+        "interval": [
+          0.2799923761135083,
+          0.7200076238864916
+        ]
+      },
+      "false_alarm": {
+        "hits": 0,
+        "total": 14,
+        "value": 0.0,
+        "interval": [
+          0.0,
+          0.21531701192718142
+        ]
+      },
+      "precision": {
+        "hits": 8,
+        "total": 8,
+        "value": 1.0,
+        "interval": [
+          0.6755843804891231,
+          1.0
+        ]
+      },
+      "strong_recall": {
+        "hits": 8,
+        "total": 16,
+        "value": 0.5,
+        "interval": [
+          0.2799923761135083,
+          0.7200076238864916
+        ]
+      },
+      "strong_false_alarm": {
+        "hits": 0,
+        "total": 14,
+        "value": 0.0,
+        "interval": [
+          0.0,
+          0.21531701192718142
+        ]
+      },
+      "missed_as_low": {
+        "hits": 0,
+        "total": 16,
+        "value": 0.0,
+        "interval": [
+          0.0,
+          0.19361341827271994
+        ]
+      },
+      "cannot_verify": {
+        "hits": 14,
+        "total": 30,
+        "value": 0.4666666666666667,
+        "interval": [
+          0.30232127224128236,
+          0.6385798671847496
+        ]
+      },
+      "levels": {
+        "scam": {
+          "very_high": 0,
+          "high": 8,
+          "medium": 0,
+          "cannot_verify": 8,
+          "low": 0
+        },
+        "benign": {
+          "very_high": 0,
+          "high": 0,
+          "medium": 0,
+          "cannot_verify": 6,
+          "low": 8
+        }
+      }
+    },
+    "scams_the_rules_are_written_for": {
+      "hits": 19,
+      "total": 26,
+      "value": 0.7307692307692307,
+      "interval": [
+        0.5391659658023868,
+        0.8629572447493261
+      ]
+    },
+    "scams_the_rules_are_not_written_for": {
+      "hits": 8,
+      "total": 12,
+      "value": 0.6666666666666666,
+      "interval": [
+        0.3906175873976139,
+        0.8618821601026385
+      ]
+    },
+    "hard_benign_warned": {
+      "hits": 10,
+      "total": 14,
+      "value": 0.7142857142857143,
+      "interval": [
+        0.4535045882751561,
+        0.882788120898909
+      ]
+    },
+    "hard_benign_strongly_warned": {
+      "hits": 6,
+      "total": 14,
+      "value": 0.42857142857142855,
+      "interval": [
+        0.21380509930400526,
+        0.6740973309713064
+      ]
+    },
+    "categories": {
+      "benign:awareness": {
+        "hits": 2,
+        "total": 8,
+        "value": 0.25,
+        "interval": [
+          0.07147768885802763,
+          0.5907301208974108
+        ]
+      },
+      "benign:bank_alert": {
+        "hits": 4,
+        "total": 5,
+        "value": 0.8,
+        "interval": [
+          0.3755282641185388,
+          0.9637768390302125
+        ]
+      },
+      "benign:delivery": {
+        "hits": 4,
+        "total": 4,
+        "value": 1.0,
+        "interval": [
+          0.5100999795960008,
+          1.0
+        ]
+      },
+      "benign:ecommerce": {
+        "hits": 2,
+        "total": 2,
+        "value": 1.0,
+        "interval": [
+          0.34237195288961925,
+          1.0
+        ]
+      },
+      "benign:govt_reminder": {
+        "hits": 3,
+        "total": 3,
+        "value": 1.0,
+        "interval": [
+          0.43849391955098227,
+          1.0
+        ]
+      },
+      "benign:official": {
+        "hits": 8,
+        "total": 8,
+        "value": 1.0,
+        "interval": [
+          0.6755843804891231,
+          1.0
+        ]
+      },
+      "benign:otp": {
+        "hits": 3,
+        "total": 4,
+        "value": 0.75,
+        "interval": [
+          0.3006360524426366,
+          0.9544139373553637
+        ]
+      },
+      "benign:personal": {
+        "hits": 5,
+        "total": 10,
+        "value": 0.5,
+        "interval": [
+          0.23658959361548731,
+          0.7634104063845126
+        ]
+      },
+      "benign:telecom": {
+        "hits": 2,
+        "total": 2,
+        "value": 1.0,
+        "interval": [
+          0.34237195288961925,
+          1.0
+        ]
+      },
+      "benign:travel": {
+        "hits": 2,
+        "total": 2,
+        "value": 1.0,
+        "interval": [
+          0.34237195288961925,
+          1.0
+        ]
+      },
+      "benign:unknown": {
+        "hits": 6,
+        "total": 6,
+        "value": 1.0,
+        "interval": [
+          0.6096569663469354,
+          0.9999999999999999
+        ]
+      },
+      "benign:utility_bill": {
+        "hits": 2,
+        "total": 2,
+        "value": 1.0,
+        "interval": [
+          0.34237195288961925,
+          1.0
+        ]
+      },
+      "scam:bare": {
+        "hits": 1,
+        "total": 1,
+        "value": 1.0,
+        "interval": [
+          0.20654329147389294,
+          1.0
+        ]
+      },
+      "scam:brand_word": {
+        "hits": 3,
+        "total": 9,
+        "value": 0.3333333333333333,
+        "interval": [
+          0.12058159868274293,
+          0.6458026525009102
+        ]
+      },
+      "scam:crypto": {
+        "hits": 1,
+        "total": 1,
+        "value": 1.0,
+        "interval": [
+          0.20654329147389294,
+          1.0
+        ]
+      },
+      "scam:decoy": {
+        "hits": 1,
+        "total": 1,
+        "value": 1.0,
+        "interval": [
+          0.20654329147389294,
+          1.0
+        ]
+      },
+      "scam:digital_arrest": {
+        "hits": 5,
+        "total": 8,
+        "value": 0.625,
+        "interval": [
+          0.30573785458380187,
+          0.863158240538479
+        ]
+      },
+      "scam:fake_notice": {
+        "hits": 5,
+        "total": 7,
+        "value": 0.7142857142857143,
+        "interval": [
+          0.35892909014821267,
+          0.9177828342909844
+        ]
+      },
+      "scam:insurance": {
+        "hits": 1,
+        "total": 1,
+        "value": 1.0,
+        "interval": [
+          0.20654329147389294,
+          1.0
+        ]
+      },
+      "scam:investment": {
+        "hits": 0,
+        "total": 1,
+        "value": 0.0,
+        "interval": [
+          0.0,
+          0.7934567085261071
+        ]
+      },
+      "scam:job_offer": {
+        "hits": 1,
+        "total": 1,
+        "value": 1.0,
+        "interval": [
+          0.20654329147389294,
+          1.0
+        ]
+      },
+      "scam:kyc_link": {
+        "hits": 4,
+        "total": 5,
+        "value": 0.8,
+        "interval": [
+          0.3755282641185388,
+          0.9637768390302125
+        ]
+      },
+      "scam:loan_threat": {
+        "hits": 0,
+        "total": 1,
+        "value": 0.0,
+        "interval": [
+          0.0,
+          0.7934567085261071
+        ]
+      },
+      "scam:lottery": {
+        "hits": 1,
+        "total": 1,
+        "value": 1.0,
+        "interval": [
+          0.20654329147389294,
+          1.0
+        ]
+      },
+      "scam:matrimonial": {
+        "hits": 1,
+        "total": 1,
+        "value": 1.0,
+        "interval": [
+          0.20654329147389294,
+          1.0
+        ]
+      },
+      "scam:olx_army": {
+        "hits": 1,
+        "total": 1,
+        "value": 1.0,
+        "interval": [
+          0.20654329147389294,
+          1.0
+        ]
+      },
+      "scam:punycode": {
+        "hits": 0,
+        "total": 1,
+        "value": 0.0,
+        "interval": [
+          0.0,
+          0.7934567085261071
+        ]
+      },
+      "scam:refund": {
+        "hits": 0,
+        "total": 1,
+        "value": 0.0,
+        "interval": [
+          0.0,
+          0.7934567085261071
+        ]
+      },
+      "scam:safe_account": {
+        "hits": 5,
+        "total": 6,
+        "value": 0.8333333333333334,
+        "interval": [
+          0.43649056343635395,
+          0.9699474141282697
+        ]
+      },
+      "scam:sextortion": {
+        "hits": 1,
+        "total": 1,
+        "value": 1.0,
+        "interval": [
+          0.20654329147389294,
+          1.0
+        ]
+      },
+      "scam:subdomain_trick": {
+        "hits": 2,
+        "total": 2,
+        "value": 1.0,
+        "interval": [
+          0.34237195288961925,
+          1.0
+        ]
+      },
+      "scam:tech_support": {
+        "hits": 0,
+        "total": 1,
+        "value": 0.0,
+        "interval": [
+          0.0,
+          0.7934567085261071
+        ]
+      },
+      "scam:typo": {
+        "hits": 1,
+        "total": 2,
+        "value": 0.5,
+        "interval": [
+          0.09452865480086614,
+          0.9054713451991339
+        ]
+      },
+      "scam:utility_threat": {
+        "hits": 1,
+        "total": 1,
+        "value": 1.0,
+        "interval": [
+          0.20654329147389294,
+          1.0
+        ]
+      }
+    },
+    "entities": {
+      "tp": 6,
+      "fp": 1,
+      "fn": 0,
+      "precision": {
+        "hits": 6,
+        "total": 7,
+        "value": 0.8571428571428571,
+        "interval": [
+          0.48686549668097007,
+          0.9743210440510253
+        ]
+      },
+      "recall": {
+        "hits": 6,
+        "total": 6,
+        "value": 1.0,
+        "interval": [
+          0.6096569663469354,
+          0.9999999999999999
+        ]
+      },
+      "mistakes": [
+        {
+          "id": "h023",
+          "expected": {
+            "link": [
+              "https://pmkisan-verify.example"
+            ]
+          },
+          "found": {
+            "amount": [
+              "Rs 4,000"
+            ],
+            "link": [
+              "https://pmkisan-verify.example"
+            ]
+          }
+        }
+      ]
+    },
+    "statutes": {
+      "correct": 2,
+      "total": 2,
+      "mistakes": []
+    },
+    "wrong": [
+      {
+        "id": "h002",
+        "label": "scam",
+        "category": "digital_arrest",
+        "level": "low",
+        "reasons": []
+      },
+      {
+        "id": "h005",
+        "label": "scam",
+        "category": "digital_arrest",
+        "level": "low",
+        "reasons": []
+      },
+      {
+        "id": "h006",
+        "label": "scam",
+        "category": "digital_arrest",
+        "level": "low",
+        "reasons": []
+      },
+      {
+        "id": "h009",
+        "label": "scam",
+        "category": "fake_notice",
+        "level": "low",
+        "reasons": []
+      },
+      {
+        "id": "h012",
+        "label": "scam",
+        "category": "fake_notice",
+        "level": "low",
+        "reasons": []
+      },
+      {
+        "id": "h017",
+        "label": "scam",
+        "category": "safe_account",
+        "level": "low",
+        "reasons": []
+      },
+      {
+        "id": "h023",
+        "label": "scam",
+        "category": "kyc_link",
+        "level": "low",
+        "reasons": []
+      },
+      {
+        "id": "h030",
+        "label": "scam",
+        "category": "investment",
+        "level": "low",
+        "reasons": []
+      },
+      {
+        "id": "h032",
+        "label": "scam",
+        "category": "tech_support",
+        "level": "low",
+        "reasons": []
+      },
+      {
+        "id": "h033",
+        "label": "scam",
+        "category": "loan_threat",
+        "level": "low",
+        "reasons": []
+      },
+      {
+        "id": "h036",
+        "label": "scam",
+        "category": "refund",
+        "level": "low",
+        "reasons": []
+      },
+      {
+        "id": "h041",
+        "label": "benign",
+        "category": "bank_alert",
+        "level": "medium",
+        "reasons": [
+          "payment_demand"
+        ]
+      },
+      {
+        "id": "h047",
+        "label": "benign",
+        "category": "otp",
+        "level": "medium",
+        "reasons": [
+          "secrecy"
+        ]
+      },
+      {
+        "id": "h066",
+        "label": "benign",
+        "category": "personal",
+        "level": "medium",
+        "reasons": [
+          "payment_demand"
+        ]
+      },
+      {
+        "id": "h067",
+        "label": "benign",
+        "category": "personal",
+        "level": "high",
+        "reasons": [
+          "payment_demand",
+          "secrecy",
+          "urgency"
+        ]
+      },
+      {
+        "id": "h068",
+        "label": "benign",
+        "category": "personal",
+        "level": "medium",
+        "reasons": [
+          "payment_demand"
+        ]
+      },
+      {
+        "id": "h070",
+        "label": "benign",
+        "category": "personal",
+        "level": "medium",
+        "reasons": [
+          "outdated_section"
+        ]
+      },
+      {
+        "id": "h071",
+        "label": "benign",
+        "category": "awareness",
+        "level": "high",
+        "reasons": [
+          "digital_arrest"
+        ]
+      },
+      {
+        "id": "h074",
+        "label": "benign",
+        "category": "awareness",
+        "level": "high",
+        "reasons": [
+          "safe_account"
+        ]
+      },
+      {
+        "id": "h075",
+        "label": "benign",
+        "category": "awareness",
+        "level": "high",
+        "reasons": [
+          "digital_arrest",
+          "urgency"
+        ]
+      },
+      {
+        "id": "h076",
+        "label": "benign",
+        "category": "awareness",
+        "level": "high",
+        "reasons": [
+          "digital_arrest"
+        ]
+      },
+      {
+        "id": "h077",
+        "label": "benign",
+        "category": "awareness",
+        "level": "high",
+        "reasons": [
+          "safe_account"
+        ]
+      },
+      {
+        "id": "h078",
+        "label": "benign",
+        "category": "awareness",
+        "level": "medium",
+        "reasons": [
+          "urgency"
+        ]
+      },
+      {
+        "id": "h079",
+        "label": "benign",
+        "category": "personal",
+        "level": "medium",
+        "reasons": [
+          "payment_demand"
+        ]
+      },
+      {
+        "id": "hm16",
+        "label": "scam",
+        "category": "brand_word",
+        "level": "cannot_verify",
+        "reasons": []
+      },
+      {
+        "id": "hm17",
+        "label": "scam",
+        "category": "brand_word",
+        "level": "cannot_verify",
+        "reasons": []
+      },
+      {
+        "id": "hm20",
+        "label": "scam",
+        "category": "brand_word",
+        "level": "cannot_verify",
+        "reasons": []
+      },
+      {
+        "id": "hm24",
+        "label": "scam",
+        "category": "typo",
+        "level": "cannot_verify",
+        "reasons": []
+      },
+      {
+        "id": "hm26",
+        "label": "scam",
+        "category": "punycode",
+        "level": "cannot_verify",
+        "reasons": []
+      },
+      {
+        "id": "hm28",
+        "label": "scam",
+        "category": "brand_word",
+        "level": "cannot_verify",
+        "reasons": []
+      },
+      {
+        "id": "hm29",
+        "label": "scam",
+        "category": "brand_word",
+        "level": "cannot_verify",
+        "reasons": []
+      },
+      {
+        "id": "hm30",
+        "label": "scam",
+        "category": "brand_word",
+        "level": "cannot_verify",
+        "reasons": []
+      }
+    ]
+  }
+]

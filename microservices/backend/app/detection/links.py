@@ -12,6 +12,7 @@ from dataclasses import dataclass
 from typing import Final
 from urllib.parse import urlsplit
 
+from app.detection.text import CONFUSABLES
 from app.models import ReasonCode
 
 MAX_URL_LENGTH = 2048
@@ -47,6 +48,9 @@ BRANDS: Final = (
     "rbi",
     "cbi",
     "uidai",
+    "aadhaar",
+    "pmkisan",
+    "dgft",
     "epfo",
     "irctc",
     "incometax",
@@ -77,27 +81,6 @@ SCAM_WORDS: Final = (
     "redeem",
 )
 
-# Cyrillic and Greek letters that look like Latin ones.
-_CONFUSABLES: Final = {
-    ord(lookalike): latin
-    for lookalike, latin in {
-        "а": "a",
-        "е": "e",
-        "о": "o",
-        "р": "p",
-        "с": "c",
-        "х": "x",
-        "у": "y",
-        "і": "i",
-        "ѕ": "s",
-        "ԁ": "d",
-        "ӏ": "l",
-        "ο": "o",
-        "α": "a",
-        "ν": "v",
-        "ρ": "p",
-    }.items()
-}
 # Digits used in place of letters ("sb1", "ph0nepe").
 _LEET: Final = str.maketrans("0135", "oies")
 
@@ -171,7 +154,7 @@ def _brand_like(word: str) -> bool:
 def _imitates_brand(shown_host: str) -> bool:
     if any(_mixed_script(label) for label in shown_host.split(".")):
         return True
-    skeleton = unicodedata.normalize("NFKC", shown_host).translate(_CONFUSABLES)
+    skeleton = unicodedata.normalize("NFKC", shown_host).translate(CONFUSABLES)
     for token in re.split(r"[-_.]", skeleton):
         for spelling in {token, token.translate(_LEET)}:
             if _brand_like(spelling.rstrip("0123456789").replace("rn", "m")):

@@ -34,8 +34,13 @@ async def read_limited(file: UploadFile, limit: int) -> bytes | None:
 
 
 def safe_name(filename: str | None) -> str:
-    """Only the file's own name: no folders, no control characters, not too long."""
-    name = re.sub(r"[\x00-\x1f\x7f]", "", (filename or "").replace("\\", "/").split("/")[-1])
+    """Only the file's own name: no folders, no control or text-direction characters, not too long.
+
+    A right-to-left override can make "invoice<override>gnp.exe" read as "invoiceexe.png", so those
+    characters are removed.
+    """
+    name = (filename or "").replace("\\", "/").split("/")[-1]
+    name = re.sub(r"[\x00-\x1f\x7f‎‏‪-‮⁦-⁩]", "", name)
     return name.strip()[:MAX_NAME_LENGTH] or "upload"
 
 
