@@ -85,6 +85,7 @@ export const routes: RouteObject[] = [
               { path: 'scan/notice', ...page(() => import('@/pages/ScanNotice')) },
               { path: 'scan/link', ...page(() => import('@/pages/ScanLink')) },
               { path: 'scan/voice', ...page(() => import('@/pages/ScanVoice')) },
+              { path: 'share', ...page(() => import('@/pages/Share')) },
               { path: 'scan/:id', ...page(() => import('@/pages/ScanView')) },
               { path: 'scan/:id/details', ...page(() => import('@/pages/ScanDetails')) },
               { path: 'scan/:id/dossier', ...page(() => import('@/pages/Dossier')) },

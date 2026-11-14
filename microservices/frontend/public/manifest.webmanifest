@@ -1,0 +1,45 @@
+{
+  "id": "/app",
+  "name": "Kavach: check before you get scammed",
+  "short_name": "Kavach",
+  "description": "Check a suspicious notice, link or message in a minute. A risk assessment with reasons, not a final verdict.",
+  "start_url": "/app?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["security", "utilities"],
+  "background_color": "#f6f9ff",
+  "theme_color": "#1d4ed8",
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    {
+      "name": "Check a notice or message",
+      "short_name": "Check",
+      "url": "/app/scan/notice?source=shortcut",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Check a link",
+      "short_name": "Link",
+      "url": "/app/scan/link?source=shortcut",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Already sent money?",
+      "short_name": "Sent money",
+      "url": "/app/sent-money?source=shortcut",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    }
+  ],
+  "share_target": {
+    "action": "/app/share",
+    "method": "GET",
+    "params": { "title": "title", "text": "text", "url": "url" }
+  }
+}

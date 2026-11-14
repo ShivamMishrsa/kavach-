@@ -7,6 +7,7 @@ import tailwindcss from '@tailwindcss/vite';
 import compression from 'compression';
 import { loadEnv, type Plugin } from 'vite';
 import { defineConfig } from 'vitest/config';
+import { precacheList, serviceWorkerSource } from './scripts/serviceWorker.ts';
 import { PUBLIC_PATHS } from './src/publicPages.ts';
 
 /**
@@ -76,12 +77,23 @@ function production(siteUrl: string | undefined, apiUrl: string | undefined): Pl
         next();
       });
     },
-    generateBundle() {
+    generateBundle(_options, bundle) {
       const robots = ['User-agent: *', 'Allow: /', 'Disallow: /app', 'Disallow: /design'];
       if (origin) robots.push(`Sitemap: ${origin}/sitemap.xml`);
       this.emitFile({ type: 'asset', fileName: 'robots.txt', source: file(robots) });
       const rules = Object.entries(headers).map(([name, value]) => `  ${name}: ${value}`);
-      this.emitFile({ type: 'asset', fileName: '_headers', source: file(['/*', ...rules]) });
+      // Files with a hash in the name never change; the service worker must always be looked at.
+      const headerFile = [
+        '/*',
+        ...rules,
+        '/assets/*',
+        '  Cache-Control: public, max-age=31536000, immutable',
+        '/sw.js',
+        '  Cache-Control: no-cache',
+      ];
+      this.emitFile({ type: 'asset', fileName: '_headers', source: file(headerFile) });
+      const worker = serviceWorkerSource(precacheList(bundle, PUBLIC_PATHS), import.meta.dirname);
+      this.emitFile({ type: 'asset', fileName: 'sw.js', source: worker });
       if (!origin) return;
       const sitemap = [
         '<?xml version="1.0" encoding="UTF-8"?>',

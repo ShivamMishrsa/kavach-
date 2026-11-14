@@ -1,12 +1,14 @@
 import { useTranslation } from 'react-i18next';
 import { LanguageSelect } from '@/components/LanguageSelect';
 import { Segmented } from '@/components/ui/Segmented';
+import { useLowDataChoice } from '@/lib/lowData';
 import { useTheme } from '@/theme/ThemeProvider';
 
 /** Language, theme (light default), text size and contrast. Used on the settings page later. */
 export function SettingsPanel() {
   const { t } = useTranslation();
   const { theme, setTheme, text, setText, highContrast, setHighContrast } = useTheme();
+  const [lowData, setLowData] = useLowDataChoice();
 
   return (
     <div className="flex flex-col gap-4">
@@ -40,6 +42,19 @@ export function SettingsPanel() {
         />
         {t('settings.highContrast')}
       </label>
+      <div className="flex flex-col gap-1">
+        <Segmented
+          label={t('lowData.title')}
+          value={lowData}
+          options={[
+            { value: 'auto', label: t('lowData.auto') },
+            { value: 'on', label: t('lowData.on') },
+            { value: 'off', label: t('lowData.off') },
+          ]}
+          onChange={setLowData}
+        />
+        <p className="text-sm text-muted">{t('lowData.hint')}</p>
+      </div>
     </div>
   );
 }

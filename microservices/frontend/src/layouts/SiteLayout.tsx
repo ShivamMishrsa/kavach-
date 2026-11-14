@@ -6,6 +6,7 @@ import { DemoBanner } from '@/components/DemoBanner';
 import { LanguageSelect } from '@/components/LanguageSelect';
 import { buttonVariants } from '@/components/ui/button-variants';
 import { EmergencyStrip } from '@/components/ui/EmergencyStrip';
+import { OfflineBanner } from '@/pwa/OfflineBanner';
 import { cn } from '@/lib/utils';
 import { useTheme } from '@/theme/ThemeProvider';
 
@@ -69,6 +70,7 @@ export function SiteLayout() {
 
       <main id="main" className={`${WIDTH} flex flex-1 flex-col gap-2 py-3`}>
         <DemoBanner />
+        <OfflineBanner />
         <EmergencyStrip />
         <div className="flex flex-1 flex-col py-3">
           <Outlet />

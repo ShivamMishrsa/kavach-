@@ -4,13 +4,14 @@ import type { FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
 import { normalizeUrl } from '@/api/mock/analyze';
-import { useCreateScan } from '@/api/queries';
 import { ConsentCard } from '@/components/ConsentCard';
 import { PageHeader } from '@/components/PageHeader';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/Input';
 import { useConsent } from '@/consent/ConsentProvider';
 import { errorKey } from '@/lib/errors';
+import { useSharedInput } from '@/lib/useSharedInput';
+import { useSendOrKeep } from '@/offline/useSendOrKeep';
 
 const DEMO_LINKS = [
   { id: 'lookalike', url: 'http://sbi-kyc-update.example/verify' },
@@ -21,8 +22,9 @@ export default function ScanLink() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { granted } = useConsent();
-  const create = useCreateScan();
-  const [url, setUrl] = useState('');
+  const shared = useSharedInput(); // a link sent here with "Share" from another app
+  const { send, busy } = useSendOrKeep();
+  const [url, setUrl] = useState(shared.url ?? '');
   const [error, setError] = useState<string | undefined>();
 
   async function submit(event: FormEvent) {
@@ -33,8 +35,8 @@ export default function ScanLink() {
     }
     setError(undefined);
     try {
-      const scan = await create.mutateAsync({ kind: 'link', url });
-      navigate(`/app/scan/${scan.id}`);
+      const scan = await send({ kind: 'link', url });
+      if (scan) navigate(`/app/scan/${scan.id}`);
     } catch (problem) {
       setError(t(errorKey(problem)));
     }
@@ -46,10 +48,7 @@ export default function ScanLink() {
       <ConsentCard />
 
       <form onSubmit={(event) => void submit(event)} noValidate>
-        <fieldset
-          disabled={!granted || create.isPending}
-          className="flex flex-col gap-4 disabled:opacity-60"
-        >
+        <fieldset disabled={!granted || busy} className="flex flex-col gap-4 disabled:opacity-60">
           <legend className="sr-only">{t('link.title')}</legend>
           <Input
             label={t('link.label')}
@@ -64,7 +63,7 @@ export default function ScanLink() {
             onChange={(event) => setUrl(event.target.value)}
           />
           <Button type="submit" size="lg" block disabled={url.trim() === ''}>
-            {create.isPending ? (
+            {busy ? (
               <>
                 <Loader2 className="size-5 animate-spin" aria-hidden="true" />
                 {t('common.checking')}

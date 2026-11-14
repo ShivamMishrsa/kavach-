@@ -75,6 +75,8 @@ export function UploadBox({ accept = DEFAULT_ACCEPT, maxMb = 10, onFile }: Uploa
         </Button>
       </div>
 
+      <p className="text-xs text-muted">{t('upload.cameraTip')}</p>
+
       <input
         ref={fileInput}
         type="file"

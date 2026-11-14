@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useLowData } from '@/lib/lowData';
 import { api } from './client';
 import type { DossierText, Entity, FeedbackInput, Scan, ScanInput } from './types';
 
@@ -10,13 +11,15 @@ export const queryKeys = {
 
 /** Polls while the check is still running, then stops. */
 export function useScan(id: string | undefined) {
+  const slowly = useLowData(); // asking less often saves data on a weak connection
   return useQuery({
     queryKey: queryKeys.scan(id ?? ''),
     queryFn: () => api.getScan(id as string),
     enabled: Boolean(id),
     retry: false,
     refetchOnWindowFocus: false,
-    refetchInterval: (query) => (query.state.data?.status === 'processing' ? 700 : false),
+    refetchInterval: (query) =>
+      query.state.data?.status === 'processing' ? (slowly ? 1500 : 700) : false,
   });
 }
 

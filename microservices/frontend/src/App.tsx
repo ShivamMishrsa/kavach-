@@ -1,13 +1,19 @@
+import type { ComponentProps } from 'react';
 import { RouterProvider } from 'react-router';
 import { Providers } from '@/Providers';
 import { Toaster } from '@/components/ui/Toaster';
-import { router } from '@/router';
+import { PwaUpdates } from '@/pwa/PwaUpdates';
 
-export default function App() {
+export default function App({
+  router,
+}: {
+  router: ComponentProps<typeof RouterProvider>['router'];
+}) {
   return (
     <Providers>
       <RouterProvider router={router} />
       <Toaster />
+      <PwaUpdates />
     </Providers>
   );
 }

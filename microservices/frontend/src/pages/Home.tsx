@@ -4,6 +4,7 @@ import { Link } from 'react-router';
 import { useHistory } from '@/api/queries';
 import { useAuth } from '@/auth/AuthProvider';
 import { ActionCard } from '@/components/ActionCard';
+import { PendingChecks } from '@/components/PendingChecks';
 import { RiskBadge } from '@/components/ui/RiskCard';
 import { formatDateTime } from '@/lib/format';
 
@@ -23,6 +24,8 @@ export default function Home() {
             : t('home.guestHint')}
         </p>
       </header>
+
+      <PendingChecks />
 
       <div className="flex flex-col gap-3">
         <ActionCard

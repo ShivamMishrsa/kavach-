@@ -4,7 +4,9 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import i18n, { ready } from './i18n';
 import './index.css';
+import './pwa/install'; // must listen from the start: the browser sends its install offer once
 import App from './App.tsx';
+import { createAppRouter } from './router.ts';
 import Maintenance from './pages/Maintenance.tsx';
 import { startsLikePrerendered, ThemeProvider } from './theme/ThemeProvider.tsx';
 
@@ -33,15 +35,16 @@ if (!keepPrerendered()) root.replaceChildren();
 delete document.documentElement.dataset.skipPrerender;
 delete document.documentElement.dataset.prerendered;
 
-void ready.then(() => {
+void ready.then(async () => {
+  const router = maintenance ? null : await createAppRouter();
   createRoot(root).render(
     <StrictMode>
-      {maintenance ? (
+      {maintenance || !router ? (
         <ThemeProvider>
           <Maintenance />
         </ThemeProvider>
       ) : (
-        <App />
+        <App router={router} />
       )}
     </StrictMode>,
   );

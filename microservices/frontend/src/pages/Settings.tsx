@@ -5,12 +5,14 @@ import { toast } from 'sonner';
 import { useDeleteAllScans } from '@/api/queries';
 import { useAuth } from '@/auth/AuthProvider';
 import { AccountPanel } from '@/components/AccountPanel';
+import { InstallPanel } from '@/components/InstallPanel';
 import { PageHeader } from '@/components/PageHeader';
 import { SettingsPanel } from '@/components/SettingsPanel';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogTrigger } from '@/components/ui/Dialog';
 import { useConsent } from '@/consent/ConsentProvider';
 import { formatDateTime } from '@/lib/format';
+import { usePending } from '@/offline/PendingProvider';
 import pkg from '../../package.json';
 
 function Section({ id, title, children }: { id: string; title: string; children: ReactNode }) {
@@ -30,6 +32,7 @@ export default function Settings() {
   const { session } = useAuth();
   const { consent, granted, grant, withdraw } = useConsent();
   const deleteAll = useDeleteAllScans();
+  const pending = usePending();
 
   return (
     <div className="flex flex-col gap-7">
@@ -37,6 +40,10 @@ export default function Settings() {
 
       <Section id="appearance" title={t('settings.appearance')}>
         <SettingsPanel />
+      </Section>
+
+      <Section id="install" title={t('install.title')}>
+        <InstallPanel />
       </Section>
 
       <Section id="privacy" title={t('settings.privacy')}>
@@ -66,6 +73,7 @@ export default function Settings() {
                     variant="danger"
                     onClick={async () => {
                       await deleteAll.mutateAsync();
+                      await pending.clear(); // checks waiting for a connection go too
                       toast.success(t('history.deleted'));
                     }}
                   >

@@ -113,7 +113,9 @@
     "tooBig": "File is too large (max {{max}} MB).",
     "badType": "This file type is not accepted.",
     "selected": "Selected file: {{name}}",
-    "remove": "Remove"
+    "remove": "Remove",
+    "cameraTip": "For a photo: hold the phone steady, fill the frame with the page, avoid shadows and glare.",
+    "willShrink": "This photo is large, so a smaller copy is sent to save data. The copy has no location or camera details."
   },
   "stepper": {
     "done": "Done",
@@ -552,5 +554,39 @@
   "maintenance": {
     "title": "Kavach is being updated",
     "body": "We are doing maintenance and will be back shortly. If you have already lost money, call 1930 now."
+  },
+  "pwa": {
+    "updateReady": "A new version of Kavach is ready.",
+    "reload": "Reload"
+  },
+  "offline": {
+    "banner": "No internet. Checking needs a connection. If you already lost money, call 1930: calls work without internet.",
+    "bannerDemo": "No internet. The demo still works: its results are made on your phone."
+  },
+  "pending": {
+    "title": "Waiting for a connection",
+    "note": "Saved only on this phone. Sent when you are back online while Kavach is open, then deleted. Kept for 1 hour at most.",
+    "savedAt": "Saved at {{time}}",
+    "sendNow": "Send now",
+    "remove": "Remove",
+    "saved": "No connection. Your check is saved on this phone and will be sent when you are back online.",
+    "sent": "Your saved check is ready.",
+    "open": "Open",
+    "failed": "A saved check could not be sent and was removed."
+  },
+  "lowData": {
+    "title": "Save data",
+    "hint": "Makes photos smaller before sending and asks for the result less often. Auto follows your phone's Data Saver and slow networks. While it is on, the app is not saved on the phone for offline use.",
+    "auto": "Auto",
+    "on": "On",
+    "off": "Off"
+  },
+  "install": {
+    "title": "Install the app",
+    "hint": "Add Kavach to your home screen to open it like an app, even with a weak connection.",
+    "button": "Install Kavach",
+    "done": "Kavach is installed on this phone.",
+    "ios": "On iPhone: tap the Share button, then \"Add to Home Screen\".",
+    "other": "Use your browser's menu: \"Install app\" or \"Add to Home screen\"."
   }
 }

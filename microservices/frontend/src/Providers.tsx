@@ -10,7 +10,13 @@ export function Providers({ children }: { children: ReactNode }) {
   const [queryClient] = useState(
     () =>
       new QueryClient({
-        defaultOptions: { queries: { refetchOnWindowFocus: false, staleTime: 5_000 } },
+        // "always": without a connection the library would wait instead of trying, and a check
+        // would hang on "Checking" forever. Trying fails at once with a network error, which the
+        // screens turn into a message (or into a check kept for later, see src/offline).
+        defaultOptions: {
+          queries: { refetchOnWindowFocus: false, staleTime: 5_000, networkMode: 'always' },
+          mutations: { networkMode: 'always' },
+        },
       }),
   );
 
