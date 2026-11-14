@@ -62,7 +62,11 @@ written out as finished HTML (`index.html`, `help.html`, `emergency.html`, `priv
   host serves `privacy.html` for `/privacy`);
 - `https://kavach.example/app/history` (or any address that is not one of the six) still opens the
   app, and shows nothing of the landing page while it starts;
-- the response has `Content-Security-Policy` (the host reads `_headers`);
+- the response has `Content-Security-Policy` (the host reads `_headers`), and `/sw.js` is sent with
+  `Cache-Control: no-cache` while `/assets/*` is sent as immutable;
+- the app installs (Chrome: an install icon or "Install the app" in Settings; the site must be on
+  `https://`, a service worker and a manifest do not work on plain `http://`), and after one visit it
+  opens with the connection off;
 - a check goes through, a sign-in email arrives and its link signs in, the PDF downloads.
 
 To show only a maintenance page: build with `VITE_MAINTENANCE=true` and upload that.
@@ -111,7 +115,8 @@ Try a restore on a spare machine once before launch.
 - [ ] Legal text read by a lawyer; contact address and the mail service named in the privacy policy
 - [ ] Translations read by native speakers (all but English; the legal text is English and Hindi)
 - [ ] The usability test (`usability-test.md`) done with five people, and what it found fixed
-- [ ] A real phone used for a check, a PDF download and a sign-in (Android and iPhone)
+- [ ] A real phone used for a check, a PDF download and a sign-in (Android and iPhone); the checklist is `phone-test.md`
+- [ ] The app installed on a real Android phone and an iPhone, and opened offline
 - [ ] `KAVACH_SECRET`, SMTP and metrics settings are in the host, not in git
 - [ ] A restore from a backup tried
 - [ ] A day-one budget alert set at the host

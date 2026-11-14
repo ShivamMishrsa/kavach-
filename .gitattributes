@@ -1,0 +1,14 @@
+# One line ending (LF) in the repository, whatever the machine. The editor config says the same.
+* text=auto eol=lf
+
+# Never changed by line-ending conversion.
+*.png binary
+*.jpg binary
+*.webm binary
+*.pdf binary
+*.docx binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.traineddata binary
+

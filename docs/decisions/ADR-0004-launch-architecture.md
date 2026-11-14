@@ -77,7 +77,7 @@ paid service from a particular company; the choices are meant to be easy to move
     hydration, so a page that differs by language or colours cannot mismatch). An inline script
     that hides the page from anyone it is wrong for is allowed by its hash in the CSP rather than by
     `'unsafe-inline'`. Cost: about 8 KB more on the landing page download; gain: the landing page
-    paints at about 0.55 s on the slow-phone test instead of about 1.5 s, and search engines read
+    paints at about 0.65 s on the slow-phone test instead of about 1.5 s (Step 9 added the manifest and offline code: about 0.75 s, +8 KB; see ADR-0005), and search engines read
     the text. Rejected: a headless browser to take snapshots (needs a browser in the build) and
     hydration (needs identical output on both sides).
 

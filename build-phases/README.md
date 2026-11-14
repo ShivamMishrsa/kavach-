@@ -21,7 +21,7 @@ Website pehle (mobile-first), phir PWA. Ye 9 steps `Project Kavach - Phase-wise 
 | 6 | [Landing, help, privacy pages](06-landing-help-privacy.md) | 3, 10 | Done (legal text is a draft) |
 | 7 | [Auth + settings](07-auth-settings.md) | 4, 10 | Done (email link; Google later) |
 | 8 | [Accuracy, tests, deploy](08-accuracy-tests-deploy.md) | 14, 15, 16 | Done in code and measured (not live: needs your accounts) |
-| 9 | [PWA + packaging](09-pwa-packaging.md) | 18 | Not started |
+| 9 | [PWA + packaging](09-pwa-packaging.md) | 18 | Done in code, tested in 3 browser engines (not on a real phone) |
 
 ## Working rules
 - Har step ke end me **kuch chalta hua dikhe** aur git me commit ho.
