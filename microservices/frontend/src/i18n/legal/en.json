@@ -1,0 +1,144 @@
+{
+  "draft": "Draft, November 2026. This text describes what Kavach does today. It has not yet been reviewed by a lawyer and will change before public launch.",
+  "privacy": {
+    "title": "Privacy policy",
+    "sections": [
+      {
+        "h": "Who we are",
+        "p": [
+          "Kavach is a tool that helps you judge the risk of a suspicious notice, message or link. It is not a government service.",
+          "Contact details for privacy questions and complaints will be published here before public launch."
+        ]
+      },
+      {
+        "h": "What we handle",
+        "p": [
+          "The file, text or link you submit for a check, and the text and details (such as UTR, UPI ID, phone number, amount and time) we read from it.",
+          "A record of your consent: the policy version, the time and a scrambled form of your IP address. We do not keep the IP address itself in this record.",
+          "A note, only if you choose to send feedback about a result. We remove phone numbers, UPI IDs, UTR numbers, email addresses and Aadhaar or PAN numbers from it automatically. We cannot remove names or other free text, so please do not write personal details.",
+          "On your own device only: your language, display settings, consent, check-list ticks and a history that keeps just the type, risk level and time of each check."
+        ]
+      },
+      {
+        "h": "How long we keep it",
+        "p": [
+          "Your file, the result and any evidence summary (PDF) are held in the server's memory, not saved to disk, and deleted automatically 15 minutes after the check. You can delete them earlier with \"Delete now\".",
+          "We try to hide Aadhaar numbers and email addresses in the text we keep. This is not guaranteed to catch every case.",
+          "Consent and feedback records are kept in a log and deleted automatically after 90 days.",
+          "Our own server does not write IP addresses to its logs. The hosting service or a proxy in front of it may keep ordinary connection logs; we will state which, and for how long, before launch."
+        ]
+      },
+      {
+        "h": "What we do not do",
+        "p": [
+          "We do not sell your data, show ads, or use your file to train any model.",
+          "We do not send your file to any outside AI service. Checks are done by rules running on our own server.",
+          "We do not use analytics or tracking tools, and the fonts on this site are served by us, not by a third party."
+        ]
+      },
+      {
+        "h": "Accounts",
+        "p": [
+          "You can use Kavach without an account. Account features are still being built, and this policy will be updated before they are offered."
+        ]
+      },
+      {
+        "h": "Your choices",
+        "p": [
+          "You can withdraw your consent and delete your history on your device in Settings, and delete a check's data at any time with \"Delete now\".",
+          "Under India's Digital Personal Data Protection Act, 2023 you may have rights to access, correct and erase your data and to complain (verify with a lawyer). Until the contact details are published, you can exercise these by deleting your data in the app."
+        ]
+      },
+      {
+        "h": "Children",
+        "p": [
+          "Kavach is meant for adults. If a young person is scammed, a parent or guardian should help them use it (verify with a lawyer)."
+        ]
+      },
+      {
+        "h": "Changes",
+        "p": ["If we change this policy in a way that matters, we will ask for your consent again."]
+      }
+    ]
+  },
+  "terms": {
+    "title": "Terms of use",
+    "sections": [
+      {
+        "h": "What Kavach is",
+        "p": [
+          "Kavach gives a risk assessment with reasons about a notice, message or link. It is not a verdict, not legal advice, and not a service of the police, a court, a bank or the government.",
+          "A summary prepared with Kavach is a summary prepared by you. It is not a First Information Report (FIR)."
+        ]
+      },
+      {
+        "h": "Using Kavach",
+        "p": [
+          "Use Kavach only for files and messages you have the right to share. Do not upload other people's private documents without their permission.",
+          "Do not try to break, overload or misuse the service. We limit how often an action can be repeated.",
+          "You are responsible for what you decide to do after a check, including paying or not paying anyone."
+        ]
+      },
+      {
+        "h": "No guarantee",
+        "p": [
+          "Results can be wrong. A scam may be missed and a genuine message may be flagged. Always verify with an official source, such as your bank's official number, before you pay.",
+          "The service may be slow, change, or be unavailable, especially while it is in testing."
+        ]
+      },
+      {
+        "h": "Our responsibility",
+        "p": [
+          "To the extent the law allows, Kavach is not responsible for losses that follow from relying on a result (verify with a lawyer)."
+        ]
+      },
+      {
+        "h": "Changes and law",
+        "p": [
+          "We may update these terms. The terms are governed by the laws of India; the courts that can hear a dispute will be stated before launch (verify with a lawyer)."
+        ]
+      }
+    ]
+  },
+  "limitations": {
+    "title": "Limitations",
+    "sections": [
+      {
+        "h": "How a check works",
+        "p": [
+          "Kavach reads the text in your file, looks for known scam signals using fixed rules, and adds up what it finds into a risk level. No AI model decides the result.",
+          "Every reason shown is a signal found in your text or link, so you can see why the level was given."
+        ]
+      },
+      {
+        "h": "What a risk level means",
+        "p": [
+          "Higher levels mean more signals were found. \"Low\" does not mean safe: it means we found no known signal.",
+          "\"Cannot verify\" means there was too little readable text to say anything."
+        ]
+      },
+      {
+        "h": "What Kavach cannot do",
+        "p": [
+          "It cannot confirm who a caller or sender really is, or whether a payment will be returned.",
+          "It reads English and Hindi text from photos and PDFs. Notices in other languages may not be read. Blurry, cropped or handwritten photos may be read wrongly.",
+          "It does not use live lists of bad websites. A link is checked only for look-alike names, unusual characters, hidden addresses and missing https.",
+          "New scam styles that its rules do not know about can be missed.",
+          "Voice notes cannot be checked yet. For now, type or paste what the caller said."
+        ]
+      },
+      {
+        "h": "Law sections",
+        "p": [
+          "When a notice quotes an old law section, Kavach can point to its newer equivalent for a small list of sections. The list is limited and every entry needs checking with an official source or a lawyer (verify)."
+        ]
+      },
+      {
+        "h": "If you have already paid",
+        "p": [
+          "Call 1930 right away and report on cybercrime.gov.in. Reporting quickly gives the best chance of stopping a transfer, but nothing is guaranteed."
+        ]
+      }
+    ]
+  }
+}

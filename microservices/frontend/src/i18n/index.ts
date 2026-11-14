@@ -3,6 +3,8 @@ import { initReactI18next } from 'react-i18next';
 import { readStorage, writeStorage } from '@/lib/storage';
 import { loadFontsFor } from './fonts';
 import { DEFAULT_LANGUAGE, isLanguage, type Language } from './languages';
+import legalEn from './legal/en.json';
+import legalHi from './legal/hi.json';
 import bn from './locales/bn.json';
 import en from './locales/en.json';
 import gu from './locales/gu.json';
@@ -25,8 +27,9 @@ const start = initialLanguage();
 
 void i18n.use(initReactI18next).init({
   resources: {
-    en: { translation: en },
-    hi: { translation: hi },
+    // Legal pages exist in English and Hindi only; other languages show the English text.
+    en: { translation: en, legal: legalEn },
+    hi: { translation: hi, legal: legalHi },
     bn: { translation: bn },
     mr: { translation: mr },
     ta: { translation: ta },

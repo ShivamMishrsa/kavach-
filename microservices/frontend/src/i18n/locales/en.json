@@ -124,7 +124,8 @@
     "point1": "We use your file only to check it.",
     "point2": "It is deleted automatically within 15 minutes.",
     "point3": "We do not use it to train any model.",
-    "withdrawHint": "You can withdraw your consent any time in Settings."
+    "withdrawHint": "You can withdraw your consent any time in Settings.",
+    "privacyLink": "Read the privacy policy"
   },
   "actions": {
     "primary": "Create evidence report",
@@ -457,5 +458,74 @@
     "sampleLabel": "Phone number",
     "sampleHint": "We never share this.",
     "sampleError": "Enter a valid 10-digit number."
+  },
+  "site": {
+    "privacy": "Privacy policy",
+    "terms": "Terms of use",
+    "limitations": "Limitations",
+    "theme": "Change theme",
+    "footer": "Kavach is a risk-assessment tool. It is not a government service and not legal advice.",
+    "legalLangNote": "This page is available in English and Hindi only. You are reading the English version.",
+    "more": "More information"
+  },
+  "landing": {
+    "badge": "Works in 7 Indian languages",
+    "cta": "Check now",
+    "noAccount": "No account needed",
+    "sample": "Sample result (not a real check)",
+    "types": {
+      "title": "Scams Kavach helps you spot",
+      "subtitle": "Kavach looks for common scam patterns and tells you why.",
+      "arrest": {
+        "title": "\"Digital arrest\"",
+        "body": "Fake CBI, police or court notices and threats on a video call."
+      },
+      "link": {
+        "title": "Scam links",
+        "body": "Fake bank or agency websites and look-alike web addresses."
+      },
+      "voice": {
+        "title": "Cloned voice",
+        "body": "Fake voice notes that imitate someone you know. Experimental, coming later."
+      },
+      "paid": {
+        "title": "Already paid?",
+        "body": "A first-hour checklist and an evidence summary for the 1930 helpline."
+      }
+    },
+    "how": {
+      "title": "How it works",
+      "subtitle": "Three simple steps. Nothing to install.",
+      "s1": {
+        "title": "Upload",
+        "body": "A photo of the notice, a screenshot, a pasted message or a link."
+      },
+      "s2": {
+        "title": "Understand",
+        "body": "A risk level and the reasons, in simple words in your language."
+      },
+      "s3": {
+        "title": "Prepare your report",
+        "body": "UTR, UPI ID, time and file fingerprints in a PDF, ready to tell 1930."
+      }
+    },
+    "privacy": {
+      "title": "Your privacy comes first",
+      "p1": "Your file is deleted automatically within 15 minutes.",
+      "p2": "Your file is never used to train a model.",
+      "p3": "Your history is kept on your own device.",
+      "p4": "You can withdraw your consent any time.",
+      "honest": "We never say a notice is \"100% fake\". The result is a risk assessment. Always verify with an official source.",
+      "more": "Read the privacy policy"
+    },
+    "api": {
+      "badge": "Planned",
+      "title": "Scam checks inside your app",
+      "body": "We plan an API for banks, UPI apps and fintechs. It is not available yet."
+    }
+  },
+  "maintenance": {
+    "title": "Kavach is being updated",
+    "body": "We are doing maintenance and will be back shortly. If you have already lost money, call 1930 now."
   }
 }
