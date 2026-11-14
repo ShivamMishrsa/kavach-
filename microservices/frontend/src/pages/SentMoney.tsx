@@ -2,6 +2,7 @@ import { ExternalLink, Phone } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
+import { useAuth } from '@/auth/AuthProvider';
 import { PageHeader } from '@/components/PageHeader';
 import { Button } from '@/components/ui/button';
 import { buttonVariants } from '@/components/ui/button-variants';
@@ -17,6 +18,7 @@ import { readStorage, writeStorage } from '@/lib/storage';
 /** First-hour checklist for someone who has already paid. Ticks are saved on this device only. */
 export default function SentMoney() {
   const { t } = useTranslation();
+  const { session } = useAuth();
   const [checked, setChecked] = useState<SentMoneyStep[]>(() =>
     parseChecked(readStorage(SENT_MONEY_KEY)),
   );
@@ -28,7 +30,11 @@ export default function SentMoney() {
 
   return (
     <div className="flex flex-col gap-5">
-      <PageHeader backTo="/app" title={t('sentMoney.title')} subtitle={t('sentMoney.subtitle')} />
+      <PageHeader
+        backTo={session ? '/app' : '/'}
+        title={t('sentMoney.title')}
+        subtitle={t('sentMoney.subtitle')}
+      />
 
       <div className="flex flex-col gap-2">
         <a
@@ -85,7 +91,10 @@ export default function SentMoney() {
         )}
       </section>
 
-      <Link to="/app/scan/notice" className={buttonVariants({ size: 'lg', block: true })}>
+      <Link
+        to={session ? '/app/scan/notice' : '/start'}
+        className={buttonVariants({ size: 'lg', block: true })}
+      >
         {t('sentMoney.prepare')}
       </Link>
     </div>

@@ -1,5 +1,6 @@
 import { ShieldCheck } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router';
 import { useConsent } from '@/consent/ConsentProvider';
 import { Button } from '@/components/ui/button';
 
@@ -30,6 +31,13 @@ export function ConsentCard() {
         ))}
       </ul>
       <p className="text-sm text-muted">{t('consent.withdrawHint')}</p>
+      <Link
+        to="/privacy"
+        target="_blank"
+        className="min-h-11 py-2 font-semibold text-primary underline"
+      >
+        {t('consent.privacyLink')}
+      </Link>
       <Button size="lg" block onClick={grant}>
         {t('consent.agree')}
       </Button>

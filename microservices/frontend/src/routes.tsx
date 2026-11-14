@@ -2,6 +2,8 @@ import type { ComponentType } from 'react';
 import { createBrowserRouter, type RouteObject } from 'react-router';
 import { AppShell } from '@/layouts/AppShell';
 import { PublicLayout } from '@/layouts/PublicLayout';
+import { RootLayout, type RouteHandle } from '@/layouts/RootLayout';
+import { SiteLayout } from '@/layouts/SiteLayout';
 import {
   RedirectIfReady,
   RedirectIfUser,
@@ -15,17 +17,42 @@ function page(importer: () => Promise<{ default: ComponentType }>) {
   return { lazy: async () => ({ Component: (await importer()).default }) };
 }
 
+/** A public page: indexed by search engines, with its title taken from a translation key. */
+function publicPage(importer: () => Promise<{ default: ComponentType }>, title: string) {
+  return { ...page(importer), handle: { title } satisfies RouteHandle };
+}
+
 export const routes: RouteObject[] = [
   {
     path: '/',
+    element: <RootLayout />,
     errorElement: <RootError />,
     children: [
+      {
+        element: <SiteLayout />,
+        children: [
+          {
+            element: <RedirectIfReady />,
+            children: [
+              { index: true, ...publicPage(() => import('@/pages/Landing'), 'app.tagline') },
+            ],
+          },
+          { path: 'help', ...publicPage(() => import('@/pages/Help'), 'help.title') },
+          {
+            path: 'emergency',
+            ...publicPage(() => import('@/pages/SentMoney'), 'sentMoney.title'),
+          },
+          { path: 'privacy', ...publicPage(() => import('@/pages/Legal'), 'site.privacy') },
+          { path: 'terms', ...publicPage(() => import('@/pages/Legal'), 'site.terms') },
+          { path: 'limitations', ...publicPage(() => import('@/pages/Legal'), 'site.limitations') },
+        ],
+      },
       {
         element: <PublicLayout />,
         children: [
           {
             element: <RedirectIfReady />,
-            children: [{ index: true, ...page(() => import('@/pages/Welcome')) }],
+            children: [{ path: 'start', ...page(() => import('@/pages/Welcome')) }],
           },
           {
             element: <RedirectIfUser />,

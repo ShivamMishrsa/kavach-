@@ -1,9 +1,8 @@
-import { ChevronDown, ExternalLink, Phone } from 'lucide-react';
+import { ExternalLink, Phone } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { FaqList } from '@/components/FaqList';
 import { PageHeader } from '@/components/PageHeader';
 import { buttonVariants } from '@/components/ui/button-variants';
-
-const QUESTIONS = ['q1', 'q2', 'q3', 'q4', 'q5'] as const;
 
 export default function Help() {
   const { t } = useTranslation();
@@ -37,21 +36,7 @@ export default function Help() {
         <h2 id="faq-title" className="text-lg font-extrabold">
           {t('help.faq')}
         </h2>
-        {QUESTIONS.map((question) => (
-          <details
-            key={question}
-            className="group rounded-card border border-border bg-surface px-4 py-1"
-          >
-            <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-3 font-bold">
-              {t(`help.${question}.q`)}
-              <ChevronDown
-                className="size-5 flex-none transition-transform group-open:rotate-180"
-                aria-hidden="true"
-              />
-            </summary>
-            <p className="pb-3 text-muted">{t(`help.${question}.a`)}</p>
-          </details>
-        ))}
+        <FaqList />
       </section>
     </div>
   );

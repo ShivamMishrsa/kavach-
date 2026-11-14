@@ -2,15 +2,18 @@ import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LANGUAGE_LIST, DEFAULT_LANGUAGE, isLanguage } from '@/i18n';
 
-/** Compact language dropdown for Settings (a native select works well with many languages). */
-export function LanguageSelect() {
+/**
+ * Language dropdown (a native select works well with many languages).
+ * `compact` hides the label and shows only the native name, for the site header.
+ */
+export function LanguageSelect({ compact = false }: { compact?: boolean }) {
   const { t, i18n } = useTranslation();
   const id = useId();
   const current = isLanguage(i18n.language) ? i18n.language : DEFAULT_LANGUAGE;
 
   return (
     <div className="flex flex-col gap-1.5">
-      <label htmlFor={id} className="font-semibold">
+      <label htmlFor={id} className={compact ? 'sr-only' : 'font-semibold'}>
         {t('language.selectLabel')}
       </label>
       <select
@@ -21,7 +24,7 @@ export function LanguageSelect() {
       >
         {LANGUAGE_LIST.map((language) => (
           <option key={language.code} value={language.code} lang={language.code}>
-            {language.nativeName} ({language.englishName})
+            {compact ? language.nativeName : `${language.nativeName} (${language.englishName})`}
           </option>
         ))}
       </select>
