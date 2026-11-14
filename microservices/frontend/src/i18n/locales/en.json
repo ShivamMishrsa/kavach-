@@ -25,10 +25,26 @@
     "signOut": "Sign out",
     "deleteAccount": "Delete account",
     "deleteAccountTitle": "Delete your account?",
-    "deleteAccountBody": "This removes your account details and your check history from this device. This cannot be undone.",
+    "deleteAccountBody": "This deletes your account, its saved history and all sign-ins from our servers, and the check history on this device. This cannot be undone.",
     "guestInfo": "You are using Kavach without an account. An account keeps your language and history on every device.",
     "loginOrSignup": "Log in or sign up",
-    "about": "Kavach demo version {{version}}"
+    "about": "Kavach version {{version}}",
+    "signOutEverywhere": "Sign out on all devices",
+    "exportData": "Download my data",
+    "syncTitle": "Keep my history on all my devices",
+    "syncBody": "Off by default. When on, only the type, risk level and time of each check are saved in your account. Files, text and details are never saved.",
+    "syncOn": "Turn on history sync",
+    "syncOff": "Turn off history sync",
+    "syncUpload": "Also add the checks already saved on this device",
+    "syncOnDone": "History sync is on.",
+    "syncOffDone": "History sync is off. Your saved history was deleted from the server.",
+    "changeEmail": "Change email address",
+    "changeEmailBody": "We will send a confirmation link to the new address. Your email address changes only after you open it.",
+    "sendConfirm": "Send confirmation link",
+    "confirmSent": "Check your new email for the confirmation link.",
+    "devicesTitle": "Where you are signed in",
+    "deviceThis": "This device",
+    "deviceSince": "Signed in on {{date}}"
   },
   "risk": {
     "label": {
@@ -186,7 +202,15 @@
     "continueDemo": "Continue (demo)",
     "useOtherEmail": "Use a different email",
     "noAccount": "New to Kavach?",
-    "haveAccount": "Already have an account?"
+    "haveAccount": "Already have an account?",
+    "linkNote": "The link works once and expires in 15 minutes. If you do not see the email, check your spam folder.",
+    "verifying": "Signing you in…",
+    "verifyFailedTitle": "This link did not work",
+    "verifyFailedBody": "It may have expired or been used already. Ask for a new sign-in link.",
+    "newLink": "Get a new link",
+    "confirmingEmail": "Confirming your new email address…",
+    "emailChanged": "Your email address was changed.",
+    "confirmFailedBody": "It may have expired, been used already, or belong to another account. Ask for the change again in Settings."
   },
   "notFound": {
     "title": "We could not find that page",

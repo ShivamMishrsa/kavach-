@@ -16,7 +16,8 @@
           "The file, text or link you submit for a check, and the text and details (such as UTR, UPI ID, phone number, amount and time) we read from it.",
           "A record of your consent: the policy version, the time and a scrambled form of your IP address. We do not keep the IP address itself in this record.",
           "A note, only if you choose to send feedback about a result. We remove phone numbers, UPI IDs, UTR numbers, email addresses and Aadhaar or PAN numbers from it automatically. We cannot remove names or other free text, so please do not write personal details.",
-          "On your own device only: your language, display settings, consent, check-list ticks and a history that keeps just the type, risk level and time of each check."
+          "On your own device only: your language, display settings, consent, check-list ticks and a history that keeps just the type, risk level and time of each check.",
+          "If you create an account: your email address, the language you chose, whether history sync is on, and when you signed in. If you turn history sync on, also the type, risk level and time of each check (never the file, the text or the details)."
         ]
       },
       {
@@ -25,7 +26,8 @@
           "Your file, the result and any evidence summary (PDF) are held in the server's memory, not saved to disk, and deleted automatically 15 minutes after the check. You can delete them earlier with \"Delete now\".",
           "We try to hide Aadhaar numbers and email addresses in the text we keep. This is not guaranteed to catch every case.",
           "Consent and feedback records are kept in a log and deleted automatically after 90 days.",
-          "Our own server does not write IP addresses to its logs. The hosting service or a proxy in front of it may keep ordinary connection logs; we will state which, and for how long, before launch."
+          "Our own server does not write IP addresses to its logs. The hosting service or a proxy in front of it may keep ordinary connection logs; we will state which, and for how long, before launch.",
+          "A sign-in link works once and expires after 15 minutes. A sign-in lasts 14 days unless you sign out. An account and its saved history stay until you delete the account, or until nobody has signed in to it for 12 months, when it is deleted automatically. We do not warn by email before that yet."
         ]
       },
       {
@@ -39,13 +41,16 @@
       {
         "h": "Accounts",
         "p": [
-          "You can use Kavach without an account. Account features are still being built, and this policy will be updated before they are offered."
+          "You can use Kavach without an account. An account lets you sign in with an emailed link (no password), keeps your language and, if you choose, your history on all your devices.",
+          "Sign-in emails are sent through an email service, which sees your address for that. We will name the service before launch.",
+          "The cookie that keeps you signed in is used for nothing else, and scripts on the page cannot read it."
         ]
       },
       {
         "h": "Your choices",
         "p": [
           "You can withdraw your consent and delete your history on your device in Settings, and delete a check's data at any time with \"Delete now\".",
+          "In Settings you can also download everything we hold about your account, change your email address, see where you are signed in and end any of those, sign out on all devices, turn history sync off (which deletes the saved history from the server) and delete your account.",
           "Under India's Digital Personal Data Protection Act, 2023 you may have rights to access, correct and erase your data and to complain (verify with a lawyer). Until the contact details are published, you can exercise these by deleting your data in the app."
         ]
       },
