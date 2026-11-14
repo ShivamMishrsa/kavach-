@@ -124,3 +124,65 @@ class DossierFile(CamelModel):
 class ConsentRequest(CamelModel):
     version: Annotated[str, StringConstraints(max_length=32)]
     granted: bool
+
+
+Language = Literal["en", "hi", "bn", "mr", "ta", "te", "gu"]
+
+
+_EmailAddress = Annotated[
+    str,
+    StringConstraints(
+        strip_whitespace=True,
+        to_lower=True,
+        max_length=254,
+        pattern=r"^[^\s@]+@[^\s@]+\.[^\s@]{2,}$",
+    ),
+]
+
+
+class MagicLinkRequest(CamelModel):
+    email: _EmailAddress
+    language: Language | None = None
+
+
+class VerifyRequest(CamelModel):
+    token: Annotated[str, StringConstraints(min_length=20, max_length=100)]
+
+
+class Account(CamelModel):
+    id: str
+    email: str
+    language: Language | None
+    sync_history: bool
+
+
+class EmailChangeRequest(CamelModel):
+    email: _EmailAddress
+    language: Language | None = None
+
+
+class SignIn(CamelModel):
+    """One place the account is signed in. The id is not the secret."""
+
+    id: str
+    created_at: datetime
+    expires_at: datetime
+    current: bool
+
+
+class ProfileUpdate(CamelModel):
+    language: Language | None = None
+    sync_history: bool | None = None
+
+
+class HistoryItem(CamelModel):
+    """What stays of a check: no file, no text, no details."""
+
+    id: Annotated[str, StringConstraints(pattern=r"^[A-Za-z0-9_-]{8,64}$")]
+    kind: ScanKind
+    risk_level: RiskLevel | None
+    created_at: datetime
+
+
+class HistoryUpload(CamelModel):
+    items: Annotated[list[HistoryItem], Field(max_length=200)]

@@ -8,6 +8,8 @@ from typing import Annotated
 
 from fastapi import Depends, Request
 
+from app.accounts.mail import Mailer
+from app.accounts.store import AccountStore
 from app.core.config import Settings
 from app.core.errors import rate_limited
 from app.core.ratelimit import RateLimiter
@@ -24,6 +26,9 @@ class Services:
     executor: Executor
     clock: Callable[[], datetime]
     limiter: RateLimiter
+    email_limiter: RateLimiter
+    accounts: AccountStore
+    mailer: Mailer
 
 
 def get_services(request: Request) -> Services:

@@ -6,7 +6,7 @@ from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
-ErrorCode = Literal["not_found", "invalid_input", "rate_limited"]
+ErrorCode = Literal["not_found", "invalid_input", "rate_limited", "unauthorized", "forbidden"]
 
 
 class ApiProblem(Exception):
@@ -29,6 +29,14 @@ def invalid_input() -> ApiProblem:
 
 def rate_limited() -> ApiProblem:
     return ApiProblem("rate_limited", 429)
+
+
+def unauthorized() -> ApiProblem:
+    return ApiProblem("unauthorized", 401)
+
+
+def forbidden() -> ApiProblem:
+    return ApiProblem("forbidden", 403)
 
 
 def error_response(code: ErrorCode, status_code: int) -> JSONResponse:

@@ -4,6 +4,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Form, Response, UploadFile
 
+from app.accounts.deps import OptionalUser, check_owner
 from app.core.errors import invalid_input, not_found
 from app.detection.links import normalize_url
 from app.models import ConfirmEntitiesRequest, EvidenceHash, Scan, ScanKind
@@ -54,19 +55,21 @@ async def _read_input(
 @router.post("", response_model=Scan, status_code=201, dependencies=[limited("scan")])
 async def create_scan(
     services: ServicesDep,
+    user: OptionalUser,
     kind: Annotated[ScanKind, Form()],
     text: Annotated[str | None, Form()] = None,
     url: Annotated[str | None, Form()] = None,
     file: UploadFile | None = None,
 ) -> Scan:
     source, evidence = await _read_input(services, kind, text, url, file)
-    scan = services.store.create(kind, [evidence])
+    scan = services.store.create(kind, [evidence], owner=user.id if user else None)
     services.executor.submit(run_scan, services.store, services.ocr, scan.id, source)
     return scan
 
 
 @router.get("/{scan_id}", response_model=Scan)
-def get_scan(scan_id: str, services: ServicesDep) -> Scan:
+def get_scan(scan_id: str, services: ServicesDep, user: OptionalUser) -> Scan:
+    check_owner(scan_id, user, services)
     scan = services.store.get(scan_id)
     if scan is None:
         raise not_found()
@@ -74,7 +77,10 @@ def get_scan(scan_id: str, services: ServicesDep) -> Scan:
 
 
 @router.put("/{scan_id}/entities", response_model=Scan)
-def confirm_entities(scan_id: str, body: ConfirmEntitiesRequest, services: ServicesDep) -> Scan:
+def confirm_entities(
+    scan_id: str, body: ConfirmEntitiesRequest, services: ServicesDep, user: OptionalUser
+) -> Scan:
+    check_owner(scan_id, user, services)
     scan = services.store.confirm(scan_id, body.entities)
     if scan is None:
         raise not_found()
@@ -82,6 +88,7 @@ def confirm_entities(scan_id: str, body: ConfirmEntitiesRequest, services: Servi
 
 
 @router.delete("/{scan_id}", status_code=204)
-def delete_scan(scan_id: str, services: ServicesDep) -> Response:
+def delete_scan(scan_id: str, services: ServicesDep, user: OptionalUser) -> Response:
+    check_owner(scan_id, user, services)
     services.store.delete(scan_id)
     return Response(status_code=204)

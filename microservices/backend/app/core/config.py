@@ -55,6 +55,24 @@ class Settings:
     # Consent and feedback records are deleted after this many days (the privacy policy says so).
     retention_days: int = 90
 
+    # Accounts. The sign-in link in the email points at the website (site_url) and works once.
+    site_url: str = field(
+        default_factory=lambda: os.getenv("KAVACH_SITE_URL", "http://localhost:5173").rstrip("/")
+    )
+    login_link_minutes: int = 15
+    session_days: int = 14
+    # An account nobody has signed in to for this long is deleted, with its history.
+    inactive_account_days: int = 365
+    email_limit: int = 5  # sign-in emails to one address per window, so nobody can be mail-bombed
+    email_window_seconds: int = 60 * 60
+    smtp_host: str | None = field(default_factory=lambda: _optional("KAVACH_SMTP_HOST"))
+    smtp_port: int = field(default_factory=lambda: int(os.getenv("KAVACH_SMTP_PORT", "587")))
+    smtp_user: str | None = field(default_factory=lambda: _optional("KAVACH_SMTP_USER"))
+    smtp_password: str | None = field(default_factory=lambda: _optional("KAVACH_SMTP_PASSWORD"))
+    mail_from: str = field(
+        default_factory=lambda: os.getenv("KAVACH_MAIL_FROM", "kavach@localhost")
+    )
+
     # Evidence summary (PDF) download links, and the sweep that deletes expired scans.
     download_link_seconds: int = 5 * 60
     purge_interval_seconds: float = 60
@@ -62,6 +80,14 @@ class Settings:
     # Abuse limits: tries per person (by hashed IP address) in a time window, for each action.
     rate_limit: int = 20
     rate_window_seconds: int = 10 * 60
+
+    @property
+    def database_path(self) -> Path:
+        return self.data_dir / "kavach.db"
+
+    @property
+    def outbox_path(self) -> Path:
+        return self.data_dir / "outbox.jsonl"  # development only: emails that were not sent
 
     @property
     def feedback_path(self) -> Path:

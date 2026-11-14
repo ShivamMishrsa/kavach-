@@ -11,7 +11,9 @@ from datetime import datetime, timedelta
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api import consent, dossier, feedback, scans
+from app.accounts.mail import FileMailer, Mailer, NoMailer, SmtpMailer
+from app.accounts.store import AccountStore
+from app.api import account, auth, consent, dossier, feedback, scans
 from app.core.config import Settings
 from app.core.config import settings as default_settings
 from app.core.errors import install_error_handlers
@@ -25,12 +27,25 @@ from app.services import Services
 RECORDS_PURGE_SECONDS = 60 * 60
 
 
+def default_mailer(settings: Settings) -> Mailer:
+    if settings.smtp_host:
+        return SmtpMailer(
+            settings.smtp_host,
+            settings.smtp_port,
+            settings.smtp_user,
+            settings.smtp_password,
+            settings.mail_from,
+        )
+    return FileMailer(settings.outbox_path) if settings.env == "dev" else NoMailer()
+
+
 def create_app(
     settings: Settings = default_settings,
     *,
     ocr: Ocr | None = None,
     executor: Executor | None = None,
     clock: Callable[[], datetime] = utc_now,
+    mailer: Mailer | None = None,
 ) -> FastAPI:
     """The parts can be replaced, which is how the tests run without Tesseract or threads."""
     owns_executor = executor is None
@@ -49,6 +64,15 @@ def create_app(
         executor=executor or ThreadPoolExecutor(max_workers=settings.workers),
         clock=clock,
         limiter=RateLimiter(settings.rate_limit, settings.rate_window_seconds, clock),
+        email_limiter=RateLimiter(settings.email_limit, settings.email_window_seconds, clock),
+        accounts=AccountStore(
+            settings.database_path,
+            clock,
+            link_ttl=timedelta(minutes=settings.login_link_minutes),
+            session_ttl=timedelta(days=settings.session_days),
+            inactive_ttl=timedelta(days=settings.inactive_account_days),
+        ),
+        mailer=mailer or default_mailer(settings),
     )
 
     def purge_old_records() -> None:
@@ -63,6 +87,7 @@ def create_app(
         while True:
             await asyncio.sleep(settings.purge_interval_seconds)
             services.store.purge()
+            services.accounts.purge()
             if time.monotonic() >= next_records:
                 next_records = time.monotonic() + RECORDS_PURGE_SECONDS
                 await asyncio.to_thread(purge_old_records)
@@ -82,7 +107,7 @@ def create_app(
     in_development = settings.env == "dev"
     app = FastAPI(
         title="Kavach API",
-        version="0.3.0",
+        version="0.4.0",
         description="Risk-assessment API for scam triage. Not a legal verdict.",
         lifespan=lifespan,
         docs_url="/docs" if in_development else None,  # the docs page needs scripts the CSP blocks
@@ -95,11 +120,13 @@ def create_app(
     app.add_middleware(
         CORSMiddleware,
         allow_origins=settings.cors_origins,
+        allow_credentials=True,  # the session cookie; origins are listed, never "*"
         allow_methods=["GET", "POST", "PUT", "DELETE"],
         allow_headers=["*"],
     )
     install_error_handlers(app)
-    for router in (scans.router, dossier.router, consent.router, feedback.router):
+    routers = (scans.router, dossier.router, consent.router, feedback.router)
+    for router in (*routers, auth.router, account.router):
         app.include_router(router)
 
     @app.get("/health")

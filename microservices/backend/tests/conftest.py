@@ -65,6 +65,25 @@ class FakeOcr:
         return self._read()
 
 
+class Outbox:
+    """Collects the emails the app would send."""
+
+    def __init__(self) -> None:
+        self.sent: list[tuple[str, str, str]] = []
+
+    def send(self, to: str, subject: str, body: str) -> None:
+        self.sent.append((to, subject, body))
+
+    def last_token(self) -> str:
+        """The secret in the last sign-in link."""
+        return self.sent[-1][2].split("#token=")[1].split()[0]
+
+
+@pytest.fixture
+def outbox() -> Outbox:
+    return Outbox()
+
+
 class Clock:
     def __init__(self) -> None:
         self.now = datetime(2026, 11, 13, 10, 0, tzinfo=UTC)
@@ -87,7 +106,7 @@ def settings(tmp_path: Path) -> Settings:
 
 
 @pytest.fixture
-def make_client(settings: Settings, clock: Clock) -> Callable[..., TestClient]:
+def make_client(settings: Settings, clock: Clock, outbox: Outbox) -> Callable[..., TestClient]:
     def build(
         ocr: FakeOcr | None = None,
         executor: Executor | None = None,
@@ -99,6 +118,7 @@ def make_client(settings: Settings, clock: Clock) -> Callable[..., TestClient]:
             ocr=ocr or FakeOcr(),
             executor=executor or InlineExecutor(),
             clock=clock,
+            mailer=outbox,
         )
         return TestClient(app, client=(host, 50000))
 

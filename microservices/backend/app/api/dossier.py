@@ -5,6 +5,7 @@ from datetime import UTC, datetime, timedelta
 
 from fastapi import APIRouter, Response
 
+from app.accounts.deps import OptionalUser, check_owner
 from app.core.errors import invalid_input, not_found
 from app.core.signing import link_is_valid, sign_link
 from app.dossier.render import render_dossier
@@ -17,7 +18,10 @@ router = APIRouter(prefix="/v1/scans/{scan_id}", tags=["dossier"])
 @router.post(
     "/dossier", response_model=DossierFile, status_code=201, dependencies=[limited("dossier")]
 )
-def create_dossier(scan_id: str, text: DossierText, services: ServicesDep) -> DossierFile:
+def create_dossier(
+    scan_id: str, text: DossierText, services: ServicesDep, user: OptionalUser
+) -> DossierFile:
+    check_owner(scan_id, user, services)
     scan = services.store.get(scan_id)
     if scan is None:
         raise not_found()

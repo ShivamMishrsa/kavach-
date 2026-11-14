@@ -39,7 +39,9 @@ def test_the_upload_is_never_written_to_disk(make_client, settings, tmp_path, mo
     run_whole_flow(client)
     assert list(spool.iterdir()) == []  # the temporary copy was removed after the request
     written = sorted(path.name for path in settings.data_dir.rglob("*") if path.is_file())
-    assert written == ["feedback.jsonl"]  # nothing else: no file, no result, no PDF
+    assert written == ["feedback.jsonl", "kavach.db"]  # no file, no result, no PDF
+    database = settings.database_path.read_bytes()  # accounts only: no scan content in it
+    assert SECRET_UTR.encode() not in database and SECRET_UPI.encode() not in database
     assert SECRET_NAME not in settings.feedback_path.read_text("utf-8")
 
 

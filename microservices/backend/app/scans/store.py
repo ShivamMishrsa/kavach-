@@ -41,6 +41,7 @@ class _Record:
     result: ScanResult | None = None
     confirmed: list[Entity] | None = None
     dossier: bytes | None = None
+    owner: str | None = None  # the account that made it, when someone was signed in
 
 
 class ScanStore:
@@ -50,7 +51,9 @@ class ScanStore:
         self._lock = threading.Lock()
         self._records: dict[str, _Record] = {}
 
-    def create(self, kind: ScanKind, evidence: list[EvidenceHash]) -> Scan:
+    def create(
+        self, kind: ScanKind, evidence: list[EvidenceHash], owner: str | None = None
+    ) -> Scan:
         now = self._clock()
         record = _Record(
             id=secrets.token_urlsafe(16),
@@ -58,6 +61,7 @@ class ScanStore:
             created_at=now,
             expires_at=now + self._ttl,
             evidence=evidence,
+            owner=owner,
         )
         with self._lock:
             self._purge()
@@ -120,6 +124,18 @@ class ScanStore:
     def delete(self, scan_id: str) -> None:
         with self._lock:
             self._records.pop(scan_id, None)
+
+    def owner_of(self, scan_id: str) -> str | None:
+        """The account a scan belongs to. None for a scan made without signing in (or no scan)."""
+        with self._lock:
+            record = self._records.get(scan_id)
+            return record.owner if record else None
+
+    def delete_owned(self, owner: str) -> None:
+        """Deletes every scan an account still has, when the account is deleted."""
+        with self._lock:
+            for scan_id in [r.id for r in self._records.values() if r.owner == owner]:
+                del self._records[scan_id]
 
     def _purge(self) -> None:
         now = self._clock()
