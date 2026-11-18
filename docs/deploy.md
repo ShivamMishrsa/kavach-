@@ -122,6 +122,36 @@ Try a restore on a spare machine once before launch.
 - [ ] A day-one budget alert set at the host
 - [ ] The `main` branch's CI is green (backend, frontend, browsers, docker jobs)
 
+## Free demo (no domain, no card, guests only)
+
+For a link to show people, not for the public. **Look up each free plan's limits first (verify);
+they change.** Website on Cloudflare Pages, API on a free Hugging Face Docker Space.
+
+What works: checks, PDF summaries, the installable app, offline. What does not last: the Space
+sleeps when idle (the first request then waits for it to wake), and its disk is erased on every
+restart, so **accounts and synced history do not last**. Sign-in emails are not sent (no mail
+service), so build the website with `VITE_SIGN_IN=off`, which hides log in and sign up. Guest checks do not use the session cookie (the check
+number is the only key), so the website and the API may sit on different addresses; only
+`KAVACH_CORS_ORIGINS` has to name the website.
+
+1. **API.** Make a Hugging Face account and a Space (SDK: Docker, public; a private Space cannot be
+   reached from a browser). Make a token with write access. From the repository root run
+   `powershell -File microservices\backend\hf-space\deploy.ps1 -Space <user>/<space>` (git asks for
+   the user name and the token as password). In the Space, Settings, Variables and secrets, add
+   `KAVACH_SECRET` (a secret: a long random value), `KAVACH_CORS_ORIGINS` (the website address,
+   next step), `KAVACH_SITE_URL` (the same), `KAVACH_PROXY_HOPS=1` (verify: if all visitors share one
+   rate limit, the number is wrong). The API is at `https://<user>-<space>.hf.space` (verify); check
+   `/health` says `"ocr": "ready"`.
+2. **Website.** Cloudflare Pages, connect the GitHub repository. Root directory
+   `microservices/frontend`, build command `npm ci && npm run build`, output `dist`, variables
+   `NODE_VERSION=22`, `VITE_API_URL` (the Space address), `VITE_SIGN_IN=off` and `VITE_SITE_URL`
+   (the Pages address, `https://<project>.pages.dev`, known from the project name).
+3. Check the list in "2. The website" above, except sign-in. Then restart the Space so it reads the
+   settings.
+
+The Space's Dockerfile (`microservices/backend/hf-space/Dockerfile`) has not been built on the
+machine it was written on; the Space's build log is the first place to look.
+
 ## Not done (and why)
 
 - **Pre-rendering in other languages**, and of the app screens: not needed to launch.
