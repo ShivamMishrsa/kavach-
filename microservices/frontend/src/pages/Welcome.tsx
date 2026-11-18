@@ -1,6 +1,7 @@
 import { FileSearch, Languages, Trash2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router';
+import { signInAvailable } from '@/api/mode';
 import { useAuth } from '@/auth/AuthProvider';
 import { Button } from '@/components/ui/button';
 import { buttonVariants } from '@/components/ui/button-variants';
@@ -42,20 +43,24 @@ export default function Welcome() {
         <p className="text-center text-sm text-muted">{t('welcome.guestHint')}</p>
       </div>
 
-      <div className="flex items-center gap-3 text-sm text-muted" aria-hidden="true">
-        <span className="h-px flex-1 bg-border" />
-        {t('welcome.or')}
-        <span className="h-px flex-1 bg-border" />
-      </div>
+      {signInAvailable && (
+        <>
+          <div className="flex items-center gap-3 text-sm text-muted" aria-hidden="true">
+            <span className="h-px flex-1 bg-border" />
+            {t('welcome.or')}
+            <span className="h-px flex-1 bg-border" />
+          </div>
 
-      <div className="grid grid-cols-2 gap-2">
-        <Link to="/login" className={buttonVariants({ variant: 'outline', size: 'lg' })}>
-          {t('welcome.login')}
-        </Link>
-        <Link to="/signup" className={buttonVariants({ variant: 'outline', size: 'lg' })}>
-          {t('welcome.signup')}
-        </Link>
-      </div>
+          <div className="grid grid-cols-2 gap-2">
+            <Link to="/login" className={buttonVariants({ variant: 'outline', size: 'lg' })}>
+              {t('welcome.login')}
+            </Link>
+            <Link to="/signup" className={buttonVariants({ variant: 'outline', size: 'lg' })}>
+              {t('welcome.signup')}
+            </Link>
+          </div>
+        </>
+      )}
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import type { ComponentType } from 'react';
 import type { RouteObject } from 'react-router';
+import { signInAvailable } from '@/api/mode';
 import { AppShell } from '@/layouts/AppShell';
 import { PublicLayout } from '@/layouts/PublicLayout';
 import { RootLayout, type RouteHandle } from '@/layouts/RootLayout';
@@ -56,13 +57,17 @@ export const routes: RouteObject[] = [
             element: <RedirectIfReady />,
             children: [{ path: 'start', ...page(() => import('@/pages/Welcome')) }],
           },
-          {
-            element: <RedirectIfUser />,
-            children: [
-              { path: 'login', ...page(() => import('@/pages/Login')) },
-              { path: 'signup', ...page(() => import('@/pages/Signup')) },
-            ],
-          },
+          ...(signInAvailable
+            ? [
+                {
+                  element: <RedirectIfUser />,
+                  children: [
+                    { path: 'login', ...page(() => import('@/pages/Login')) },
+                    { path: 'signup', ...page(() => import('@/pages/Signup')) },
+                  ],
+                },
+              ]
+            : []),
         ],
       },
       {

@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
 import { toast } from 'sonner';
+import { signInAvailable } from '@/api/mode';
 import { useDeleteAllScans } from '@/api/queries';
 import { useAuth } from '@/auth/AuthProvider';
 import { AccountPanel } from '@/components/AccountPanel';
@@ -89,18 +90,20 @@ export default function Settings() {
         </div>
       </Section>
 
-      <Section id="account" title={t('settings.account')}>
-        {session?.kind === 'user' ? (
-          <AccountPanel email={session.email} />
-        ) : (
-          <>
-            <p className="text-muted">{t('settings.guestInfo')}</p>
-            <div>
-              <Button onClick={() => navigate('/login')}>{t('settings.loginOrSignup')}</Button>
-            </div>
-          </>
-        )}
-      </Section>
+      {signInAvailable && (
+        <Section id="account" title={t('settings.account')}>
+          {session?.kind === 'user' ? (
+            <AccountPanel email={session.email} />
+          ) : (
+            <>
+              <p className="text-muted">{t('settings.guestInfo')}</p>
+              <div>
+                <Button onClick={() => navigate('/login')}>{t('settings.loginOrSignup')}</Button>
+              </div>
+            </>
+          )}
+        </Section>
+      )}
 
       <p className="text-xs text-muted">{t('settings.about', { version: pkg.version })}</p>
     </div>
